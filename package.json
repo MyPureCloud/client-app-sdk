@@ -1,0 +1,25 @@
+{
+  "name": "client-app-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "handlebars-cmd": "^0.1.4",
+    "jsdoc": "^3.4.0",
+    "jshint" :"*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/inindca/client-app-sdk.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/inindca/client-app-sdk#readme"
+}

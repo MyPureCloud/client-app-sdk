@@ -1,0 +1,481 @@
+[
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1,
+                42
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 2,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000002",
+                "name": "window.purecloud",
+                "type": "LogicalExpression",
+                "value": "",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "purecloud",
+        "longname": "window.purecloud",
+        "kind": "member",
+        "memberof": "window",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                45,
+                1984
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 4,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000012",
+                "name": "window.purecloud.apps",
+                "type": "CallExpression",
+                "value": "",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "apps",
+        "longname": "window.purecloud.apps",
+        "kind": "member",
+        "memberof": "window.purecloud",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                87,
+                139
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 5,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000021",
+                "name": "isInt",
+                "type": "FunctionDeclaration",
+                "paramnames": [
+                    "n"
+                ]
+            }
+        },
+        "undocumented": true,
+        "name": "isInt",
+        "longname": "<anonymous>~isInt",
+        "kind": "function",
+        "memberof": "<anonymous>",
+        "scope": "inner",
+        "params": []
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                162,
+                1972
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 10,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000033",
+                "name": "ui",
+                "type": "ObjectExpression",
+                "value": "{\"showProfile\":\"\",\"popToast\":\"\"}"
+            }
+        },
+        "undocumented": true,
+        "name": "ui",
+        "longname": "ui",
+        "kind": "member",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n             * Shows the profile of a specific user\n             * @param {string} profileId - The id of the user to show\n             */",
+        "meta": {
+            "range": [
+                334,
+                473
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 15,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000035",
+                "name": "showProfile",
+                "type": "FunctionExpression"
+            }
+        },
+        "description": "Shows the profile of a specific user",
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "description": "The id of the user to show",
+                "name": "profileId"
+            }
+        ],
+        "name": "showProfile",
+        "longname": "ui.showProfile",
+        "kind": "function",
+        "memberof": "ui",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                404,
+                427
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 16,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000045",
+                "name": "action",
+                "type": "Literal",
+                "value": "showProfile"
+            }
+        },
+        "undocumented": true,
+        "name": "action",
+        "longname": "action",
+        "kind": "member",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                429,
+                451
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 16,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000047",
+                "name": "profileId",
+                "type": "Identifier",
+                "value": "profileId"
+            }
+        },
+        "undocumented": true,
+        "name": "profileId",
+        "longname": "profileId",
+        "kind": "member",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n             * Displays a toast popup.\n             * @param {string} title - Toast title.\n             * @param {string} message - Toast Message.\n             * @param {string} options - Additonal toast options.\n             * @param {string} options.messageType - Toast type, valid options are 'error', 'info', 'success'.\n             * @param {bool} options.shouldPlaySound - (default true) When set to true, notification sound will play when toast is displayed.\n             * @param {number} options.timeout - (default 5) Time in seconds to show the toast.\n             * @param {string} options.icon - Url of an icon to show in the toast.\n             */",
+        "meta": {
+            "range": [
+                1271,
+                1962
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 34,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000050",
+                "name": "popToast",
+                "type": "FunctionExpression"
+            },
+            "vars": {
+                "options": "ui.popToast~options",
+                "messageParams": "ui.popToast~messageParams",
+                "messageParams.shouldPlaySound": "ui.popToast~messageParams.shouldPlaySound",
+                "messageParams.hideAfter": "ui.popToast~messageParams.hideAfter"
+            }
+        },
+        "description": "Displays a toast popup.",
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "description": "Toast title.",
+                "name": "title"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "description": "Toast Message.",
+                "name": "message"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "description": "Additonal toast options.",
+                "name": "options"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "description": "Toast type, valid options are 'error', 'info', 'success'.",
+                "name": "options.messageType"
+            },
+            {
+                "type": {
+                    "names": [
+                        "bool"
+                    ]
+                },
+                "description": "(default true) When set to true, notification sound will play when toast is displayed.",
+                "name": "options.shouldPlaySound"
+            },
+            {
+                "type": {
+                    "names": [
+                        "number"
+                    ]
+                },
+                "description": "(default 5) Time in seconds to show the toast.",
+                "name": "options.timeout"
+            },
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "description": "Url of an icon to show in the toast.",
+                "name": "options.icon"
+            }
+        ],
+        "name": "popToast",
+        "longname": "ui.popToast",
+        "kind": "function",
+        "memberof": "ui",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1333,
+                1356
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 36,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000057",
+                "name": "options",
+                "type": "LogicalExpression",
+                "funcscope": "ui.popToast",
+                "value": "",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "options",
+        "longname": "ui.popToast~options",
+        "kind": "member",
+        "memberof": "ui.popToast",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1378,
+                1602
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 38,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000063",
+                "name": "messageParams",
+                "type": "ObjectExpression",
+                "value": "{\"action\":\"showToast\",\"title\":\"\",\"message\":\"\",\"type\":\"\"}"
+            }
+        },
+        "undocumented": true,
+        "name": "messageParams",
+        "longname": "ui.popToast~messageParams",
+        "kind": "member",
+        "memberof": "ui.popToast",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1416,
+                1435
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 39,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000066",
+                "name": "action",
+                "type": "Literal",
+                "value": "showToast"
+            }
+        },
+        "undocumented": true,
+        "name": "action",
+        "longname": "ui.popToast~messageParams.action",
+        "kind": "member",
+        "memberof": "ui.popToast~messageParams",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1457,
+                1469
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 40,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000068",
+                "name": "title",
+                "type": "Identifier",
+                "value": "title"
+            }
+        },
+        "undocumented": true,
+        "name": "title",
+        "longname": "ui.popToast~messageParams.title",
+        "kind": "member",
+        "memberof": "ui.popToast~messageParams",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1491,
+                1507
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 41,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000070",
+                "name": "message",
+                "type": "Identifier",
+                "value": "message"
+            }
+        },
+        "undocumented": true,
+        "name": "message",
+        "longname": "ui.popToast~messageParams.message",
+        "kind": "member",
+        "memberof": "ui.popToast~messageParams",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1529,
+                1584
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 42,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000072",
+                "name": "type",
+                "type": "ConditionalExpression",
+                "value": ""
+            }
+        },
+        "undocumented": true,
+        "name": "type",
+        "longname": "ui.popToast~messageParams.type",
+        "kind": "member",
+        "memberof": "ui.popToast~messageParams",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1671,
+                1726
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 46,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000087",
+                "name": "messageParams.shouldPlaySound",
+                "type": "MemberExpression",
+                "funcscope": "ui.popToast",
+                "value": "options.shouldPlaySound",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "shouldPlaySound",
+        "longname": "ui.popToast~messageParams.shouldPlaySound",
+        "kind": "member",
+        "memberof": "ui.popToast~messageParams",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1831,
+                1872
+            ],
+            "filename": "purecloud_app.js",
+            "lineno": 50,
+            "path": "/Data/bitbucket/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000106",
+                "name": "messageParams.hideAfter",
+                "type": "MemberExpression",
+                "funcscope": "ui.popToast",
+                "value": "options.timeout",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "hideAfter",
+        "longname": "ui.popToast~messageParams.hideAfter",
+        "kind": "member",
+        "memberof": "ui.popToast~messageParams",
+        "scope": "static"
+    },
+    {
+        "kind": "package",
+        "longname": "package:undefined",
+        "files": [
+            "/Data/bitbucket/client-app-sdk/src/purecloud_app.js"
+        ]
+    }
+]
