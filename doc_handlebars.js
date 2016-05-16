@@ -17,8 +17,6 @@ for(var x=0; x< jsdoc.length; x++){
                 docSec.functionParams.push(docSec.params[p])
             }
         }
-
-
     }
 }
 

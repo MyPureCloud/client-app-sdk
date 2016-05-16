@@ -14,6 +14,9 @@ window.purecloud.apps = (function() {
              * Shows the profile of a specific user
              * @since 1
              * @param {string} profileId - The id of the user to show
+             * @example
+             * purecloud.apps.ui.showProfile("userprofileid");
+             */
              */
             showProfile: function(profileId){
                 parent.postMessage({"action": "showProfile", "profileId": profileId}, '*');
@@ -40,8 +43,12 @@ window.purecloud.apps = (function() {
                 options = options || {};
 
                 var type = "info";
-                if(options.messageType && VALID_MESSAGE_TYPES.indexOf(options.messageType) > -1){
-                    type = options.messageType;
+                if(options.messageType){
+                    options.messageType = options.messageType.toLower();
+
+                    if(VALID_MESSAGE_TYPES.indexOf(options.messageType) > -1){
+                        type = options.messageType;
+                    }
                 }
 
                 var messageParams = {
