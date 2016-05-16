@@ -7,9 +7,10 @@
     "doc": "doc"
   },
   "dependencies": {
-    "handlebars-cmd": "^0.1.4",
     "jsdoc": "^3.4.0",
-    "jshint" :"*"
+    "jshint" :"*",
+    "handlebars": "~1.1.0",
+    "optimist": "~0.3.5"
   },
   "devDependencies": {},
   "scripts": {

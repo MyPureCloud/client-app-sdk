@@ -1,15 +1,18 @@
 
-{{#.}}{{^undocumented}}
-## {{longname}}({{#params}}{{name}},{{/params}})
+{{#.}}{{^undocumented}}{{#if scope}}
+## {{longname}}({{#functionParams}}{{name}}{{#unless @last}},{{/unless}}{{/functionParams}})
 Added in version {{since}}
 
 ### Usage
 {{description}}
 
 ### Example
-
+{{#examples}}
+{{.}}
+{{/examples}}
 
 ### Arguments
 | Name | Type | Description |
+| ------------- |-------------| -----|
 {{#params}}| {{name}} | {{#type.names}}{{.}} {{/type.names}} | {{description}} |{{/params}}
-{{/undocumented}}{{/.}}
+{{/if}}{{/undocumented}}{{/.}}

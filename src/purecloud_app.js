@@ -29,6 +29,11 @@ window.purecloud.apps = (function() {
              * @param {bool}   options.shouldPlaySound - (default true) When set to true, notification sound will play when toast is displayed.
              * @param {number} options.timeout - (default 5) Time in seconds to show the toast.
              * @param {string} options.icon - Url of an icon to show in the toast.
+             * @example
+             * var options = {
+             *    messageType: "info"
+             * };
+             * purecloud.apps.ui.popToast("Hello world", "Hello world, how are you doing today?", options);
              */
             popToast: function(title, message, options){
 

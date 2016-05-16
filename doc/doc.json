@@ -29,7 +29,7 @@
         "meta": {
             "range": [
                 45,
-                2144
+                2363
             ],
             "filename": "purecloud_app.js",
             "lineno": 4,
@@ -105,7 +105,7 @@
         "meta": {
             "range": [
                 221,
-                2131
+                2350
             ],
             "filename": "purecloud_app.js",
             "lineno": 12,
@@ -205,14 +205,14 @@
         "scope": "global"
     },
     {
-        "comment": "/**\n             * Displays a toast popup.\n             * @since 1\n             * @param {string} title - Toast title.\n             * @param {string} message - Toast Message.\n             * @param {string} options - Additonal toast options.\n             * @param {string} options.messageType - Toast type, valid options are 'error', 'info', 'success'.\n             * @param {bool}   options.shouldPlaySound - (default true) When set to true, notification sound will play when toast is displayed.\n             * @param {number} options.timeout - (default 5) Time in seconds to show the toast.\n             * @param {string} options.icon - Url of an icon to show in the toast.\n             */",
+        "comment": "/**\n             * Displays a toast popup.\n             * @since 1\n             * @param {string} title - Toast title.\n             * @param {string} message - Toast Message.\n             * @param {string} options - Additonal toast options.\n             * @param {string} options.messageType - Toast type, valid options are 'error', 'info', 'success'.\n             * @param {bool}   options.shouldPlaySound - (default true) When set to true, notification sound will play when toast is displayed.\n             * @param {number} options.timeout - (default 5) Time in seconds to show the toast.\n             * @param {string} options.icon - Url of an icon to show in the toast.\n             * @example\n             * var options = {\n             *    messageType: \"info\"\n             * };\n             * purecloud.apps.ui.popToast(\"Hello world\", \"Hello world, how are you doing today?\", options);\n             */",
         "meta": {
             "range": [
-                1274,
-                2121
+                1493,
+                2340
             ],
             "filename": "purecloud_app.js",
-            "lineno": 33,
+            "lineno": 38,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000057",
@@ -294,6 +294,9 @@
                 "name": "options.icon"
             }
         ],
+        "examples": [
+            "var options = {\n   messageType: \"info\"\n};\npurecloud.apps.ui.popToast(\"Hello world\", \"Hello world, how are you doing today?\", options);"
+        ],
         "name": "popToast",
         "longname": "ui.popToast",
         "kind": "function",
@@ -304,11 +307,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1336,
-                1359
+                1555,
+                1578
             ],
             "filename": "purecloud_app.js",
-            "lineno": 35,
+            "lineno": 40,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000064",
@@ -330,11 +333,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1382,
-                1395
+                1601,
+                1614
             ],
             "filename": "purecloud_app.js",
-            "lineno": 37,
+            "lineno": 42,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000070",
@@ -354,11 +357,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1515,
-                1541
+                1734,
+                1760
             ],
             "filename": "purecloud_app.js",
-            "lineno": 39,
+            "lineno": 44,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000090",
@@ -380,11 +383,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1582,
-                1761
+                1801,
+                1980
             ],
             "filename": "purecloud_app.js",
-            "lineno": 42,
+            "lineno": 47,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000096",
@@ -404,11 +407,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1620,
-                1639
+                1839,
+                1858
             ],
             "filename": "purecloud_app.js",
-            "lineno": 43,
+            "lineno": 48,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000099",
@@ -428,11 +431,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1661,
-                1673
+                1880,
+                1892
             ],
             "filename": "purecloud_app.js",
-            "lineno": 44,
+            "lineno": 49,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000101",
@@ -452,11 +455,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1695,
-                1711
+                1914,
+                1930
             ],
             "filename": "purecloud_app.js",
-            "lineno": 45,
+            "lineno": 50,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000103",
@@ -476,11 +479,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1733,
-                1743
+                1952,
+                1962
             ],
             "filename": "purecloud_app.js",
-            "lineno": 46,
+            "lineno": 51,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000105",
@@ -500,11 +503,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1830,
-                1885
+                2049,
+                2104
             ],
             "filename": "purecloud_app.js",
-            "lineno": 50,
+            "lineno": 55,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000113",
@@ -526,11 +529,11 @@
         "comment": "",
         "meta": {
             "range": [
-                1990,
-                2031
+                2209,
+                2250
             ],
             "filename": "purecloud_app.js",
-            "lineno": 54,
+            "lineno": 59,
             "path": "/Data/bitbucket/client-app-sdk/src",
             "code": {
                 "id": "astnode100000132",
