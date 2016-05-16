@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Collaborate Toast Demo</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+        <style>
+            body {
+                margin-left: 20px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <h1>Send a Toast</h1>
+        <textarea name="textarea" rows="10" cols="50"></textarea>
+        <br />
+        Type <select id="toastType">
+            <option value='error' selected="true">Error</option>
+            <option value='info'>Info</option>
+            <option value='success'>Success</option>
+        </select>
+        <br />
+        <input id='shouldPlaySound' type='checkbox'></input> Should Play sound
+        <br/>
+        Timeout <input id= 'timeout' type="number" min="0" value="5"></input>
+
+        <br/>
+        <button class="send-txt btn btn-primary">Send Toast</button>
+
+        <script>
+        //    if(parent !== window) {
+                $('button.send-txt').on('click', function() {
+                    var txtMsgField = $('textarea');
+                    var msgToSend = txtMsgField.val();
+                    var options = {
+                        messageType: $("#toastType").val(),
+                        timeout: $("#timeout").val(),
+                        shouldPlaySound: ($('#shouldPlaySound').is(":checked")),
+                        icon: "https://dhqbrvplips7x.cloudfront.net/directory/2986/demo-apps/assets/images/toaster-48x48.png"
+                    };
+
+                    alert(JSON.stringify(options, null, " "));
+/*
+                    if(msgToSend) {
+                        //purecloud.apps.ui.popToast
+                        parent.postMessage({
+                            action: 'showToast',
+                            title: 'This is a Toast',
+                            message: msgToSend,
+                            type: $(this).hasClass('emergency-msg') ? 'error' : 'success'
+                        }, '*');
+                        txtMsgField.val('');
+                    }
+                    */
+                });
+        //    }
+        </script>
+    </body>
+</html>
