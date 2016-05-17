@@ -6,6 +6,8 @@
 
 # dependencies
 /node_modules
+/.npm-cache
+npm-debug.log
 
 # misc
 .DS_Store

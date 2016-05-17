@@ -13,8 +13,11 @@
     "build-docs": "./scripts/build-docs.sh",
     "test": "echo \"Error: no test specified\" && exit 1",
     "about": "node scripts/about.js",
+    "postinstall": "npm run build",
+    "preversion": "npm test",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags && rm -rf build/temp"
 
-    "postinstall": "npm run build"
   },
   "keywords": [
     "MyPureCloud",
