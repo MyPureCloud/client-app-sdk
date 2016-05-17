@@ -1,24 +1,30 @@
 ---
 title: Client App SDK
 ---
+{{#.}}
+{{#if (and (not-eq undocumented true) (not-eq access "private") (not-eq kind "package"))}}
 
-{{#.}}{{^undocumented}}{{#if (not-eq kind "package")}}{{#if functionParams}}
+{{#if functionParams}}
 ## {{name}} ({{#functionParams}}{{name}}{{#unless @last}},{{/unless}}{{/functionParams}})
-{{else if (eq kind "function")}}## {{name}}()
-{{else}}## {{name}} Module
+{{else if (eq kind "function")}}
+## {{name}}()
+{{else}}
+## {{name}} Module
 {{/if}}
 Added in version {{since}}
 
 ### Usage
 {{description}}
 
-{{#if examples}}### Examples
+{{#if examples ~}}
+### Examples
 
 ~~~javascript
 {{#each examples}}
 {{{this}}}
 {{/each}}
-~~~{{/if}}
+~~~
+{{/if}}
 
 {{#if params}}
 ### Arguments
@@ -29,4 +35,5 @@ Name | Type | Description
 {{/params}}
 
 {{/if}}
-{{/if}}{{/undocumented}}{{/.}}
+{{~/if}}
+{{~/.}}

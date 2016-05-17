@@ -4,6 +4,8 @@
  * @since 1.0.0
  */
 
+let comms = require('../utils/comms');
+
 const VALID_MESSAGE_TYPES = ['error', 'info', 'success'];
 
 function isInt(n) {
@@ -40,7 +42,6 @@ exports.showToastPopup = function (title, message, options) {
     }
 
     let messageParams = {
-        action: 'showToast',
         title,
         message,
         type
@@ -54,5 +55,5 @@ exports.showToastPopup = function (title, message, options) {
         messageParams.hideAfter = options.timeout;
     }
 
-    parent.postMessage(messageParams, '*');
+    comms._sendMsgToPc('showToast', messageParams);
 };

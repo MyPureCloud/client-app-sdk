@@ -14,12 +14,12 @@ Displays information about this version of the PureClound Client App SDK.
 pcClientApp.about() // returns module name and current version
 ~~~
 
+
 ## alerting Module
 Added in version 1.0.0
 
 ### Usage
 Utilities for alerting users in the PureCloud Client
-
 
 
 
@@ -50,12 +50,12 @@ options.shouldPlaySound | bool | (default true) When set to true, notification s
 options.timeout | number | (default 5) Time in seconds to show the toast.
 options.icon | string | Url of an icon to show in the toast.
 
+
 ## users Module
 Added in version 1.0.0
 
 ### Usage
 Utilities for interacting with users in the PureCloud Client
-
 
 
 
@@ -76,5 +76,4 @@ purecloud.apps.showProfile("targetUserId");
 Name | Type | Description
 -- | -- | --
 profileId | string | The id of the user to show
-
 

@@ -4,6 +4,8 @@
  * @since 1.0.0
  */
 
+let comms = require('../utils/comms');
+
  /**
   * Shows the profile of a specified user
   * @since 1.0.0
@@ -13,5 +15,5 @@
   * purecloud.apps.showProfile("targetUserId");
   */
 exports.showProfile = function(profileId) {
-    parent.postMessage({"action": "showProfile", "profileId": profileId}, '*');
+    comms._sendMsgToPc('showProfile', {'profileId': profileId});
 };
