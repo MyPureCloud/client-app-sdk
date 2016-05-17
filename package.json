@@ -1,6 +1,6 @@
 {
   "name": "purecloud-client-app-sdk",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1-beta.3",
   "description": "Javascript API for PureCloud Client Apps and Extensions",
   "main": "dist/index.js",
   "directories": {
