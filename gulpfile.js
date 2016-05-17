@@ -31,7 +31,7 @@ var buildBrowser = function() {
     return browserify({entries: './src/index.js', standalone: API_EXPORT_NAME, debug: true})
         .transform('babelify', {presets: ['es2015']})
         .bundle()
-        .pipe(source(pkg.name + '-' + pkg.version + '.js'))
+        .pipe(source(pkg.name + '.js'))
         .pipe(gulp.dest(BROWSER_OUTPUT_DIR))
         .pipe(buffer())
         .pipe(uglify())
