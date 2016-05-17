@@ -16,7 +16,7 @@
     "postinstall": "npm run build",
     "preversion": "npm run lint",
     "version": "npm run build",
-    "postversion": "git push origin HEAD:master && git push origin --tags && rm -rf build/temp"
+    "postversion": "git -c core.askpass=true push origin HEAD:master && git -c core.askpass=true push origin --tags && rm -rf build/temp"
   },
   "keywords": [
     "MyPureCloud",
