@@ -1,7 +1,18 @@
 #!/usr/bin/env node
 var fs   = require('fs'),
     args = require('optimist').argv,
-    hbs  = require('handlebars');
+    hbs  = require('handlebars'),
+    _    = require('lodash/core');
+
+function isTruthy(toTest) {
+    var result = !!toTest;
+
+    if (toTest && (_.isArray(toTest) || _.isObject(toTest))) {
+        result = !_.isEmpty(toTest);
+    }
+
+    return result;
+}
 
 hbs.registerHelper('eq', function (op1, op2) {
     return op1 === op2;
@@ -9,6 +20,26 @@ hbs.registerHelper('eq', function (op1, op2) {
 
 hbs.registerHelper('not-eq', function (op1, op2) {
     return op1 !== op2;
+});
+
+hbs.registerHelper('not', function () {
+    for (var i=0, len=arguments.length; i<len; i++) {
+        if (isTruthy(arguments[i]) === true) {
+          return false;
+        }
+    }
+
+    return true;
+});
+
+hbs.registerHelper('and', function () {
+    for (var i=0, len=arguments.length; i<len; i++) {
+        if (isTruthy(arguments[i]) === false) {
+          return arguments[i];
+        }
+    }
+
+    return arguments[arguments.length-1];
 });
 
 jsdoc = JSON.parse(fs.readFileSync("./" + args._[0]).toString());

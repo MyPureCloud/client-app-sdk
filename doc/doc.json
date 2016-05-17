@@ -8,7 +8,7 @@
             ],
             "filename": "index.js",
             "lineno": 5,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "path": "/Users/jray/code/public/client-app-sdk/src",
             "code": {
                 "id": "astnode100000004",
                 "name": "pkg",
@@ -31,7 +31,7 @@
             ],
             "filename": "index.js",
             "lineno": 16,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "path": "/Users/jray/code/public/client-app-sdk/src",
             "code": {
                 "id": "astnode100000010",
                 "name": "exports.about",
@@ -63,7 +63,7 @@
             ],
             "filename": "index.js",
             "lineno": 20,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "path": "/Users/jray/code/public/client-app-sdk/src",
             "code": {
                 "id": "astnode100000028",
                 "name": "exports.users",
@@ -87,7 +87,7 @@
             ],
             "filename": "index.js",
             "lineno": 21,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "path": "/Users/jray/code/public/client-app-sdk/src",
             "code": {
                 "id": "astnode100000036",
                 "name": "exports.alerting",
@@ -111,7 +111,7 @@
             ],
             "filename": "alerting.js",
             "lineno": 1,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {}
         },
         "description": "Utilities for alerting users in the PureCloud Client",
@@ -124,14 +124,38 @@
         "comment": "",
         "meta": {
             "range": [
-                107,
-                157
+                105,
+                138
             ],
             "filename": "alerting.js",
             "lineno": 7,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
                 "id": "astnode100000045",
+                "name": "comms",
+                "type": "CallExpression",
+                "value": ""
+            }
+        },
+        "undocumented": true,
+        "name": "comms",
+        "longname": "module:alerting~comms",
+        "kind": "member",
+        "scope": "inner",
+        "memberof": "module:alerting"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                147,
+                197
+            ],
+            "filename": "alerting.js",
+            "lineno": 9,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
+            "code": {
+                "id": "astnode100000051",
                 "name": "VALID_MESSAGE_TYPES",
                 "type": "ArrayExpression",
                 "value": "[\"error\",\"info\",\"success\"]"
@@ -148,14 +172,14 @@
         "comment": "",
         "meta": {
             "range": [
-                160,
-                204
+                200,
+                244
             ],
             "filename": "alerting.js",
-            "lineno": 9,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 11,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000051",
+                "id": "astnode100000057",
                 "name": "isInt",
                 "type": "FunctionDeclaration",
                 "paramnames": [
@@ -175,14 +199,14 @@
         "comment": "/**\n * Displays a toast popup.\n * @since 1.0.0\n * @param {string} title - Toast title.\n * @param {string} message - Toast Message.\n * @param {string} options - Additonal toast options.\n * @param {string} options.messageType - Toast type, valid options are 'error', 'info', 'success'.\n * @param {bool}   options.shouldPlaySound - (default true) When set to true, notification sound will play when toast is displayed.\n * @param {number} options.timeout - (default 5) Time in seconds to show the toast.\n * @param {string} options.icon - Url of an icon to show in the toast.\n *\n * @example\n * var options = {\n *    messageType: \"info\"\n * };\n * purecloud.apps.showToastPopup(\"Hello world\", \"Hello world, how are you doing today?\", options);\n */",
         "meta": {
             "range": [
-                946,
-                1687
+                986,
+                1706
             ],
             "filename": "alerting.js",
-            "lineno": 30,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 32,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000062",
+                "id": "astnode100000068",
                 "name": "exports.showToastPopup",
                 "type": "FunctionExpression",
                 "paramnames": [
@@ -280,14 +304,14 @@
         "comment": "",
         "meta": {
             "range": [
-                1012,
-                1035
+                1052,
+                1075
             ],
             "filename": "alerting.js",
-            "lineno": 31,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 33,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000072",
+                "id": "astnode100000078",
                 "name": "options",
                 "type": "LogicalExpression",
                 "funcscope": "module:alerting.showToastPopup",
@@ -306,14 +330,14 @@
         "comment": "",
         "meta": {
             "range": [
-                1046,
-                1059
+                1086,
+                1099
             ],
             "filename": "alerting.js",
-            "lineno": 33,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 35,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000078",
+                "id": "astnode100000084",
                 "name": "type",
                 "type": "Literal",
                 "value": "info"
@@ -330,14 +354,14 @@
         "comment": "",
         "meta": {
             "range": [
-                1146,
-                1202
+                1186,
+                1242
             ],
             "filename": "alerting.js",
-            "lineno": 35,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 37,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000094",
+                "id": "astnode100000100",
                 "name": "requestedType",
                 "type": "CallExpression",
                 "value": ""
@@ -354,14 +378,14 @@
         "comment": "",
         "meta": {
             "range": [
-                1277,
-                1297
+                1317,
+                1337
             ],
             "filename": "alerting.js",
-            "lineno": 38,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 40,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000116",
+                "id": "astnode100000122",
                 "name": "type",
                 "type": "Identifier",
                 "funcscope": "module:alerting.showToastPopup",
@@ -380,17 +404,17 @@
         "comment": "",
         "meta": {
             "range": [
-                1324,
-                1421
+                1364,
+                1432
             ],
             "filename": "alerting.js",
-            "lineno": 42,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 44,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000120",
+                "id": "astnode100000126",
                 "name": "messageParams",
                 "type": "ObjectExpression",
-                "value": "{\"action\":\"showToast\",\"title\":\"\",\"message\":\"\",\"type\":\"\"}"
+                "value": "{\"title\":\"\",\"message\":\"\",\"type\":\"\"}"
             }
         },
         "undocumented": true,
@@ -404,38 +428,14 @@
         "comment": "",
         "meta": {
             "range": [
-                1350,
-                1369
+                1390,
+                1395
             ],
             "filename": "alerting.js",
-            "lineno": 43,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 45,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000123",
-                "name": "action",
-                "type": "Literal",
-                "value": "showToast"
-            }
-        },
-        "undocumented": true,
-        "name": "action",
-        "longname": "module:alerting.showToastPopup~messageParams.action",
-        "kind": "member",
-        "memberof": "module:alerting.showToastPopup~messageParams",
-        "scope": "static"
-    },
-    {
-        "comment": "",
-        "meta": {
-            "range": [
-                1379,
-                1384
-            ],
-            "filename": "alerting.js",
-            "lineno": 44,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
-            "code": {
-                "id": "astnode100000125",
+                "id": "astnode100000129",
                 "name": "title",
                 "type": "Identifier",
                 "value": "title"
@@ -452,14 +452,14 @@
         "comment": "",
         "meta": {
             "range": [
-                1394,
-                1401
+                1405,
+                1412
             ],
             "filename": "alerting.js",
-            "lineno": 45,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 46,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000127",
+                "id": "astnode100000131",
                 "name": "message",
                 "type": "Identifier",
                 "value": "message"
@@ -476,14 +476,14 @@
         "comment": "",
         "meta": {
             "range": [
-                1411,
-                1415
+                1422,
+                1426
             ],
             "filename": "alerting.js",
-            "lineno": 46,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 47,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000129",
+                "id": "astnode100000133",
                 "name": "type",
                 "type": "Identifier",
                 "value": "type"
@@ -500,14 +500,14 @@
         "comment": "",
         "meta": {
             "range": [
-                1467,
-                1522
+                1478,
+                1533
             ],
             "filename": "alerting.js",
-            "lineno": 50,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 51,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000137",
+                "id": "astnode100000141",
                 "name": "messageParams.shouldPlaySound",
                 "type": "MemberExpression",
                 "funcscope": "module:alerting.showToastPopup",
@@ -526,14 +526,14 @@
         "comment": "",
         "meta": {
             "range": [
-                1592,
-                1633
+                1603,
+                1644
             ],
             "filename": "alerting.js",
-            "lineno": 54,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 55,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000156",
+                "id": "astnode100000160",
                 "name": "messageParams.hideAfter",
                 "type": "MemberExpression",
                 "funcscope": "module:alerting.showToastPopup",
@@ -557,7 +557,7 @@
             ],
             "filename": "users.js",
             "lineno": 1,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {}
         },
         "description": "Utilities for interacting with users in the PureCloud Client",
@@ -567,17 +567,41 @@
         "longname": "module:users"
     },
     {
+        "comment": "",
+        "meta": {
+            "range": [
+                110,
+                143
+            ],
+            "filename": "users.js",
+            "lineno": 7,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
+            "code": {
+                "id": "astnode100000176",
+                "name": "comms",
+                "type": "CallExpression",
+                "value": ""
+            }
+        },
+        "undocumented": true,
+        "name": "comms",
+        "longname": "module:users~comms",
+        "kind": "member",
+        "scope": "inner",
+        "memberof": "module:users"
+    },
+    {
         "comment": "/**\n  * Shows the profile of a specified user\n  * @since 1.0.0\n  * @param {string} profileId - The id of the user to show\n  *\n  * @example\n  * purecloud.apps.showProfile(\"targetUserId\");\n  */",
         "meta": {
             "range": [
-                299,
-                424
+                339,
+                449
             ],
             "filename": "users.js",
-            "lineno": 15,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 17,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000172",
+                "id": "astnode100000182",
                 "name": "exports.showProfile",
                 "type": "FunctionExpression",
                 "paramnames": [
@@ -611,38 +635,14 @@
         "comment": "",
         "meta": {
             "range": [
-                367,
-                390
+                422,
+                444
             ],
             "filename": "users.js",
-            "lineno": 16,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
+            "lineno": 18,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000185",
-                "name": "action",
-                "type": "Literal",
-                "value": "showProfile"
-            }
-        },
-        "undocumented": true,
-        "name": "action",
-        "longname": "module:users~action",
-        "kind": "member",
-        "scope": "inner",
-        "memberof": "module:users"
-    },
-    {
-        "comment": "",
-        "meta": {
-            "range": [
-                392,
-                414
-            ],
-            "filename": "users.js",
-            "lineno": 16,
-            "path": "/Data/bitbucket/client-app-sdk/src/modules",
-            "code": {
-                "id": "astnode100000187",
+                "id": "astnode100000196",
                 "name": "profileId",
                 "type": "Identifier",
                 "value": "profileId"
@@ -656,11 +656,420 @@
         "memberof": "module:users"
     },
     {
+        "comment": "",
+        "meta": {
+            "range": [
+                4,
+                30
+            ],
+            "filename": "comms.js",
+            "lineno": 1,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000200",
+                "name": "_",
+                "type": "CallExpression",
+                "value": ""
+            }
+        },
+        "undocumented": true,
+        "name": "_",
+        "longname": "_",
+        "kind": "member",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                39,
+                65
+            ],
+            "filename": "comms.js",
+            "lineno": 3,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000206",
+                "name": "ACTION_NAME_KEY",
+                "type": "Literal",
+                "value": "action"
+            }
+        },
+        "undocumented": true,
+        "name": "ACTION_NAME_KEY",
+        "longname": "ACTION_NAME_KEY",
+        "kind": "constant",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * @private\n */",
+        "meta": {
+            "range": [
+                88,
+                980
+            ],
+            "filename": "comms.js",
+            "lineno": 8,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000210",
+                "name": "exports._postMsgToPc",
+                "type": "FunctionExpression",
+                "paramnames": []
+            },
+            "vars": {
+                "validRuntime": "_postMsgToPc~validRuntime",
+                "validEnv": "_postMsgToPc~validEnv",
+                "validApi": "_postMsgToPc~validApi",
+                "errMsg": "_postMsgToPc~errMsg"
+            }
+        },
+        "access": "private",
+        "name": "_postMsgToPc",
+        "longname": "_postMsgToPc",
+        "kind": "function",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                133,
+                153
+            ],
+            "filename": "comms.js",
+            "lineno": 9,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000217",
+                "name": "validRuntime",
+                "type": "Literal",
+                "value": false
+            }
+        },
+        "undocumented": true,
+        "name": "validRuntime",
+        "longname": "_postMsgToPc~validRuntime",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                163,
+                179
+            ],
+            "filename": "comms.js",
+            "lineno": 10,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000220",
+                "name": "validEnv",
+                "type": "Literal",
+                "value": false
+            }
+        },
+        "undocumented": true,
+        "name": "validEnv",
+        "longname": "_postMsgToPc~validEnv",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                189,
+                205
+            ],
+            "filename": "comms.js",
+            "lineno": 11,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000223",
+                "name": "validApi",
+                "type": "Literal",
+                "value": false
+            }
+        },
+        "undocumented": true,
+        "name": "validApi",
+        "longname": "_postMsgToPc~validApi",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                217,
+                290
+            ],
+            "filename": "comms.js",
+            "lineno": 13,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000227",
+                "name": "validRuntime",
+                "type": "LogicalExpression",
+                "funcscope": "_postMsgToPc",
+                "value": "",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "validRuntime",
+        "longname": "_postMsgToPc~validRuntime",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                308,
+                336
+            ],
+            "filename": "comms.js",
+            "lineno": 14,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000240",
+                "name": "validEnv",
+                "type": "BinaryExpression",
+                "funcscope": "_postMsgToPc",
+                "value": "",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "validEnv",
+        "longname": "_postMsgToPc~validEnv",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                353,
+                404
+            ],
+            "filename": "comms.js",
+            "lineno": 15,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000247",
+                "name": "validApi",
+                "type": "BinaryExpression",
+                "funcscope": "_postMsgToPc",
+                "value": "",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "validApi",
+        "longname": "_postMsgToPc~validApi",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                538,
+                582
+            ],
+            "filename": "comms.js",
+            "lineno": 22,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000271",
+                "name": "errMsg",
+                "type": "Literal",
+                "value": "PureCloud Communication Failed.  "
+            }
+        },
+        "undocumented": true,
+        "name": "errMsg",
+        "longname": "_postMsgToPc~errMsg",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                625,
+                666
+            ],
+            "filename": "comms.js",
+            "lineno": 24,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000279",
+                "name": "errMsg",
+                "type": "Literal",
+                "funcscope": "_postMsgToPc",
+                "value": "Not running within a browser.",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "errMsg",
+        "longname": "_postMsgToPc~errMsg",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                712,
+                753
+            ],
+            "filename": "comms.js",
+            "lineno": 26,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000287",
+                "name": "errMsg",
+                "type": "Literal",
+                "funcscope": "_postMsgToPc",
+                "value": "Not running within an iframe.",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "errMsg",
+        "longname": "_postMsgToPc~errMsg",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                784,
+                838
+            ],
+            "filename": "comms.js",
+            "lineno": 28,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000292",
+                "name": "errMsg",
+                "type": "Literal",
+                "funcscope": "_postMsgToPc",
+                "value": "postMessage not supported in this browser.",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "errMsg",
+        "longname": "_postMsgToPc~errMsg",
+        "kind": "member",
+        "memberof": "_postMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "/**\n * @private\n */",
+        "meta": {
+            "range": [
+                1003,
+                1212
+            ],
+            "filename": "comms.js",
+            "lineno": 42,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000310",
+                "name": "exports._sendMsgToPc",
+                "type": "FunctionExpression",
+                "paramnames": [
+                    "actionName",
+                    "msgPayload"
+                ]
+            },
+            "vars": {
+                "postMsgPayload": "_sendMsgToPc~postMsgPayload",
+                "postMsgPayload[undefined]": "_sendMsgToPc~postMsgPayload.undefined]"
+            }
+        },
+        "access": "private",
+        "name": "_sendMsgToPc",
+        "longname": "_sendMsgToPc",
+        "kind": "function",
+        "scope": "global"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1070,
+                1112
+            ],
+            "filename": "comms.js",
+            "lineno": 43,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000319",
+                "name": "postMsgPayload",
+                "type": "CallExpression",
+                "value": ""
+            }
+        },
+        "undocumented": true,
+        "name": "postMsgPayload",
+        "longname": "_sendMsgToPc~postMsgPayload",
+        "kind": "member",
+        "memberof": "_sendMsgToPc",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1118,
+                1162
+            ],
+            "filename": "comms.js",
+            "lineno": 44,
+            "path": "/Users/jray/code/public/client-app-sdk/src/utils",
+            "code": {
+                "id": "astnode100000328",
+                "name": "postMsgPayload[undefined]",
+                "type": "Identifier",
+                "funcscope": "_sendMsgToPc",
+                "value": "actionName",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "undefined]",
+        "longname": "_sendMsgToPc~postMsgPayload.undefined]",
+        "kind": "member",
+        "memberof": "_sendMsgToPc~postMsgPayload",
+        "scope": "static"
+    },
+    {
         "kind": "package",
         "name": "purecloud-client-app-sdk",
         "longname": "package:purecloud-client-app-sdk",
         "author": "Interactive Intelligence, Inc.",
-        "dependencies": {},
+        "dependencies": {
+            "lodash": "^4.12.0"
+        },
         "description": "Javascript API for PureCloud Client Apps and Extensions",
         "devDependencies": {
             "babel-preset-es2015": "^6.6.0",
@@ -675,6 +1084,7 @@
             "jsdoc": "^3.4.0",
             "jshint": "*",
             "optimist": "^0.6.1",
+            "purecloud-api-sdk-common": "git://github.com/MyPureCloud/purecloud_api_sdk_common.git",
             "vinyl-buffer": "^1.0.0",
             "vinyl-source-stream": "^1.1.0"
         },
@@ -682,9 +1092,10 @@
             "node": ">= 4.4.0"
         },
         "files": [
-            "/Data/bitbucket/client-app-sdk/src/index.js",
-            "/Data/bitbucket/client-app-sdk/src/modules/alerting.js",
-            "/Data/bitbucket/client-app-sdk/src/modules/users.js"
+            "/Users/jray/code/public/client-app-sdk/src/index.js",
+            "/Users/jray/code/public/client-app-sdk/src/modules/alerting.js",
+            "/Users/jray/code/public/client-app-sdk/src/modules/users.js",
+            "/Users/jray/code/public/client-app-sdk/src/utils/comms.js"
         ],
         "homepage": "http://www.inin.com/purecloud/",
         "keywords": [
@@ -701,6 +1112,6 @@
             "type": "git",
             "url": "https://github.com/MyPureCloud/client-app-sdk"
         },
-        "version": "0.0.1-beta.1"
+        "version": "0.0.1-beta.2"
     }
 ]
