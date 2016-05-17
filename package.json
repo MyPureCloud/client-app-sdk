@@ -16,7 +16,7 @@
     "postinstall": "npm run build",
     "preversion": "npm run lint",
     "version": "npm run build",
-    "postversion": "git -c core.askpass=true push origin HEAD:master && git -c core.askpass=true push origin --tags && rm -rf build/temp"
+    "postversion": "rm -rf build/temp"
   },
   "keywords": [
     "MyPureCloud",
@@ -47,6 +47,7 @@
     "jsdoc": "^3.4.0",
     "jshint": "*",
     "optimist": "^0.6.1",
+    "purecloud-api-sdk-common": "git://github.com/MyPureCloud/purecloud_api_sdk_common.git",		
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   }
