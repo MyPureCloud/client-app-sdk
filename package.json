@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "about": "node scripts/about.js",
     "postinstall": "npm run build",
-    "preversion": "npm lint",
+    "preversion": "npm run lint",
     "version": "npm run build && git add -A dist",
     "postversion": "git push && git push --tags && rm -rf build/temp"
 
