@@ -1,3 +1,7 @@
+---
+title: Client App SDK
+---
+
 {{#.}}{{^undocumented}}{{#if (not-eq kind "package")}}{{#if functionParams}}
 ## {{name}} ({{#functionParams}}{{name}}{{#unless @last}},{{/unless}}{{/functionParams}})
 {{else if (eq kind "function")}}## {{name}}()
@@ -20,8 +24,8 @@ Added in version {{since}}
 ### Arguments
 
 Name | Type | Description
-| -- | -- | -- |
-|{{#params}}{{name}} | {{#type.names}}{{.}}{{/type.names}} | {{description}}|
+-- | -- | --
+{{#params}}{{name}} | {{#type.names}}{{.}}{{/type.names}} | {{description}}
 {{/params}}
 
 {{/if}}
