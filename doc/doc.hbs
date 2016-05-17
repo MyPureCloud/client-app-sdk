@@ -1,22 +1,28 @@
-
-{{#.}}{{^undocumented}}{{#if scope}}
-## {{longname}}({{#functionParams}}{{name}}{{#unless @last}},{{/unless}}{{/functionParams}})
+{{#.}}{{^undocumented}}{{#if (not-eq kind "package")}}{{#if functionParams}}
+## {{name}} ({{#functionParams}}{{name}}{{#unless @last}},{{/unless}}{{/functionParams}})
+{{else if (eq kind "function")}}## {{name}}()
+{{else}}## {{name}} Module
+{{/if}}
 Added in version {{since}}
 
 ### Usage
 {{description}}
 
-### Example
-{{#examples}}
-~~~javascript
-{{.}}
-~~~
-{{/examples}}
+{{#if examples}}### Examples
 
+~~~javascript
+{{#each examples}}
+{{{this}}}
+{{/each}}
+~~~{{/if}}
+
+{{#if params}}
 ### Arguments
 
-| Name | Type | Description |
-| ------------- |-------------| -----|
-{{#params}}| {{name}} | {{#type.names}}{{.}} {{/type.names}} | {{description}} |
+Name | Type | Description
+| -- | -- | -- |
+|{{#params}}{{name}} | {{#type.names}}{{.}}{{/type.names}} | {{description}}|
 {{/params}}
+
+{{/if}}
 {{/if}}{{/undocumented}}{{/.}}

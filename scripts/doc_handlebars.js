@@ -3,6 +3,14 @@ var fs   = require('fs'),
     args = require('optimist').argv,
     hbs  = require('handlebars');
 
+hbs.registerHelper('eq', function (op1, op2) {
+    return op1 === op2;
+});
+
+hbs.registerHelper('not-eq', function (op1, op2) {
+    return op1 !== op2;
+});
+
 jsdoc = JSON.parse(fs.readFileSync("./" + args._[0]).toString());
 template_file_contents = fs.readFileSync(args._[1]).toString();
 
@@ -14,7 +22,7 @@ for(var x=0; x< jsdoc.length; x++){
 
         for(var p=0; p< docSec.params.length; p++){
             if(docSec.params[p].name.indexOf('.') == -1){
-                docSec.functionParams.push(docSec.params[p])
+                docSec.functionParams.push(docSec.params[p]);
             }
         }
     }
