@@ -26,7 +26,7 @@
     "type": "git",
     "url": "git+ssh://git@bitbucket.org/inindca/client-app-sdk.git"
   },
-  "license": "ISC",
+  "license": "MIT",
   "private": true,
   "repository": {
     "type": "git",
