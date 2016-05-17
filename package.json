@@ -1,6 +1,6 @@
 {
   "name": "purecloud-client-app-sdk",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.0",
   "description": "Javascript API for PureCloud Client Apps and Extensions",
   "main": "dist/index.js",
   "directories": {
@@ -50,6 +50,7 @@
     "jsdoc": "^3.4.0",
     "jshint" :"*",
     "optimist": "^0.6.1",
+    "purecloud-api-sdk-common": "git://github.com/MyPureCloud/purecloud_api_sdk_common.git",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   }
