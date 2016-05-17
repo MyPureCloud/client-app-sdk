@@ -16,7 +16,7 @@
     "postinstall": "npm run build",
     "preversion": "npm run lint",
     "version": "npm run build",
-    "postversion": "git push && git push --tags && rm -rf build/temp"
+    "postversion": "git push origin master && git push origin --tags && rm -rf build/temp"
   },
   "keywords": [
     "MyPureCloud",
