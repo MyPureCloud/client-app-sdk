@@ -3,64 +3,135 @@
         "comment": "",
         "meta": {
             "range": [
-                1,
-                42
+                44,
+                76
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 2,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "index.js",
+            "lineno": 5,
+            "path": "/Users/jray/code/public/client-app-sdk/src",
             "code": {
-                "id": "astnode100000002",
-                "name": "window.purecloud",
-                "type": "LogicalExpression",
-                "value": "",
-                "paramnames": []
+                "id": "astnode100000004",
+                "name": "pkg",
+                "type": "CallExpression",
+                "value": ""
             }
         },
         "undocumented": true,
-        "name": "purecloud",
-        "longname": "window.purecloud",
+        "name": "pkg",
+        "longname": "pkg",
         "kind": "member",
-        "memberof": "window",
-        "scope": "static"
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Displays information about this version of the PureClound Client App SDK.\n * @since 1.0.0\n *\n * @returns A string of information describing this library\n *\n * @example\n * pcClientApp.about() // returns module name and current version\n */",
+        "meta": {
+            "range": [
+                324,
+                397
+            ],
+            "filename": "index.js",
+            "lineno": 16,
+            "path": "/Users/jray/code/public/client-app-sdk/src",
+            "code": {
+                "id": "astnode100000010",
+                "name": "exports.about",
+                "type": "FunctionExpression",
+                "paramnames": []
+            }
+        },
+        "description": "Displays information about this version of the PureClound Client App SDK.",
+        "since": "1.0.0",
+        "returns": [
+            {
+                "description": "A string of information describing this library"
+            }
+        ],
+        "examples": [
+            "pcClientApp.about() // returns module name and current version"
+        ],
+        "name": "about",
+        "longname": "about",
+        "kind": "function",
+        "scope": "global"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                45,
-                2363
+                400,
+                442
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 4,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "index.js",
+            "lineno": 20,
+            "path": "/Users/jray/code/public/client-app-sdk/src",
             "code": {
-                "id": "astnode100000012",
-                "name": "window.purecloud.apps",
+                "id": "astnode100000028",
+                "name": "exports.users",
                 "type": "CallExpression",
                 "value": "",
                 "paramnames": []
             }
         },
         "undocumented": true,
-        "name": "apps",
-        "longname": "window.purecloud.apps",
+        "name": "users",
+        "longname": "users",
         "kind": "member",
-        "memberof": "window.purecloud",
-        "scope": "static"
+        "scope": "global"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                91,
-                139
+                444,
+                492
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 5,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "index.js",
+            "lineno": 21,
+            "path": "/Users/jray/code/public/client-app-sdk/src",
             "code": {
-                "id": "astnode100000022",
+                "id": "astnode100000036",
+                "name": "exports.alerting",
+                "type": "CallExpression",
+                "value": "",
+                "paramnames": []
+            }
+        },
+        "undocumented": true,
+        "name": "alerting",
+        "longname": "alerting",
+        "kind": "member",
+        "scope": "global"
+    },
+    {
+        "comment": "/**\n * Utilities for alerting users in the PureCloud Client\n * @module alerting\n * @since 1.0.0\n */",
+        "meta": {
+            "range": [
+                0,
+                99
+            ],
+            "filename": "alerting.js",
+            "lineno": 1,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
+            "code": {}
+        },
+        "description": "Utilities for alerting users in the PureCloud Client",
+        "kind": "module",
+        "name": "alerting",
+        "since": "1.0.0",
+        "longname": "module:alerting"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                107,
+                157
+            ],
+            "filename": "alerting.js",
+            "lineno": 7,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
+            "code": {
+                "id": "astnode100000045",
                 "name": "VALID_MESSAGE_TYPES",
                 "type": "ArrayExpression",
                 "value": "[\"error\",\"info\",\"success\"]"
@@ -68,23 +139,23 @@
         },
         "undocumented": true,
         "name": "VALID_MESSAGE_TYPES",
-        "longname": "<anonymous>~VALID_MESSAGE_TYPES",
-        "kind": "member",
-        "memberof": "<anonymous>",
-        "scope": "inner"
+        "longname": "module:alerting~VALID_MESSAGE_TYPES",
+        "kind": "constant",
+        "scope": "inner",
+        "memberof": "module:alerting"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                146,
-                198
+                160,
+                204
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 7,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 9,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000028",
+                "id": "astnode100000051",
                 "name": "isInt",
                 "type": "FunctionDeclaration",
                 "paramnames": [
@@ -94,141 +165,43 @@
         },
         "undocumented": true,
         "name": "isInt",
-        "longname": "<anonymous>~isInt",
+        "longname": "module:alerting~isInt",
         "kind": "function",
-        "memberof": "<anonymous>",
         "scope": "inner",
+        "memberof": "module:alerting",
         "params": []
     },
     {
-        "comment": "",
+        "comment": "/**\n * Displays a toast popup.\n * @since 1.0.0\n * @param {string} title - Toast title.\n * @param {string} message - Toast Message.\n * @param {string} options - Additonal toast options.\n * @param {string} options.messageType - Toast type, valid options are 'error', 'info', 'success'.\n * @param {bool}   options.shouldPlaySound - (default true) When set to true, notification sound will play when toast is displayed.\n * @param {number} options.timeout - (default 5) Time in seconds to show the toast.\n * @param {string} options.icon - Url of an icon to show in the toast.\n *\n * @example\n * var options = {\n *    messageType: \"info\"\n * };\n * purecloud.apps.showToastPopup(\"Hello world\", \"Hello world, how are you doing today?\", options);\n */",
         "meta": {
             "range": [
-                221,
-                2350
+                946,
+                1687
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 12,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 30,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000040",
-                "name": "ui",
-                "type": "ObjectExpression",
-                "value": "{\"showProfile\":\"\",\"popToast\":\"\"}"
-            }
-        },
-        "undocumented": true,
-        "name": "ui",
-        "longname": "ui",
-        "kind": "member",
-        "scope": "global"
-    },
-    {
-        "comment": "/**\n             * Shows the profile of a specific user\n             * @since 1\n             * @param {string} profileId - The id of the user to show\n             */",
-        "meta": {
-            "range": [
-                417,
-                556
-            ],
-            "filename": "purecloud_app.js",
-            "lineno": 18,
-            "path": "/Data/bitbucket/client-app-sdk/src",
-            "code": {
-                "id": "astnode100000042",
-                "name": "showProfile",
-                "type": "FunctionExpression"
-            }
-        },
-        "description": "Shows the profile of a specific user",
-        "since": "1",
-        "params": [
-            {
-                "type": {
-                    "names": [
-                        "string"
-                    ]
-                },
-                "description": "The id of the user to show",
-                "name": "profileId"
-            }
-        ],
-        "name": "showProfile",
-        "longname": "ui.showProfile",
-        "kind": "function",
-        "memberof": "ui",
-        "scope": "static"
-    },
-    {
-        "comment": "",
-        "meta": {
-            "range": [
-                487,
-                510
-            ],
-            "filename": "purecloud_app.js",
-            "lineno": 19,
-            "path": "/Data/bitbucket/client-app-sdk/src",
-            "code": {
-                "id": "astnode100000052",
-                "name": "action",
-                "type": "Literal",
-                "value": "showProfile"
-            }
-        },
-        "undocumented": true,
-        "name": "action",
-        "longname": "action",
-        "kind": "member",
-        "scope": "global"
-    },
-    {
-        "comment": "",
-        "meta": {
-            "range": [
-                512,
-                534
-            ],
-            "filename": "purecloud_app.js",
-            "lineno": 19,
-            "path": "/Data/bitbucket/client-app-sdk/src",
-            "code": {
-                "id": "astnode100000054",
-                "name": "profileId",
-                "type": "Identifier",
-                "value": "profileId"
-            }
-        },
-        "undocumented": true,
-        "name": "profileId",
-        "longname": "profileId",
-        "kind": "member",
-        "scope": "global"
-    },
-    {
-        "comment": "/**\n             * Displays a toast popup.\n             * @since 1\n             * @param {string} title - Toast title.\n             * @param {string} message - Toast Message.\n             * @param {string} options - Additonal toast options.\n             * @param {string} options.messageType - Toast type, valid options are 'error', 'info', 'success'.\n             * @param {bool}   options.shouldPlaySound - (default true) When set to true, notification sound will play when toast is displayed.\n             * @param {number} options.timeout - (default 5) Time in seconds to show the toast.\n             * @param {string} options.icon - Url of an icon to show in the toast.\n             * @example\n             * var options = {\n             *    messageType: \"info\"\n             * };\n             * purecloud.apps.ui.popToast(\"Hello world\", \"Hello world, how are you doing today?\", options);\n             */",
-        "meta": {
-            "range": [
-                1493,
-                2340
-            ],
-            "filename": "purecloud_app.js",
-            "lineno": 38,
-            "path": "/Data/bitbucket/client-app-sdk/src",
-            "code": {
-                "id": "astnode100000057",
-                "name": "popToast",
-                "type": "FunctionExpression"
+                "id": "astnode100000062",
+                "name": "exports.showToastPopup",
+                "type": "FunctionExpression",
+                "paramnames": [
+                    "title",
+                    "message",
+                    "options"
+                ]
             },
             "vars": {
-                "options": "ui.popToast~options",
-                "type": "ui.popToast~type",
-                "messageParams": "ui.popToast~messageParams",
-                "messageParams.shouldPlaySound": "ui.popToast~messageParams.shouldPlaySound",
-                "messageParams.hideAfter": "ui.popToast~messageParams.hideAfter"
+                "options": "module:alerting~options",
+                "type": "module:alerting~type",
+                "requestedType": "module:alerting.showToastPopup~requestedType",
+                "messageParams": "module:alerting.showToastPopup~messageParams",
+                "messageParams.shouldPlaySound": "module:alerting.showToastPopup~messageParams.shouldPlaySound",
+                "messageParams.hideAfter": "module:alerting.showToastPopup~messageParams.hideAfter"
             }
         },
         "description": "Displays a toast popup.",
-        "since": "1",
+        "since": "1.0.0",
         "params": [
             {
                 "type": {
@@ -295,52 +268,52 @@
             }
         ],
         "examples": [
-            "var options = {\n   messageType: \"info\"\n};\npurecloud.apps.ui.popToast(\"Hello world\", \"Hello world, how are you doing today?\", options);"
+            "var options = {\n   messageType: \"info\"\n};\npurecloud.apps.showToastPopup(\"Hello world\", \"Hello world, how are you doing today?\", options);"
         ],
-        "name": "popToast",
-        "longname": "ui.popToast",
+        "name": "showToastPopup",
+        "longname": "module:alerting.showToastPopup",
         "kind": "function",
-        "memberof": "ui",
+        "memberof": "module:alerting",
         "scope": "static"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                1555,
-                1578
+                1012,
+                1035
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 40,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 31,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000064",
+                "id": "astnode100000072",
                 "name": "options",
                 "type": "LogicalExpression",
-                "funcscope": "ui.popToast",
+                "funcscope": "module:alerting.showToastPopup",
                 "value": "",
                 "paramnames": []
             }
         },
         "undocumented": true,
         "name": "options",
-        "longname": "ui.popToast~options",
+        "longname": "module:alerting~options",
         "kind": "member",
-        "memberof": "ui.popToast",
-        "scope": "inner"
+        "scope": "inner",
+        "memberof": "module:alerting"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                1601,
-                1614
+                1046,
+                1059
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 42,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 33,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000070",
+                "id": "astnode100000078",
                 "name": "type",
                 "type": "Literal",
                 "value": "info"
@@ -348,49 +321,73 @@
         },
         "undocumented": true,
         "name": "type",
-        "longname": "ui.popToast~type",
+        "longname": "module:alerting.showToastPopup~type",
         "kind": "member",
-        "memberof": "ui.popToast",
+        "memberof": "module:alerting.showToastPopup",
         "scope": "inner"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                1734,
-                1760
+                1146,
+                1202
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 44,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 35,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000090",
+                "id": "astnode100000094",
+                "name": "requestedType",
+                "type": "CallExpression",
+                "value": ""
+            }
+        },
+        "undocumented": true,
+        "name": "requestedType",
+        "longname": "module:alerting.showToastPopup~requestedType",
+        "kind": "member",
+        "memberof": "module:alerting.showToastPopup",
+        "scope": "inner"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                1277,
+                1297
+            ],
+            "filename": "alerting.js",
+            "lineno": 38,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
+            "code": {
+                "id": "astnode100000116",
                 "name": "type",
-                "type": "MemberExpression",
-                "funcscope": "ui.popToast",
-                "value": "options.messageType",
+                "type": "Identifier",
+                "funcscope": "module:alerting.showToastPopup",
+                "value": "requestedType",
                 "paramnames": []
             }
         },
         "undocumented": true,
         "name": "type",
-        "longname": "ui.popToast~type",
+        "longname": "module:alerting~type",
         "kind": "member",
-        "memberof": "ui.popToast",
-        "scope": "inner"
+        "scope": "inner",
+        "memberof": "module:alerting"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                1801,
-                1980
+                1324,
+                1421
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 47,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 42,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000096",
+                "id": "astnode100000120",
                 "name": "messageParams",
                 "type": "ObjectExpression",
                 "value": "{\"action\":\"showToast\",\"title\":\"\",\"message\":\"\",\"type\":\"\"}"
@@ -398,23 +395,23 @@
         },
         "undocumented": true,
         "name": "messageParams",
-        "longname": "ui.popToast~messageParams",
+        "longname": "module:alerting.showToastPopup~messageParams",
         "kind": "member",
-        "memberof": "ui.popToast",
+        "memberof": "module:alerting.showToastPopup",
         "scope": "inner"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                1839,
-                1858
+                1350,
+                1369
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 48,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 43,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000099",
+                "id": "astnode100000123",
                 "name": "action",
                 "type": "Literal",
                 "value": "showToast"
@@ -422,23 +419,23 @@
         },
         "undocumented": true,
         "name": "action",
-        "longname": "ui.popToast~messageParams.action",
+        "longname": "module:alerting.showToastPopup~messageParams.action",
         "kind": "member",
-        "memberof": "ui.popToast~messageParams",
+        "memberof": "module:alerting.showToastPopup~messageParams",
         "scope": "static"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                1880,
-                1892
+                1379,
+                1384
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 49,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 44,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000101",
+                "id": "astnode100000125",
                 "name": "title",
                 "type": "Identifier",
                 "value": "title"
@@ -446,23 +443,23 @@
         },
         "undocumented": true,
         "name": "title",
-        "longname": "ui.popToast~messageParams.title",
+        "longname": "module:alerting.showToastPopup~messageParams.title",
         "kind": "member",
-        "memberof": "ui.popToast~messageParams",
+        "memberof": "module:alerting.showToastPopup~messageParams",
         "scope": "static"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                1914,
-                1930
+                1394,
+                1401
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 50,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 45,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000103",
+                "id": "astnode100000127",
                 "name": "message",
                 "type": "Identifier",
                 "value": "message"
@@ -470,23 +467,23 @@
         },
         "undocumented": true,
         "name": "message",
-        "longname": "ui.popToast~messageParams.message",
+        "longname": "module:alerting.showToastPopup~messageParams.message",
         "kind": "member",
-        "memberof": "ui.popToast~messageParams",
+        "memberof": "module:alerting.showToastPopup~messageParams",
         "scope": "static"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                1952,
-                1962
+                1411,
+                1415
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 51,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 46,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000105",
+                "id": "astnode100000129",
                 "name": "type",
                 "type": "Identifier",
                 "value": "type"
@@ -494,68 +491,216 @@
         },
         "undocumented": true,
         "name": "type",
-        "longname": "ui.popToast~messageParams.type",
+        "longname": "module:alerting.showToastPopup~messageParams.type",
         "kind": "member",
-        "memberof": "ui.popToast~messageParams",
+        "memberof": "module:alerting.showToastPopup~messageParams",
         "scope": "static"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                2049,
-                2104
+                1467,
+                1522
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 55,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 50,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000113",
+                "id": "astnode100000137",
                 "name": "messageParams.shouldPlaySound",
                 "type": "MemberExpression",
-                "funcscope": "ui.popToast",
+                "funcscope": "module:alerting.showToastPopup",
                 "value": "options.shouldPlaySound",
                 "paramnames": []
             }
         },
         "undocumented": true,
         "name": "shouldPlaySound",
-        "longname": "ui.popToast~messageParams.shouldPlaySound",
+        "longname": "module:alerting.showToastPopup~messageParams.shouldPlaySound",
         "kind": "member",
-        "memberof": "ui.popToast~messageParams",
+        "memberof": "module:alerting.showToastPopup~messageParams",
         "scope": "static"
     },
     {
         "comment": "",
         "meta": {
             "range": [
-                2209,
-                2250
+                1592,
+                1633
             ],
-            "filename": "purecloud_app.js",
-            "lineno": 59,
-            "path": "/Data/bitbucket/client-app-sdk/src",
+            "filename": "alerting.js",
+            "lineno": 54,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
             "code": {
-                "id": "astnode100000132",
+                "id": "astnode100000156",
                 "name": "messageParams.hideAfter",
                 "type": "MemberExpression",
-                "funcscope": "ui.popToast",
+                "funcscope": "module:alerting.showToastPopup",
                 "value": "options.timeout",
                 "paramnames": []
             }
         },
         "undocumented": true,
         "name": "hideAfter",
-        "longname": "ui.popToast~messageParams.hideAfter",
+        "longname": "module:alerting.showToastPopup~messageParams.hideAfter",
         "kind": "member",
-        "memberof": "ui.popToast~messageParams",
+        "memberof": "module:alerting.showToastPopup~messageParams",
         "scope": "static"
     },
     {
+        "comment": "/**\n * Utilities for interacting with users in the PureCloud Client\n * @module users\n * @since 1.0.0\n */",
+        "meta": {
+            "range": [
+                0,
+                104
+            ],
+            "filename": "users.js",
+            "lineno": 1,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
+            "code": {}
+        },
+        "description": "Utilities for interacting with users in the PureCloud Client",
+        "kind": "module",
+        "name": "users",
+        "since": "1.0.0",
+        "longname": "module:users"
+    },
+    {
+        "comment": "/**\n  * Shows the profile of a specified user\n  * @since 1.0.0\n  * @param {string} profileId - The id of the user to show\n  *\n  * @example\n  * purecloud.apps.showProfile(\"targetUserId\");\n  */",
+        "meta": {
+            "range": [
+                299,
+                424
+            ],
+            "filename": "users.js",
+            "lineno": 15,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
+            "code": {
+                "id": "astnode100000172",
+                "name": "exports.showProfile",
+                "type": "FunctionExpression",
+                "paramnames": [
+                    "profileId"
+                ]
+            }
+        },
+        "description": "Shows the profile of a specified user",
+        "since": "1.0.0",
+        "params": [
+            {
+                "type": {
+                    "names": [
+                        "string"
+                    ]
+                },
+                "description": "The id of the user to show",
+                "name": "profileId"
+            }
+        ],
+        "examples": [
+            "purecloud.apps.showProfile(\"targetUserId\");"
+        ],
+        "name": "showProfile",
+        "longname": "module:users.showProfile",
+        "kind": "function",
+        "memberof": "module:users",
+        "scope": "static"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                367,
+                390
+            ],
+            "filename": "users.js",
+            "lineno": 16,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
+            "code": {
+                "id": "astnode100000185",
+                "name": "action",
+                "type": "Literal",
+                "value": "showProfile"
+            }
+        },
+        "undocumented": true,
+        "name": "action",
+        "longname": "module:users~action",
+        "kind": "member",
+        "scope": "inner",
+        "memberof": "module:users"
+    },
+    {
+        "comment": "",
+        "meta": {
+            "range": [
+                392,
+                414
+            ],
+            "filename": "users.js",
+            "lineno": 16,
+            "path": "/Users/jray/code/public/client-app-sdk/src/modules",
+            "code": {
+                "id": "astnode100000187",
+                "name": "profileId",
+                "type": "Identifier",
+                "value": "profileId"
+            }
+        },
+        "undocumented": true,
+        "name": "profileId",
+        "longname": "module:users~profileId",
+        "kind": "member",
+        "scope": "inner",
+        "memberof": "module:users"
+    },
+    {
         "kind": "package",
-        "longname": "package:undefined",
+        "name": "purecloud-client-app-sdk",
+        "longname": "package:purecloud-client-app-sdk",
+        "author": "Interactive Intelligence, Inc.",
+        "dependencies": {},
+        "description": "Javascript API for PureCloud Client Apps and Extensions",
+        "devDependencies": {
+            "babel-preset-es2015": "^6.6.0",
+            "babelify": "^7.3.0",
+            "browserify": "^13.0.1",
+            "del": "^2.2.0",
+            "gulp": "^3.9.1",
+            "gulp-babel": "^6.1.2",
+            "gulp-rename": "^1.2.2",
+            "gulp-uglify": "^1.5.3",
+            "handlebars": "^4.0.5",
+            "jsdoc": "^3.4.0",
+            "jshint": "*",
+            "optimist": "^0.6.1",
+            "vinyl-buffer": "^1.0.0",
+            "vinyl-source-stream": "^1.1.0"
+        },
+        "engines": {
+            "node": ">= 4.4.0"
+        },
         "files": [
-            "/Data/bitbucket/client-app-sdk/src/purecloud_app.js"
-        ]
+            "/Users/jray/code/public/client-app-sdk/src/index.js",
+            "/Users/jray/code/public/client-app-sdk/src/modules/alerting.js",
+            "/Users/jray/code/public/client-app-sdk/src/modules/users.js"
+        ],
+        "homepage": "http://www.inin.com/purecloud/",
+        "keywords": [
+            "MyPureCloud",
+            "PureCloud"
+        ],
+        "licenses": [
+            {
+                "type": "ISC"
+            }
+        ],
+        "main": "dist/index.js",
+        "repository": {
+            "type": "git",
+            "url": "https://github.com/MyPureCloud/client-app-sdk"
+        },
+        "version": "0.0.1-beta.1"
     }
 ]
