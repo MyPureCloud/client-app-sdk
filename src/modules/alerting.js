@@ -27,7 +27,7 @@ function isInt(n) {
  * var options = {
  *    messageType: "info"
  * };
- * purecloud.apps.showToastPopup("Hello world", "Hello world, how are you doing today?", options);
+ * purecloud.apps.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?", options);
  */
 exports.showToastPopup = function (title, message, options) {
     options = options || {};

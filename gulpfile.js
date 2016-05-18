@@ -6,9 +6,14 @@ var pkg = require('./package.json');
 
 var gulp = require('gulp');
 var del = require('del');
+var fs   = require('fs');
 var babel = require('gulp-babel');
+var gulpJsdoc2md = require('gulp-jsdoc-to-markdown')
 var rename = require('gulp-rename');
+var replace = require('gulp-replace');
 var uglify = require('gulp-uglify');
+
+var parse = require("jsdoc-parse")
 
 // Browser Bundling Modules
 var browserify = require('browserify');
@@ -25,6 +30,20 @@ var build = function() {
             presets: ['es2015']
         }))
         .pipe(gulp.dest(DEST_DIR));
+};
+
+var buildDoc = function(){
+  return gulp.src('dist-browser/purecloud-client-app-sdk.js')
+    .pipe(gulpJsdoc2md({ template: fs.readFileSync('./doc/doc.hbs', 'utf8') })) //uses dmd to create readme, can find templates here https://github.com/jsdoc2md/dmd/tree/master/partials
+    .on('error', function (err) {
+      gutil.log(gutil.colors.red('jsdoc2md failed'), err.message)
+    })
+    .pipe(rename(function (path) {
+      path.extname = '.md';
+      path.basename = 'doc';
+    }))
+    .pipe(replace(/```/g, '~~~'))  // play nicely with kramdown
+    .pipe(gulp.dest('doc'))
 };
 
 var buildBrowser = function() {
@@ -49,6 +68,8 @@ gulp.task('clean', function() {
 gulp.task('build', ['clean'], build);
 
 gulp.task('build-browser', ['clean'], buildBrowser);
+
+gulp.task('doc', buildDoc);
 
 gulp.task('watch', function() {
     var watcher = gulp.watch('src/**/*.js', function() {

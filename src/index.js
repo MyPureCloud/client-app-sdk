@@ -11,7 +11,7 @@ let pkg = require('../package.json');
  * @returns A string of information describing this library
  *
  * @example
- * pcClientApp.about() // returns module name and current version
+ * purecloud.apps.about(); // returns module name and current version
  */
 exports.about = function () {
     return `${pkg.name}: ${pkg.version}`;

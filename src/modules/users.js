@@ -12,7 +12,7 @@ let comms = require('../utils/comms');
   * @param {string} profileId - The id of the user to show
   *
   * @example
-  * purecloud.apps.showProfile("targetUserId");
+  * purecloud.apps.users.showProfile("targetUserId");
   */
 exports.showProfile = function(profileId) {
     comms._sendMsgToPc('showProfile', {'profileId': profileId});
