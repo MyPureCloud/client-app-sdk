@@ -59,7 +59,7 @@ var buildBrowser = function() {
 };
 
 // Tasks
-gulp.task('default', ['clean', 'build', 'build-browser']);
+gulp.task('default', ['clean', 'build', 'build-browser','doc']);
 
 gulp.task('clean', function() {
     return del([DEST_DIR, BROWSER_OUTPUT_DIR]);
