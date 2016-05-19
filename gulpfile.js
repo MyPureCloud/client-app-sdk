@@ -13,8 +13,6 @@ var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var uglify = require('gulp-uglify');
 
-var parse = require("jsdoc-parse")
-
 // Browser Bundling Modules
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
@@ -34,7 +32,10 @@ var build = function() {
 
 var buildDoc = function(){
   return gulp.src('dist-browser/purecloud-client-app-sdk.js')
-    .pipe(gulpJsdoc2md({ template: fs.readFileSync('./doc/doc.hbs', 'utf8') })) //uses dmd to create readme, can find templates here https://github.com/jsdoc2md/dmd/tree/master/partials
+    .pipe(gulpJsdoc2md({
+        template: fs.readFileSync('./doc/doc.hbs', 'utf8') ,
+        partial: "./doc/partials//**/*.hbs"
+    })) //uses dmd to create readme, can find templates here https://github.com/jsdoc2md/dmd/tree/master/partials
     .on('error', function (err) {
       gutil.log(gutil.colors.red('jsdoc2md failed'), err.message)
     })

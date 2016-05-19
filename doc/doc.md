@@ -1,6 +1,18 @@
 ---
 title: Client App SDK
+ispreview: true
 ---
+## Referencing the library
+
+### CDN
+
+SDK is available from our CDN at
+
+~~~
+https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk.js
+https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk.min.js
+~~~
+
 ## Modules
 
 <dl>
@@ -23,26 +35,27 @@ Utilities for alerting users in the PureCloud Client
 ### alerting.showToastPopup(title, message, options)
 Displays a toast popup.
 
-**Kind**: static method of <code>[alerting](#module_alerting)</code>  
 **Since**: 1.0.0  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| title | <code>string</code> | Toast title. |
-| message | <code>string</code> | Toast Message. |
-| options | <code>string</code> | Additonal toast options. |
-| options.messageType | <code>string</code> | Toast type, valid options are 'error', 'info', 'success'. |
-| options.shouldPlaySound | <code>bool</code> | (default true) When set to true, notification sound will play when toast is displayed. |
-| options.timeout | <code>number</code> | (default 5) Time in seconds to show the toast. |
-| options.icon | <code>string</code> | Url of an icon to show in the toast. |
+| title | string | Toast title. |
+| message | string | Toast Message. |
+| options | string | Additonal toast options. |
+| options.messageType | string | Toast type, valid options are 'error', 'info', 'success'. |
+| options.shouldPlaySound | bool | (default true) When set to true, notification sound will play when toast is displayed. |
+| options.timeout | number | (default 5) Time in seconds to show the toast. |
+| options.icon | string | Url of an icon to show in the toast. |
 
 **Example**  
+
 ~~~js
 var options = {
    messageType: "info"
 };
 purecloud.apps.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?", options);
 ~~~
+
 <a name="module_users"></a>
 
 ## users
@@ -54,14 +67,15 @@ Utilities for interacting with users in the PureCloud Client
 ### users.showProfile(profileId)
 Shows the profile of a specified user
 
-**Kind**: static method of <code>[users](#module_users)</code>  
 **Since**: 1.0.0  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| profileId | <code>string</code> | The id of the user to show |
+| profileId | string | The id of the user to show |
 
 **Example**  
+
 ~~~js
 purecloud.apps.users.showProfile("targetUserId");
 ~~~
+

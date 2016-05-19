@@ -1,5 +1,3 @@
-let _ = require('lodash/core');
-
 const ACTION_NAME_KEY = 'action';
 
 /**
@@ -40,7 +38,7 @@ exports._postMsgToPc = function () {
  * @private
  */
 exports._sendMsgToPc = function (actionName, msgPayload) {
-    let postMsgPayload = _.clone(msgPayload, true);
+    let postMsgPayload = JSON.parse(JSON.stringify(msgPayload));
     postMsgPayload[ACTION_NAME_KEY] = actionName;
     exports._postMsgToPc(postMsgPayload, '*');
 };
