@@ -1,6 +1,14 @@
 # Client Apps SDK
 
+## Referencing the library
+### CDN
+
+SDK is available from
+https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk.js
+https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk.min.js
+
 ## Creating a new applications
+
 
 POST /api/v2/integrations
 ~~~
