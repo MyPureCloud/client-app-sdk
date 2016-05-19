@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PureCloud URL Info Demo</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.6/purecloud-client-app-sdk.js"></script>
+        
+        <style>
+            body {
+                margin-left: 20px;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <h1>URL Info</h1>
+
+        <p>
+            Data can be seeded into an app (Standalone or Widget) via URL string replacement.
+        </p>
+        <hr>
+        <p>
+            URL: <span class="exUrl"></span>
+        </p>
+        <dl class="info">
+        </dl>
+
+        <button class="btn btn-primary show-my-profile hide">
+            Show My Profile
+        </button>
+
+        <script>
+            (function () {
+
+                function getParamValue(paramPairs){
+                    if(decodeURIComponent){
+                        return decodeURIComponent(paramPairs[1]);
+                    }
+
+                    return paramPairs[1];
+                }
+
+                $('span.exUrl').text(window.location);
+                var profileId = null;
+                var queryString = window.location.search.substring(1);
+                var pairs = queryString.split('&');
+                for (var i = 0; i < pairs.length; i++)
+                {
+                    var currParam = pairs[i].split('=');
+                    console.log('currParam', currParam);
+                    var currLi = '';
+
+                    if(currParam[0] === 'profileId') {
+                        profileId = currParam[1];
+                        currLi = '<dt>{{pcProfileId}}</dt><dd>' + getParamValue(currParam) + '</dd>';
+                    } else if(currParam[0] === 'locale') {
+                        currLi = '<dt>{{pcLocale}}</dt><dd>' + getParamValue(currParam) + '</dd>';
+                    } else if(currParam[0] === 'environment') {
+                        currLi = '<dt>{{pcEnvironment}}</dt><dd>' + getParamValue(currParam) + '</dd>';
+                    }
+
+                    if (currLi) {
+                        $('dl.info').append(currLi);
+                    }
+                }
+
+                if (profileId) {
+                    $('.show-my-profile').removeClass('hide').click(function() {
+                        purecloud.apps.users.showProfile(profileId);
+                    });
+                }
+            })();
+        </script>
+    </body>
+</html>

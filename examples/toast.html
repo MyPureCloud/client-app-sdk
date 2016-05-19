@@ -36,32 +36,26 @@
         <button class="send-txt btn btn-primary">Send Toast</button>
 
         <script>
-        //    if(parent !== window) {
-                $('button.send-txt').on('click', function() {
-                    var txtMsgField = $('textarea');
-                    var msgToSend = txtMsgField.val();
-                    var options = {
-                        messageType: $("#toastType").val(),
-                        timeout: $("#timeout").val(),
-                        shouldPlaySound: ($('#shouldPlaySound').is(":checked")),
-                        icon: "https://dhqbrvplips7x.cloudfront.net/directory/2986/demo-apps/assets/images/toaster-48x48.png"
-                    };
 
-                    alert(JSON.stringify(options, null, " "));
-/*
-                    if(msgToSend) {
-                        //purecloud.apps.ui.popToast
-                        parent.postMessage({
-                            action: 'showToast',
-                            title: 'This is a Toast',
-                            message: msgToSend,
-                            type: $(this).hasClass('emergency-msg') ? 'error' : 'success'
-                        }, '*');
-                        txtMsgField.val('');
-                    }
-                    */
-                });
-        //    }
+        $('button.send-txt').on('click', function() {
+            var txtMsgField = $('textarea');
+            var msgToSend = txtMsgField.val();
+            var options = {
+                messageType: $("#toastType").val(),
+                timeout: $("#timeout").val(),
+                shouldPlaySound: ($('#shouldPlaySound').is(":checked")),
+                icon: "https://dhqbrvplips7x.cloudfront.net/directory/2986/demo-apps/assets/images/toaster-48x48.png"
+            };
+
+            console.log(options);
+
+            if(msgToSend) {
+                purecloud.apps.alerting.showToastPopup("Toast Demo", msgToSend, options);
+                txtMsgField.val('');
+            }
+            
+        });
+
         </script>
     </body>
 </html>
