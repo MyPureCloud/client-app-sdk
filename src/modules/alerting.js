@@ -36,7 +36,7 @@ exports.showToastPopup = function (title, message, options) {
     if(options.messageType && typeof options.messageType === 'string') {
         let requestedType = options.messageType.trim().toLowerCase();
 
-        if (VALID_MESSAGE_TYPES.indexOf(typeToTest) > -1) {
+        if (VALID_MESSAGE_TYPES.indexOf(requestedType) > -1) {
             type = requestedType;
         }
     }
