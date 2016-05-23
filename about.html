@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>About PureCloud Apps</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+
+        <style>
+            body {
+                margin: auto 20px;
+            }
+
+            h2 {
+                margin-top: 40px;
+                border-bottom: 1px solid #0e536f;
+            }
+
+            .demo-watermark {
+                position: absolute;
+                bottom: 1em;
+                z-index: -100;
+                width: 100%;
+
+                font-size: 5em;
+                color: #F0F0F0;
+
+                text-align: center;
+            }
+
+            .demo-watermark::before {
+                content: 'APPS DEMO';
+            }
+        </style>
+    </head>
+
+    <body>
+        <!--[if lt IE 8]>
+        <p class="browsehappy">
+            You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
+        </p>
+        <![endif]-->
+
+        <div class="demo-watermark"></div>
+
+        <h1 class="sr-only">About PureCloud Apps</h1>
+
+        <h2>PureCloud Apps</h2>
+        <p>
+            PureCloud apps are a way to embed other applications to enhance the PureCloud Suite of tools.
+        </p>
+        <p>
+            Apps can be used to put a critical application in the hands of a contact center agent or to
+            add entire vertical markets to the PureCloud platform.
+        </p>
+
+        <h2>Enabling</h2>
+        <p>
+            Apps are currently in development.  For early access, please contact the PureCloud development team.
+        </p>
+
+        <h2>APIs</h2>
+        <p>
+            By utilizing PureCloud Authentication, backend SDKs, and javascript APIs, developers can build engaging apps that are
+            tightly integrated with PureCloud.
+        </p>
+
+        <br>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>API</th>
+                    <th>Desc</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="https://github.com/MyPureCloud/client-app-sdk" target="pcUiApi">PureCloud App/UI SDK</a></td>
+                    <td>Use this api to interact with the PureCloud UI.  Available on various CDNs and package managers.</td>
+                </tr>
+                <tr>
+                    <td><a href="https://github.com/MyPureCloud/purecloud_api_sdk_javascript" target="pcJsApi">PureCloud JS SDK</a></td>
+                    <td>
+                        A javascript implementation of the PureCloud SDK including authentication APIs.  Also available in other languages
+                        for server-side purposes.
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="http://developer.mypurecloud.com" target="pcDevCenter">PureCloud Developer Center</a></td>
+                    <td>Lots of great information and documentation on developing for the PureCloud Platform.</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </body>
+</html>
