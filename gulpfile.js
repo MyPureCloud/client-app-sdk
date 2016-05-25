@@ -8,7 +8,7 @@ var gulp = require('gulp');
 var del = require('del');
 var fs   = require('fs');
 var babel = require('gulp-babel');
-var gulpJsdoc2md = require('gulp-jsdoc-to-markdown')
+var gulpJsdoc2md = require('gulp-jsdoc-to-markdown');
 var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var uglify = require('gulp-uglify');
@@ -18,8 +18,12 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 
+// Deployment Modules
+var ghPages = require('gulp-gh-pages');
+
 var DEST_DIR = 'dist';
 var BROWSER_OUTPUT_DIR = 'dist-browser';
+var DEPLOY_GH_TMP_DIR = '.publish';
 var API_EXPORT_NAME = 'purecloud.apps';
 
 var build = function() {
@@ -44,7 +48,7 @@ var buildDoc = function(){
       path.basename = 'doc';
     }))
     .pipe(replace(/```/g, '~~~'))  // play nicely with kramdown
-    .pipe(gulp.dest('doc'))
+    .pipe(gulp.dest('doc'));
 };
 
 var buildBrowser = function() {
@@ -63,7 +67,7 @@ var buildBrowser = function() {
 gulp.task('default', ['clean', 'build', 'build-browser','doc']);
 
 gulp.task('clean', function() {
-    return del([DEST_DIR, BROWSER_OUTPUT_DIR]);
+    return del([DEST_DIR, BROWSER_OUTPUT_DIR, DEPLOY_GH_TMP_DIR]);
 });
 
 gulp.task('build', ['clean'], build);
@@ -77,4 +81,9 @@ gulp.task('watch', function() {
         build();
         buildBrowser();
     });
+});
+
+gulp.task('deploy-gh', function() {
+  return gulp.src('./examples/**/*')
+    .pipe(ghPages());
 });
