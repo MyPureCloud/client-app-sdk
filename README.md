@@ -4,8 +4,10 @@
 ### CDN
 
 SDK is available from
-https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk.js
-https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk.min.js
+
+https://sdk-cdn.mypurecloud.com/client-apps/{taggedversion}/purecloud-client-app-sdk.js
+
+https://sdk-cdn.mypurecloud.com/client-apps/{taggedversion}/purecloud-client-app-sdk.min.js
 
 ## Creating a new applications
 
@@ -16,8 +18,7 @@ POST /api/v2/integrations
   "name": "Custom Application Name",
   "integrationType": {
     "id": "embedded-client-app"
-  },
-  "state": "ENABLED"
+  }
 }
 ~~~
 
@@ -34,6 +35,18 @@ PUT /api/v2/integrations/{integrationId}/config/{configId}
         "icon_x24" : "http://mypurecloud.github.io/client-app-sdk/img/speech-bubbles-1.png",
         "sandbox" : "allow-same-origin,allow-top-navigation,allow-forms,allow-popups,allow-scripts,allow-pointer-lock"
     }
+}
+~~~
+
+Finally, set the state to enabled
+
+PUT /api/v2/integrations/{integrationId}
+
+~~~
+{
+  "name": "Custom Application Name",
+  "state": "ENABLED",
+  "version": 1
 }
 ~~~
 
