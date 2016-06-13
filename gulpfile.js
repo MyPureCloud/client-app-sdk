@@ -5,10 +5,11 @@
 var pkg = require('./package.json');
 
 var gulp = require('gulp');
+var gutil = require('gutil');
 var del = require('del');
 var fs   = require('fs');
 var babel = require('gulp-babel');
-var gulpJsdoc2md = require('gulp-jsdoc-to-markdown')
+var gulpJsdoc2md = require('gulp-jsdoc-to-markdown');
 var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var uglify = require('gulp-uglify');
@@ -37,14 +38,14 @@ var buildDoc = function(){
         partial: "./doc/partials//**/*.hbs"
     })) //uses dmd to create readme, can find templates here https://github.com/jsdoc2md/dmd/tree/master/partials
     .on('error', function (err) {
-      gutil.log(gutil.colors.red('jsdoc2md failed'), err.message)
+      gutil.log(gutil.colors.red('jsdoc2md failed'), err.message);
     })
     .pipe(rename(function (path) {
       path.extname = '.md';
       path.basename = 'doc';
     }))
     .pipe(replace(/```/g, '~~~'))  // play nicely with kramdown
-    .pipe(gulp.dest('doc'))
+    .pipe(gulp.dest('doc'));
 };
 
 var buildBrowser = function() {
@@ -70,7 +71,7 @@ gulp.task('build', ['clean'], build);
 
 gulp.task('build-browser', ['clean'], buildBrowser);
 
-gulp.task('doc', buildDoc);
+gulp.task('doc', ['build-browser'], buildDoc);
 
 gulp.task('watch', function() {
     var watcher = gulp.watch('src/**/*.js', function() {

@@ -3,19 +3,19 @@ const ACTION_NAME_KEY = 'action';
 /**
  * @private
  */
-exports._postMsgToPc = function () {
+exports._postMsgToPc = function (msg, tgtOrigin, transfer, myWindow=window, myParent=parent, myConsole=console) {
     let validRuntime = false,
         validEnv = false,
         validApi = false;
 
-    if ((validRuntime = (typeof window === 'object' && typeof parent === 'object'))) {
-        if ((validEnv = parent !== window)) {
-            validApi = typeof parent.postMessage === 'function';
+    if ((validRuntime = (typeof myWindow === 'object' && typeof myParent === 'object'))) {
+        if ((validEnv = myParent !== myWindow)) {
+            validApi = typeof myParent.postMessage === 'function';
         }
     }
 
     if (validRuntime && validEnv && validApi) {
-        parent.postMessage(...arguments);
+        myParent.postMessage(msg, tgtOrigin, transfer);
     } else {
         let errMsg = 'PureCloud Communication Failed.  ';
         if (!validRuntime) {
@@ -26,8 +26,8 @@ exports._postMsgToPc = function () {
             errMsg += 'postMessage not supported in this browser.';
         }
 
-        if (console) {
-            console.error(errMsg);
+        if (myConsole) {
+            myConsole.error(errMsg);
         } else {
             throw new Error(errMsg);
         }
@@ -38,7 +38,10 @@ exports._postMsgToPc = function () {
  * @private
  */
 exports._sendMsgToPc = function (actionName, msgPayload) {
-    let postMsgPayload = JSON.parse(JSON.stringify(msgPayload));
+    let postMsgPayload = {};
+    if (msgPayload && typeof msgPayload === 'object') {
+        postMsgPayload = JSON.parse(JSON.stringify(msgPayload));
+    }
     postMsgPayload[ACTION_NAME_KEY] = actionName;
     exports._postMsgToPc(postMsgPayload, '*');
 };

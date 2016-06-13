@@ -8,16 +8,26 @@
     "lib": "src"
   },
   "scripts": {
-    "lint": "jshint src",
-    "build": "node_modules/.bin/gulp",
-    "build-docs": "./scripts/build-docs.sh",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "about": "node scripts/about.js",
-    "postinstall": "npm run build",
-    "preversion": "npm run lint",
+    "lint": "jshint src package.json gulpfile.js",
+
+    "build": "gulp",
+    "docs": "gulp doc",
+
+    "pretest": "npm run lint",
+    "test": "karma start --single-run --browsers PhantomJS",
+    "watch:test": "karma start",
+
+    "preversion": "npm test",
     "version": "npm run build",
-    "postversion": "rm -rf build/temp"
+    "postversion": "rm -rf build/temp",
+
+    "postinstall": "npm run build",
+
+    "about": "node scripts/about.js"
   },
+  "pre-push": [
+    "lint", "test", "build"
+  ],
   "keywords": [
     "MyPureCloud",
     "PureCloud"
@@ -41,16 +51,26 @@
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
+    "gulp-jsdoc-to-markdown": "^1.2.2",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-uglify": "^1.5.3",
-    "gulp-jsdoc-to-markdown": "^1.2.2",
+    "gutil": "^1.6.4",
     "handlebars": "^4.0.5",
+    "jasmine": "^2.4.1",
     "jsdoc": "^3.4.0",
     "jshint": "*",
+    "karma": "^0.13.22",
+    "karma-browserify": "^5.0.5",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-jasmine": "^1.0.2",
+    "karma-phantomjs-launcher": "^1.0.0",
     "optimist": "^0.6.1",
+    "phantomjs-prebuilt": "^2.1.7",
+    "pre-push": "^0.1.1",
     "purecloud-api-sdk-common": "git://github.com/MyPureCloud/purecloud_api_sdk_common.git",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
   }
 }

@@ -19,3 +19,4 @@ exports.about = function () {
 
 exports.users = require('./modules/users');
 exports.alerting = require('./modules/alerting');
+exports.ui = require('./modules/ui');

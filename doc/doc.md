@@ -19,6 +19,9 @@ https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app
 <dt><a href="#module_alerting">alerting</a></dt>
 <dd><p>Utilities for alerting users in the PureCloud Client</p>
 </dd>
+<dt><a href="#module_ui">ui</a></dt>
+<dd><p>Utilities for manipulating the PureCloud Client UI</p>
+</dd>
 <dt><a href="#module_users">users</a></dt>
 <dd><p>Utilities for interacting with users in the PureCloud Client</p>
 </dd>
@@ -54,6 +57,41 @@ var options = {
    messageType: "info"
 };
 purecloud.apps.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?", options);
+~~~
+
+<a name="module_ui"></a>
+
+## ui
+Utilities for manipulating the PureCloud Client UI
+
+**Since**: 1.0.0  
+
+* [ui](#module_ui)
+    * [.showHelp()](#module_ui.showHelp)
+    * [.hideHelp()](#module_ui.hideHelp)
+
+<a name="module_ui.showHelp"></a>
+
+### ui.showHelp()
+Show the help UI.
+
+**Since**: 1.0.0  
+**Example**  
+
+~~~js
+purecloud.apps.ui.showHelp();
+~~~
+
+<a name="module_ui.hideHelp"></a>
+
+### ui.hideHelp()
+Hide the help UI.  Noop if already shown.
+
+**Since**: 1.0.0  
+**Example**  
+
+~~~js
+purecloud.apps.ui.hideHelp();
 ~~~
 
 <a name="module_users"></a>
