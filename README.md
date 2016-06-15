@@ -88,5 +88,20 @@ Artifacts will be committed to the repo for easy consumption on github.
   * Note: pre-push hooks will ensure your code lints, builds, and passes the test suite
 1. Open a PR to `https://github.com/MyPureCloud/client-app-sdk`
 
+## Publishing:
+
+### Examples
+Examples live on the `gh-pages` branch of the repo.
+
+To update these, simply
+1. Update the examples
+1. Commit the examples via direct push or PR
+1. `npm run publish-examples` to add `examples/**/*` to gh-pages
+1. Optional: Kick a new build to update and tag the master branch
+
+[Note 1:] The script requires you to have push access to origin/gh-pages.  If this is not the case, you can submit a PR to the `gh-pages` branch.
+
+[Note 2:] The script is set to *ADD* the examples vs replacing everything on the gh-pages branch.  This is because there are examples in `gh-pages` that are not in the examples directory.  If you have need to remove items in `gh-pages` you will need to do so manually.
+
 ## Credit
 Example Icons from http://www.flaticon.com/packs/color-communication designed by FreePik
