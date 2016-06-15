@@ -1,6 +1,6 @@
 {
   "name": "purecloud-client-app-sdk",
-  "version": "0.0.1-beta.7",
+  "version": "0.0.1-beta.8",
   "description": "Javascript API for PureCloud Client Apps and Extensions",
   "main": "dist/index.js",
   "directories": {
@@ -9,24 +9,21 @@
   },
   "scripts": {
     "lint": "jshint src package.json gulpfile.js",
-
     "build": "gulp",
     "docs": "gulp doc",
-
     "pretest": "npm run lint",
     "test": "karma start --single-run --browsers PhantomJS",
     "watch:test": "karma start",
-
     "preversion": "npm test",
     "version": "npm run build",
     "postversion": "rm -rf build/temp",
-
     "postinstall": "npm run build",
-
     "about": "node scripts/about.js"
   },
   "pre-push": [
-    "lint", "test", "build"
+    "lint",
+    "test",
+    "build"
   ],
   "keywords": [
     "MyPureCloud",
