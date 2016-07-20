@@ -43,20 +43,53 @@ Displays a toast popup.
 | Param | Type | Description |
 | --- | --- | --- |
 | title | string | Toast title. |
-| message | string | Toast Message. |
+| message | string | Toast Message.  Supports emoticons, emoji (unicode, shortcodes) and markdown (with markdwownMessage boolean). |
 | options | string | Additonal toast options. |
-| options.messageType | string | Toast type, valid options are 'error', 'info', 'success'. |
-| options.shouldPlaySound | bool | (default true) When set to true, notification sound will play when toast is displayed. |
-| options.timeout | number | (default 5) Time in seconds to show the toast. |
-| options.icon | string | Url of an icon to show in the toast. |
+| options.id | string | The id of the message.  Duplicate IDs will replace each other in the toast display.  All IDs will be  namespaced with your app ID to avoid collisions.  (Default will just be your app's namespace and will not support multiple messages) |
+| options.type | string | Toast type, valid options are 'error', 'info', 'success'.  (Default is 'info') |
+| options.markdownMessage | string | Boolean indicating if the message is in MD.  (Default is true) |
+| options.timeout | number | Time in seconds to show the toast.  Set to 0 to disable automatic dismissal. (Default is 5) |
+| options.showCloseButton | string | Boolean indicating if the close button should be shown. (Defalt is false) |
+
+**Example**  
+
+~~~js
+purecloud.apps.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?");
+~~~
 
 **Example**  
 
 ~~~js
 var options = {
-   messageType: "info"
+   type: 'success'
 };
 purecloud.apps.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?", options);
+~~~
+
+**Example**  
+
+~~~js
+var options = {
+   id: 'greeting',
+   timeout: 0,
+   showCloseButton: true
+};
+purecloud.apps.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?", options);
+// Set new id so the messages can show together
+options.id = 'exit'
+purecloud.apps.alerting.showToastPopup("Goodbye world", "See you later world", options);
+
+ 
+~~~
+
+**Example**  
+
+~~~js
+var options = {
+   id: 'mdExample',
+   markdownMessage: true
+};
+purecloud.apps.alerting.showToastPopup("Hello world", "Hello :earth_americas: How are *you* doing today?", options);
 ~~~
 
 <a name="module_ui"></a>

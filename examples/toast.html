@@ -6,10 +6,41 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.7/purecloud-client-app-sdk.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.8/purecloud-client-app-sdk.js"></script>
         <style>
             body {
                 margin-left: 20px;
+            }
+
+            .msg-group {
+                position: relative;
+            }
+
+            .msg-group .checkbox {
+                position: absolute;
+                height: 1em;
+                font-size: 1em;
+                right: 15px;
+            }
+
+            @media (max-width: 768px) {
+                .msg-group .checkbox {
+                    top: -20px;
+                    right: 15px;
+                    padding: 0;
+                }
+            }
+
+            @media (min-width: 768px) {
+                .msg-group .checkbox {
+                    bottom: 0;
+                    margin-left: 15px;
+                    padding-top: 0;
+                }
+            }
+
+            fieldset {
+                margin-top: 30px;
             }
         </style>
     </head>
@@ -20,42 +51,134 @@
         </noscript>
 
         <h1>Send a Toast</h1>
-        <textarea name="textarea" rows="10" cols="50"></textarea>
-        <br />
-        Type <select id="toastType">
-            <option value='error' selected="true">Error</option>
-            <option value='info'>Info</option>
-            <option value='success'>Success</option>
-        </select>
-        <br />
-        <input id='shouldPlaySound' type='checkbox'></input> Should Play sound
-        <br/>
-        Timeout <input id= 'timeout' type="number" min="0" value="5"></input>
 
-        <br/>
-        <button class="send-txt btn btn-primary">Send Toast</button>
+        <form class="form-horizontal container-fluid">
+            <div class="form-group">
+                <label for="title" class="col-sm-1 control-label">Title</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="title" placeholder="Message Title">
+                </div>
+            </div>
+            <div class="form-group msg-group">
+                <label for="message" class="col-sm-1 control-label">Message</label>
+                <div class="col-sm-11">
+                    <textarea name="textarea" rows="3" class="form-control" id="message" placeholder="Message Text"></textarea>
+                    <div class="help-block">
+                        <p>
+                            <span class="label label-info">Note:</span>
+                            Supports Emoticons, Unicode Emojis, and Emoji Shortcodes
+                        </p>
+                    </div>
+                    <div class="checkbox">
+                        <label title="Interpret Message Text as Markdown" aria-label="Interpret Message Text as Markdown">
+                            <input type="checkbox" id="markdownMessage" checked="true" tabindex="1"> Markdown
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="type" class="col-sm-1 control-label">Type</label>
+                <div class="col-sm-11">
+                    <select class="form-control" id="toastType">
+                        <option value="info" selected="true">Info</option>
+                        <option value="success">Success</option>
+                        <option value="error">Error</option>
+                    </select>
+                </div>
+            </div>
+            <fieldset>
+                <legend>More Options:</legend>
+                <div class="form-group">
+                    <label for="msgId" class="col-sm-1 control-label">ID</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="msgId" placeholder="Message ID">
+                        <div class="help-block">
+                            <p>
+                                <span class="label label-info">Note:</span>
+                                Messages with same ID are replaced
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="timeout" class="col-sm-1 control-label">Timeout</label>
+                    <div class="col-sm-11">
+                        <input type="number" class="form-control" id="timeout" min="0" value="5"></input>
+                        <div class="help-block">
+                            <p><span class="label label-info">Note:</span> Set to 0 for no timeout</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-11">
+                        <div class="checkbox">
+                            <label>
+                                <input id="showCloseButton" type="checkbox"> Show Close Button
+                            </label>
+                        </div>
+                        <div class="help-block">
+                            <p>
+                                <span class="label label-danger">Required:</span>
+                                Failure Toasts and no timeouts
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <button type="submit" class="btn btn-primary send-toast">Send Toast</button>
+                </div>
+            </div>
+        </form>
 
         <script>
+            $(function () {
+                var $titleField = $('input#title');
+                var $msgField = $('textarea#message');
 
-        $('button.send-txt').on('click', function() {
-            var txtMsgField = $('textarea');
-            var msgToSend = txtMsgField.val();
-            var options = {
-                messageType: $("#toastType").val(),
-                timeout: $("#timeout").val(),
-                shouldPlaySound: ($('#shouldPlaySound').is(":checked")),
-                icon: "https://dhqbrvplips7x.cloudfront.net/directory/2986/demo-apps/assets/images/toaster-48x48.png"
-            };
+                function canSubmitForm () {
+                    return !!($titleField.val() && $msgField.val());
+                }
 
-            console.log(options);
+                function setFormSubmissionState() {
+                    $('button.send-toast').prop('disabled', !canSubmitForm());
+                }
 
-            if(msgToSend) {
-                purecloud.apps.alerting.showToastPopup("Toast Demo", msgToSend, options);
-                txtMsgField.val('');
-            }
+                $titleField.on('input change', setFormSubmissionState);
+                $msgField.on('input change', setFormSubmissionState);
 
-        });
+                $('form').submit(function (e) {
+                    e.preventDefault();
 
+                    if (canSubmitForm() === false) {
+                        return false;
+                    }
+
+                    var options = {
+                        id: $('#msgId').val(),
+                        type: $('#toastType').val(),
+                        markdownMessage: ($('#markdownMessage').is(":checked")),
+                        showCloseButton: ($('#showCloseButton').is(":checked"))
+                    };
+
+                    var timeoutStr = $('#timeout').val();
+                    var timeoutInt = parseInt(timeoutStr, 10);
+                    if (timeoutInt == timeoutStr) {
+                        options.timeout = timeoutInt;
+                    }
+
+                    console.log('timeout', options.timeout);
+
+                    purecloud.apps.alerting.showToastPopup($titleField.val(), $msgField.val(), options);
+                    $titleField.val('');
+                    $msgField.val('');
+                    setFormSubmissionState();
+                });
+
+                setFormSubmissionState();
+                $titleField.focus();
+            });
         </script>
     </body>
 </html>
