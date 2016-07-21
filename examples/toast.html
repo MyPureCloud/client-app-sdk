@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.8/purecloud-client-app-sdk.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.9/purecloud-client-app-sdk.js"></script>
         <style>
             body {
                 margin-left: 20px;
@@ -167,8 +167,6 @@
                     if (timeoutInt == timeoutStr) {
                         options.timeout = timeoutInt;
                     }
-
-                    console.log('timeout', options.timeout);
 
                     purecloud.apps.alerting.showToastPopup($titleField.val(), $msgField.val(), options);
                     $titleField.val('');
