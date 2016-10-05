@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>PureCloud App Help Demo</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.10/purecloud-client-app-sdk.js"></script>
+        <style>
+            body {
+                margin-left: 20px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <h1>PureCloud Help</h1>
+
+        <h2 class="sr-only">General Toggles</h2>
+
+        <button class="btn btn-default show-help"><span class="glyphicon glyphicon-eye-open" aria-label="Open Eye"></span>&nbsp;Show Help Panel</button>
+        <button class="btn btn-default hide-help"><span class="glyphicon glyphicon-eye-close" aria-label="Closed Eye"></span>&nbsp;Hide Help Panel</button>
+
+        <h2>Resource Center Artifact</h2>
+
+        <form class="form-horizontal container-fluid">
+            <div class="form-group path-group">
+                <label for="relPath" class="col-sm-1 control-label">Relative Path</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="relPath" placeholder="/rel/path?to=artifact">
+                    <div class="help-block">
+                        <p>
+                            <span class="label label-info">Examples:</span>
+                            <ul>
+                                <li><a href="#">articles/complete-profile</a></li>
+                                <li><a href="#">/release-notes</a></li>
+                                <li><a href="#">?p=9916</a> (Permalink)</li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <button type="submit" class="btn btn-primary show-artifact">Show Artifact</button>
+                </div>
+            </div>
+        </form>
+
+        <script>
+            $(function () {
+                function showResourceCenterArtifact(relPath) {
+                    purecloud.apps.ui.showResourceCenterArtifact(relPath);
+                }
+
+                // Setup Show/Hide Help Buttons
+                $('.show-help').on('click', function () {
+                    purecloud.apps.ui.showHelp();
+                });
+
+                $('.hide-help').on('click', function () {
+                    purecloud.apps.ui.hideHelp();
+                });
+
+                // Setup Example Links
+                $('.form-group.path-group .help-block a').on('click', function () {
+                    let relPath = $(this).text();
+                    if (relPath && relPath.trim().length > 0) {
+                        showResourceCenterArtifact(relPath.trim());
+                    }
+
+                    return false;
+                });
+
+                // Setup Form
+                var $pathField = $('input#relPath');
+
+                function canSubmitForm () {
+                    return !!$pathField.val();
+                }
+
+                function setFormSubmissionState() {
+                    $('button.show-artifact').prop('disabled', !canSubmitForm());
+                }
+
+                $pathField.on('input change', setFormSubmissionState);
+
+                $('form').submit(function (e) {
+                    e.preventDefault();
+
+                    if (canSubmitForm() === false) {
+                        return false;
+                    }
+
+                    showResourceCenterArtifact($pathField.val());
+
+                    // Reset form
+                    $pathField.val('');
+                    setFormSubmissionState();
+                });
+
+                setFormSubmissionState();
+                $pathField.focus();
+            });
+        </script>
+    </body>
+</html>
