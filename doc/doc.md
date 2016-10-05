@@ -101,12 +101,13 @@ Utilities for manipulating the PureCloud Client UI
 
 * [ui](#module_ui)
     * [.showHelp()](#module_ui.showHelp)
+    * [.showResourceCenterArtifact(artifactRelPath)](#module_ui.showResourceCenterArtifact)
     * [.hideHelp()](#module_ui.hideHelp)
 
 <a name="module_ui.showHelp"></a>
 
 ### ui.showHelp()
-Show the help UI.
+Show the help UI.  Noop if already shown.
 
 **Since**: 1.0.0  
 **Example**  
@@ -115,10 +116,35 @@ Show the help UI.
 purecloud.apps.ui.showHelp();
 ~~~
 
+<a name="module_ui.showResourceCenterArtifact"></a>
+
+### ui.showResourceCenterArtifact(artifactRelPath)
+Open the help panel to the specified Resource Center artifact
+
+**Since**: 1.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| artifactRelPath | string | The path of the Resource Center artifact relative to the Resource Center root.  Supports paths and query string params, but not hash params.  The appropriate theme will be inserted automatically. |
+
+**Example**  
+
+~~~js
+// Direct path
+purecloud.apps.ui.showResourceCenterArtifact('articles/complete-profile');
+~~~
+
+**Example**  
+
+~~~js
+// Permalink
+purecloud.apps.ui.showResourceCenterArtifact('?p=7711');
+~~~
+
 <a name="module_ui.hideHelp"></a>
 
 ### ui.hideHelp()
-Hide the help UI.  Noop if already shown.
+Hide the help UI.  Noop if already hidden.
 
 **Since**: 1.0.0  
 **Example**  
