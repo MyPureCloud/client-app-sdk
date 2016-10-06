@@ -1,6 +1,7 @@
 # Client Apps SDK
 
 ## Referencing the library
+
 ### CDN
 
 SDK is available from
@@ -9,46 +10,51 @@ https://sdk-cdn.mypurecloud.com/client-apps/{taggedversion}/purecloud-client-app
 
 https://sdk-cdn.mypurecloud.com/client-apps/{taggedversion}/purecloud-client-app-sdk.min.js
 
-## Creating a new applications
+## Creating a new application
 
+1. Create the app (i.e. integration instance)
 
+    ~~~
 POST /api/v2/integrations
-~~~
 {
-  "name": "Custom Application Name",
-  "integrationType": {
-    "id": "embedded-client-app"
-  }
+    "integrationType": {
+        "id": "embedded-client-app"
+    }
 }
-~~~
+    ~~~
 
-from that POST, you will get a config.id, use that id to call
+1. Configure the app
 
-PUT /api/v2/integrations/{integrationId}/config/{configId}
+    The create call will return an {integrationInstanceId}.  Use that to call:
 
-~~~
+    ~~~
+PUT /api/v2/integrations/{integrationInstanceId}/config/current
 {
-    "version": 1,
+    "name": "Custom Application Name",
+    "notes": "Optional Application Notes",
     "properties" : {
         "url" : "http://mypurecloud.github.io/client-app-sdk/toast.html",
         "displayModes": "widget",
         "icon_x24" : "http://mypurecloud.github.io/client-app-sdk/img/speech-bubbles-1.png",
         "sandbox" : "allow-same-origin,allow-top-navigation,allow-forms,allow-popups,allow-scripts,allow-pointer-lock"
+    },
+    "advanced": {
+        "i18n": {
+            "name-es": "Ejemplo tostadas",
+            "name-fr": "Toast Exemple"
+        },
     }
 }
-~~~
+    ~~~
 
-Finally, set the state to enabled
+1. Finally, enable the app
 
-PUT /api/v2/integrations/{integrationId}
-
-~~~
+    ~~~
+PATCH /api/v2/integrations/{integrationInstanceId}
 {
-  "name": "Custom Application Name",
-  "state": "ENABLED",
-  "version": 1
+    "intendedState": "ENABLED"
 }
-~~~
+    ~~~
 
 ## Development
 
