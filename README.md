@@ -25,7 +25,9 @@ POST /api/v2/integrations
 
 1. Configure the app
 
-    The create call will return an {integrationInstanceId}.  Use that to call:
+  - The create call will return an {integrationInstanceId}.
+
+  - Use the {integrationInstanceId} to configure the app.  __(Not all the properties/values are required.)__
 
     ~~~
 PUT /api/v2/integrations/{integrationInstanceId}/config/current
@@ -33,15 +35,23 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
     "name": "Custom Application Name",
     "notes": "Optional Application Notes",
     "properties" : {
-        "url" : "http://mypurecloud.github.io/client-app-sdk/toast.html",
-        "displayModes": "widget",
-        "icon_x24" : "http://mypurecloud.github.io/client-app-sdk/img/speech-bubbles-1.png",
-        "sandbox" : "allow-same-origin,allow-top-navigation,allow-forms,allow-popups,allow-scripts,allow-pointer-lock"
+        "url" : "https://mypurecloud.github.io/client-app-sdk/help.html",
+        "sandbox" : "allow-same-origin,allow-top-navigation,allow-forms,allow-popups,allow-scripts,allow-pointer-lock",
+        "displayModes": "widget,standalone"
     },
     "advanced": {
-        "i18n": {
-            "name-es": "Ejemplo tostadas",
-            "name-fr": "Toast Exemple"
+        "i10n": {
+            "es": {
+                "name": "PureCloud ejemplo de la Ayuda"
+            },
+            "fr": {
+                "name": "PureCloud Aide Exemple"
+            }
+        },
+        "smallIcon": {
+            "vector": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy.svg",
+            "x24": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-24x24.png",
+            "x48": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-48x48.png"
         },
     }
 }
@@ -110,4 +120,16 @@ To update these, simply
 [Note 2:] The script is set to *ADD* the examples vs replacing everything on the gh-pages branch.  This is because there are examples in `gh-pages` that are not in the examples directory.  If you have need to remove items in `gh-pages` you will need to do so manually.
 
 ## Credit
+
+### IcoMoon
+
+IcoMoon icons used under [CC By 4.0](http://creativecommons.org/licenses/by/4.0/)
+
+https://github.com/Keyamoon/IcoMoon-Free
+
+#### Modifications
+* Base SVGs exported to PNGs of varing sizes
+
+### FreePik
+
 Example Icons from http://www.flaticon.com/packs/color-communication designed by FreePik
