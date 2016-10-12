@@ -48,10 +48,12 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
                 "name": "PureCloud Aide Exemple"
             }
         },
-        "smallIcon": {
+        "icon": {
             "vector": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy.svg",
             "x24": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-24x24.png",
-            "x48": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-48x48.png"
+            "x36": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-36x36.png",
+            "x48": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-48x48.png",
+            "x72": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-72x72.png"
         },
     }
 }
