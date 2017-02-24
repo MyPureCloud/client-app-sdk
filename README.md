@@ -150,5 +150,7 @@ https://github.com/Keyamoon/IcoMoon-Free
 * Base SVGs exported to PNGs of varing sizes
 
 ### FreePik
+Example Icons made by [FreePik](http://www.flaticon.com/packs/color-communication) from [www.flaticon.com](http://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
 
-Example Icons from http://www.flaticon.com/packs/color-communication designed by FreePik
+### Cursor Creative
+Example Icons made by [Cursor Creative](http://www.flaticon.com/authors/cursor-creative) from [www.flaticon.com](http://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
