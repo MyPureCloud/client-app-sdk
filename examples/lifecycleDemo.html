@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PureCloud App Lifecycle Demo</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.9/purecloud-client-app-sdk.js"></script>
+
+        <style>
+            body {
+                margin-left: 20px;
+            }
+
+            .log {
+                overflow: auto;
+
+                height: 15em;
+
+                line-height: 1.5em;
+            }
+
+            section {
+                margin-top: 2em;
+                padding-left: 3em;
+            }
+
+            section h1 {
+                font-size: 2em;
+            }
+
+            ul.lifecycle-event-log li.incomming::before {
+                content: '↙ ';
+                color: #FF0000;
+            }
+            ul.lifecycle-event-log li.outgoing::before {
+                content: '↗ ';
+                color: #00FF00;
+            }
+
+            footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <h1>PureCloud App Lifecycle Demo</h1>
+        <p>
+            PureCloud Apps have a full lifecycle that developers can utilize to
+            provide a seamless experience for end users.
+        </p>
+        <hr>
+
+        <section>
+            <h1>App Lifecycle</h1>
+            <ol>
+                <li>Loading - The app's iframe is loading</li>
+                <li>Bootstrapping (Opt-in)
+                    <ul>
+                        <li>'bootstrap' message fired from PureCloud after load</li>
+                        <li>PureCloud awaits app 'bootstrapped' response (Will timeout)</li>
+                    </ul>
+                </li>
+                <li>Running
+                    <ul>
+                        <li>'blur' message fired from PureCloud on app blur (Opt-in)</li>
+                        <li>'focus' message fired from PureCloud on subsequent app focus (Opt-in)</li>
+                    </ul>
+                </li>
+                <li>Stopping (Opt-in)
+                    <ul>
+                        <li>'stop' message fired from PureCloud after load</li>
+                        <li>PureCloud awaits app 'stopped' response (Will timeout)</li>
+                    </ul>
+                </li>
+                <li>Stopped - The app has shut down and the iframe will be removed from PureCloud</li>
+            </ol>
+        </section>
+
+        <section class="lifecycle-events">
+            <h1>Lifecycle Events Log:</h1>
+            <ul class="log lifecycle-event-log">
+            </ul>
+        </section>
+
+        <footer>
+            Icon made by
+            <a href="http://www.flaticon.com/authors/pixel-perfect"
+                title="Pixel perfect">
+                Pixel perfect
+            </a>
+            from
+            <a href="http://www.flaticon.com"
+                title="Flaticon">
+                www.flaticon.com
+            </a>
+            is licensed by
+            <a href="http://creativecommons.org/licenses/by/3.0/"
+                title="Creative Commons BY 3.0"
+                target="_blank">
+                CC 3.0 BY
+            </a>
+        </footer>
+
+        <script>
+            var lifecycleStatusMessageTitle = 'Lifecycle Demo App';
+            var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
+
+            jQuery(function () {
+                $window = jQuery(window);
+
+                $window.on('message onmessage', onPostMessage);
+
+                function onPostMessage(evt) {
+                    let msgEventData, appId, localMsg = false;
+
+                    if (!(msgEventData = evt.originalEvent.data) ||
+                        msgEventData.purecloudEventType !== 'appLifecycleHook' ||
+                        !msgEventData.hook ||
+                        !evt.originalEvent.source ||
+                        evt.originalEvent.source !== window.parent) {
+                        // Not a valid app event
+                        return;
+                    }
+
+                    if (evt) {
+                        logLifecycleEvent('App Lifecycle Event: ' + msgEventData.hook, true);
+
+                        switch(msgEventData.hook) {
+                            case 'bootstrap':
+                                // Simulating bootstrap delay of 500ms
+                                window.setTimeout(() => {
+                                    purecloud.apps.lifecycle.bootstrapped();
+
+                                    purecloud.apps.alerting.showToastPopup(
+                                        lifecycleStatusMessageTitle,
+                                        'Bootstrap Complete (500ms delay)', {
+                                            id: lifecycleStatusMessageId,
+                                            type: 'success'
+                                        }
+                                    );
+
+                                    logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
+                                }, 500);
+                                break;
+                            case 'focus':
+                                purecloud.apps.alerting.showToastPopup(
+                                    lifecycleStatusMessageTitle,
+                                    'App Focused', {
+                                        id: lifecycleStatusMessageId
+                                    }
+                                );
+                                break;
+                            case 'blur':
+                                purecloud.apps.alerting.showToastPopup(
+                                    lifecycleStatusMessageTitle,
+                                    'App Blurred', {
+                                        id: lifecycleStatusMessageId
+                                    }
+                                );
+                                break;
+                            case 'stop':
+                                $window.off('message onmessage', onPostMessage);
+
+                                // Simulating delay of 500ms
+                                window.setTimeout(() => {
+                                    purecloud.apps.lifecycle.stopped();
+
+                                    purecloud.apps.alerting.showToastPopup(
+                                        lifecycleStatusMessageTitle,
+                                        'App Stopped (500ms delay)', {
+                                            id: lifecycleStatusMessageId,
+                                            type: 'error',
+                                            showCloseButton: true
+                                        }
+                                    );
+
+                                    logLifecycleEvent('Notified PC of Successful App Stop', false);
+                                }, 500);
+
+                                break;
+                        }
+                    }
+                }
+
+                function logLifecycleEvent(logText, incommingEvent) {
+                    $tgt = jQuery('.lifecycle-events .log')
+                    var newItem = $('<li>' + logText + '</li>');
+                    newItem.addClass(incommingEvent ? 'incomming' : 'outgoing');
+
+                    $tgt.prepend(newItem);
+                }
+            });
+        </script>
+    </body>
+</html>
