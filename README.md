@@ -27,16 +27,22 @@ POST /api/v2/integrations
 
   - The create call will return an {integrationInstanceId}.
 
-  - Use the {integrationInstanceId} to configure the app.  __(Not all the properties/values are required.)__
+  - Use the {integrationInstanceId} to configure the app.
+
+  - You must provide the current version of the config as a `version` property to the PUT.  For the first update, this will be `1`
+
+  - __(Not all of the following properties/values are required.)__
 
     ~~~
 PUT /api/v2/integrations/{integrationInstanceId}/config/current
 {
     "name": "Custom Application Name",
     "notes": "Optional Application Notes",
+    "credentials": {},
+    "version": {currAppConfigVersion},
     "properties" : {
         "url" : "https://mypurecloud.github.io/client-app-sdk/help.html",
-        "sandbox" : "allow-same-origin,allow-top-navigation,allow-forms,allow-popups,allow-scripts,allow-pointer-lock",
+        "sandbox" : "allow-forms,allow-modals,allow-popups,allow-presentation,allow-same-origin,allow-scripts",
         "displayModes": "widget,standalone"
     },
     "advanced": {
@@ -46,6 +52,15 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
             },
             "fr": {
                 "name": "PureCloud Aide Exemple"
+            }
+        },
+        "lifecycle": {
+            "ephemeral": false,
+            "hooks": {
+                "bootstrap": false,
+                "focus": false,
+                "blur": false,
+                "stop": false
             }
         },
         "icon": {
@@ -94,13 +109,15 @@ Artifacts will be committed to the repo for easy consumption on github.
 
 `gulp build-browser` and use the generated script in an app for live testing
 
+`npm run serve` Starts a test server with the examples using the local sdk build
+
 ## Contributing
 1. Fork the repo
 1. Add your code (Don't forget the unit tests!)
 1. Run the docs build (occurs as part of a standard build) to update the docs
 1. Test your code
   * `npm test` -or- `npm run watch:test`
-  * `npm build` and try the version in an app
+  * `npm run build` and try the version in an app -or- `npm run serve` and try the example in PC
 1. Rebase onto upstream/master
 1. Push your branch up to your remote
   * Note: pre-push hooks will ensure your code lints, builds, and passes the test suite

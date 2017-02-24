@@ -19,6 +19,9 @@ https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app
 <dt><a href="#module_alerting">alerting</a></dt>
 <dd><p>Utilities for alerting users in the PureCloud Client</p>
 </dd>
+<dt><a href="#module_lifecycle">lifecycle</a></dt>
+<dd><p>Utilities for integrating with a PureCloud App&#39;s Lifecycle</p>
+</dd>
 <dt><a href="#module_ui">ui</a></dt>
 <dd><p>Utilities for manipulating the PureCloud Client UI</p>
 </dd>
@@ -90,6 +93,43 @@ var options = {
    markdownMessage: true
 };
 purecloud.apps.alerting.showToastPopup("Hello world", "Hello :earth_americas: How are *you* doing today?", options);
+~~~
+
+<a name="module_lifecycle"></a>
+
+## lifecycle
+Utilities for integrating with a PureCloud App's Lifecycle
+
+**Since**: 1.0.0  
+
+* [lifecycle](#module_lifecycle)
+    * [.bootstrapped()](#module_lifecycle.bootstrapped)
+    * [.stopped()](#module_lifecycle.stopped)
+
+<a name="module_lifecycle.bootstrapped"></a>
+
+### lifecycle.bootstrapped()
+Signals PureCloud that this app has finished its initialization work and
+can be shown to the user.
+
+**Since**: 1.0.0  
+**Example**  
+
+~~~js
+purecloud.apps.lifecycle.bootstrapped();
+~~~
+
+<a name="module_lifecycle.stopped"></a>
+
+### lifecycle.stopped()
+Signals PureCloud that this app has finished its tear down work and the iframe
+can be removed from purecloud permanently.
+
+**Since**: 1.0.0  
+**Example**  
+
+~~~js
+purecloud.apps.lifecycle.stopped();
 ~~~
 
 <a name="module_ui"></a>

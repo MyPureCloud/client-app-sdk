@@ -17,6 +17,7 @@ exports.about = function () {
     return `${pkg.name}: ${pkg.version}`;
 };
 
+exports.lifecycle = require('./modules/lifecycle');
 exports.users = require('./modules/users');
 exports.alerting = require('./modules/alerting');
 exports.ui = require('./modules/ui');

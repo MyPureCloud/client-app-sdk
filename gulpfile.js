@@ -19,6 +19,9 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 
+// Development Server Utils
+var browserSync = require('browser-sync');
+
 var DEST_DIR = 'dist';
 var BROWSER_OUTPUT_DIR = 'dist-browser';
 var API_EXPORT_NAME = 'purecloud.apps';
@@ -48,16 +51,22 @@ var buildDoc = function(){
     .pipe(gulp.dest('doc'));
 };
 
-var buildBrowser = function() {
+var buildBrowser = function(destPath=BROWSER_OUTPUT_DIR) {
     return browserify({entries: './src/index.js', standalone: API_EXPORT_NAME, debug: true})
         .transform('babelify', {presets: ['es2015']})
         .bundle()
         .pipe(source(pkg.name + '.js'))
-        .pipe(gulp.dest(BROWSER_OUTPUT_DIR))
+        .pipe(gulp.dest(destPath))
         .pipe(buffer())
         .pipe(uglify())
         .pipe(rename({extname: '.min.js'}))
-        .pipe(gulp.dest(BROWSER_OUTPUT_DIR));
+        .pipe(gulp.dest(destPath));
+};
+
+var buildExamples = function (destPath=BROWSER_OUTPUT_DIR, sdkUrl=null) {
+    gulp.src('examples/**')
+        .pipe(replace(/(\s*<script.*src=")([^"]+client-app-sdk[^"]+)(".*<\/script>\s*)/i, '$1' + (sdkUrl || '$2') + '$3\n'))
+        .pipe(gulp.dest(destPath));
 };
 
 // Tasks
@@ -69,7 +78,9 @@ gulp.task('clean', function() {
 
 gulp.task('build', ['clean'], build);
 
-gulp.task('build-browser', ['clean'], buildBrowser);
+gulp.task('build-browser', ['clean'], () => {
+    return buildBrowser();
+});
 
 gulp.task('doc', ['build-browser'], buildDoc);
 
@@ -78,4 +89,27 @@ gulp.task('watch', function() {
         build();
         buildBrowser();
     });
+});
+
+gulp.task('serve', ['clean'], function() {
+    let buildSdkForServer = buildBrowser.bind(this, 'dist/vendor');
+    let buildExamplesForServer = buildExamples.bind(this, 'dist', 'vendor/purecloud-client-app-sdk.js');
+
+    buildSdkForServer();
+    buildExamplesForServer();
+
+    browserSync({
+        server: {
+            baseDir: 'dist',
+            directory: true
+        },
+        port: 8443,
+        https: {
+            key: 'sslcert-dev/key.pem',
+            cert: 'sslcert-dev/cert.pem'
+        }
+    });
+
+    gulp.watch('src/**/*.js', buildSdkForServer);
+    gulp.watch('examples/**', buildExamplesForServer);
 });
