@@ -43,7 +43,8 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
     "properties" : {
         "url" : "https://mypurecloud.github.io/client-app-sdk/help.html",
         "sandbox" : "allow-forms,allow-modals,allow-popups,allow-presentation,allow-same-origin,allow-scripts",
-        "displayModes": "widget,standalone"
+        "displayType": "standalone", // standalone, widget
+        "featureCategory": "" // directory, performance
     },
     "advanced": {
         "i10n": {
@@ -65,10 +66,10 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
         },
         "icon": {
             "vector": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy.svg",
-            "x24": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-24x24.png",
-            "x36": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-36x36.png",
-            "x48": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-48x48.png",
-            "x72": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-72x72.png"
+            "24x24": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-24x24.png",
+            "36x36": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-36x36.png",
+            "48x48": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-48x48.png",
+            "72x72": "https://mypurecloud.github.io/client-app-sdk/img/066-lifebuoy-72x72.png"
         },
     }
 }
