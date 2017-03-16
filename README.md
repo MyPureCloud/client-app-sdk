@@ -44,7 +44,7 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
         "url" : "https://mypurecloud.github.io/client-app-sdk/help.html",
         "sandbox" : "allow-forms,allow-modals,allow-popups,allow-presentation,allow-same-origin,allow-scripts",
         "displayType": "standalone", // standalone, widget
-        "featureCategory": "" // directory, performance
+        "featureCategory": "" // directory, contactCenterInsights
     },
     "advanced": {
         "i10n": {
