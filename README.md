@@ -14,14 +14,14 @@ https://sdk-cdn.mypurecloud.com/client-apps/{taggedversion}/purecloud-client-app
 
 1. Create the app (i.e. integration instance)
 
-    ~~~
+~~~
 POST /api/v2/integrations
 {
     "integrationType": {
         "id": "embedded-client-app"
     }
 }
-    ~~~
+~~~
 
 1. Configure the app
 
@@ -33,7 +33,7 @@ POST /api/v2/integrations
 
   - __(Not all of the following properties/values are required.)__
 
-    ~~~
+~~~
 PUT /api/v2/integrations/{integrationInstanceId}/config/current
 {
     "name": "Custom Application Name",
@@ -73,16 +73,16 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
         },
     }
 }
-    ~~~
+~~~
 
 1. Finally, enable the app
 
-    ~~~
+~~~
 PATCH /api/v2/integrations/{integrationInstanceId}
 {
     "intendedState": "ENABLED"
 }
-    ~~~
+~~~
 
 ## Development
 
