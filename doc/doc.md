@@ -36,6 +36,11 @@ https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app
 Utilities for alerting users in the PureCloud Client
 
 **Since**: 1.0.0  
+
+* [alerting](#module_alerting)
+    * [.showToastPopup(title, message, options)](#module_alerting.showToastPopup)
+    * [.setBadging(source, count)](#module_alerting.setBadging)
+
 <a name="module_alerting.showToastPopup"></a>
 
 ### alerting.showToastPopup(title, message, options)
@@ -93,6 +98,29 @@ var options = {
    markdownMessage: true
 };
 purecloud.apps.alerting.showToastPopup("Hello world", "Hello :earth_americas: How are *you* doing today?", options);
+~~~
+
+<a name="module_alerting.setBadging"></a>
+
+### alerting.setBadging(source, count)
+Displays badging for unread messages and notifications
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| source | string | The parent app setting the badge count |
+| count | number | The updated number of unread messages or notifications |
+
+**Example**  
+
+~~~js
+purecloud.apps.alerting.setBadging("skype", 2);
+~~~
+
+**Example**  
+
+~~~js
+purecloud.apps.alerting.setBadging("toast-demo", 0);
 ~~~
 
 <a name="module_lifecycle"></a>

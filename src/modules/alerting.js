@@ -74,3 +74,23 @@ exports.showToastPopup = function (title, message, options) {
 
     comms._sendMsgToPc('showToast', messageParams);
 };
+
+/**
+ * Displays badging for unread messages and notifications
+ * @param {string} source - The parent app setting the badge count
+ * @param {number} count - The updated number of unread messages or notifications
+ *
+ * @example
+ * purecloud.apps.alerting.setBadging("skype", 2);
+ *
+ * @example
+ * purecloud.apps.alerting.setBadging("toast-demo", 0);
+ */
+exports.setBadging = function (source, count) {
+    const messageParams = {
+        source,
+        count
+    };
+
+    comms._sendMsgToPc('setBadging', messageParams);
+};
