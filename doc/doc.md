@@ -39,7 +39,7 @@ Utilities for alerting users in the PureCloud Client
 
 * [alerting](#module_alerting)
     * [.showToastPopup(title, message, options)](#module_alerting.showToastPopup)
-    * [.setAttentionCount(source, count)](#module_alerting.setAttentionCount)
+    * [.setAttentionCount(count)](#module_alerting.setAttentionCount)
 
 <a name="module_alerting.showToastPopup"></a>
 
@@ -102,13 +102,12 @@ purecloud.apps.alerting.showToastPopup("Hello world", "Hello :earth_americas: Ho
 
 <a name="module_alerting.setAttentionCount"></a>
 
-### alerting.setAttentionCount(source, count)
+### alerting.setAttentionCount(count)
 Displays badging for unread messages and notifications
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| source | string | The parent app setting the badge count |
 | count | number | The updated number of unread messages or notifications |
 
 **Example**  

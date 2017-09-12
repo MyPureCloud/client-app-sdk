@@ -77,7 +77,6 @@ exports.showToastPopup = function (title, message, options) {
 
 /**
  * Displays badging for unread messages and notifications
- * @param {string} source - The parent app setting the badge count
  * @param {number} count - The updated number of unread messages or notifications
  *
  * @example
