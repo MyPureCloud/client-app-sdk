@@ -81,16 +81,11 @@ exports.showToastPopup = function (title, message, options) {
  * @param {number} count - The updated number of unread messages or notifications
  *
  * @example
- * purecloud.apps.alerting.setBadging("skype", 2);
+ * purecloud.apps.alerting.setAttentionCount(2);
  *
  * @example
- * purecloud.apps.alerting.setBadging("toast-demo", 0);
+ * purecloud.apps.alerting.setAttentionCount(0);
  */
-exports.setBadging = function (source, count) {
-    const messageParams = {
-        source,
-        count
-    };
-
-    comms._sendMsgToPc('setBadging', messageParams);
+exports.setAttentionCount = function (count) {
+    comms._sendMsgToPc('setBadging', count);
 };

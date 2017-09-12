@@ -39,7 +39,7 @@ Utilities for alerting users in the PureCloud Client
 
 * [alerting](#module_alerting)
     * [.showToastPopup(title, message, options)](#module_alerting.showToastPopup)
-    * [.setBadging(source, count)](#module_alerting.setBadging)
+    * [.setAttentionCount(source, count)](#module_alerting.setAttentionCount)
 
 <a name="module_alerting.showToastPopup"></a>
 
@@ -100,9 +100,9 @@ var options = {
 purecloud.apps.alerting.showToastPopup("Hello world", "Hello :earth_americas: How are *you* doing today?", options);
 ~~~
 
-<a name="module_alerting.setBadging"></a>
+<a name="module_alerting.setAttentionCount"></a>
 
-### alerting.setBadging(source, count)
+### alerting.setAttentionCount(source, count)
 Displays badging for unread messages and notifications
 
 
@@ -114,13 +114,13 @@ Displays badging for unread messages and notifications
 **Example**  
 
 ~~~js
-purecloud.apps.alerting.setBadging("skype", 2);
+purecloud.apps.alerting.setAttentionCount(2);
 ~~~
 
 **Example**  
 
 ~~~js
-purecloud.apps.alerting.setBadging("toast-demo", 0);
+purecloud.apps.alerting.setAttentionCount(0);
 ~~~
 
 <a name="module_lifecycle"></a>
