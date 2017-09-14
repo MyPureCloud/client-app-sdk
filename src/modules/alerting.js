@@ -86,5 +86,5 @@ exports.showToastPopup = function (title, message, options) {
  * purecloud.apps.alerting.setAttentionCount(0);
  */
 exports.setAttentionCount = function (count) {
-    comms._sendMsgToPc('setBadging', count);
+    comms._sendMsgToPc('setAttentionCount', {count});
 };
