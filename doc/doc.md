@@ -105,6 +105,7 @@ purecloud.apps.alerting.showToastPopup("Hello world", "Hello :earth_americas: Ho
 ### alerting.setAttentionCount(count)
 Displays badging for unread messages and notifications
 
+**Since**: 1.0.0  
 
 | Param | Type | Description |
 | --- | --- | --- |

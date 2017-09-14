@@ -77,6 +77,7 @@ exports.showToastPopup = function (title, message, options) {
 
 /**
  * Displays badging for unread messages and notifications
+ * @since 1.0.0
  * @param {number} count - The updated number of unread messages or notifications
  *
  * @example
