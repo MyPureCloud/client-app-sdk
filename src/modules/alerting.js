@@ -74,3 +74,18 @@ exports.showToastPopup = function (title, message, options) {
 
     comms._sendMsgToPc('showToast', messageParams);
 };
+
+/**
+ * Displays badging for unread messages and notifications
+ * @since 1.0.0
+ * @param {number} count - The updated number of unread messages or notifications
+ *
+ * @example
+ * purecloud.apps.alerting.setAttentionCount(2);
+ *
+ * @example
+ * purecloud.apps.alerting.setAttentionCount(0);
+ */
+exports.setAttentionCount = function (count) {
+    comms._sendMsgToPc('setAttentionCount', {count});
+};
