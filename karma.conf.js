@@ -1,5 +1,4 @@
 // Karma configuration
-// Generated on Mon Jun 13 2016 18:30:32 GMT-0400 (EDT)
 
 module.exports = function(config) {
   config.set({
@@ -10,12 +9,12 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine', 'browserify'],
+    frameworks: ['jasmine'],
 
 
     // list of files / patterns to load in the browser
     files: [
-      'src/**/*Spec.js'
+      {pattern: 'src/**/*Spec.js', watched: false}
     ],
 
 
@@ -27,7 +26,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        'src/**/*Spec.js': ['browserify']
+        'src/**/*Spec.js': ['rollup']
     },
 
 
@@ -66,9 +65,18 @@ module.exports = function(config) {
     // how many browser should be started simultaneous
     concurrency: Infinity,
 
-    browserify: {
-        debug: true,
-        transform: [ ['babelify', {presets: ['es2015']}] ]
+    rollupPreprocessor: {
+        plugins: [
+            require('rollup-plugin-commonjs')(),
+            require('rollup-plugin-node-resolve')(),
+            require('rollup-plugin-json')(),
+            require('rollup-plugin-babel')({
+                exclude: 'node_modules/**'
+            })
+        ],
+        format: 'iife',         // Helps prevent naming collisions.
+        name: 'sdkTestBundle', // Required for 'iife' format.
+        sourcemap: 'inline'     // Sensible for testing.
     }
   });
 };

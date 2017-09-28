@@ -1,41 +1,19 @@
-let commsUtil = require('./comms');
+import commsUtil from './comms';
 
-module.exports = describe('comms util', () => {
+export default describe('comms util', () => {
     it('should have the correct signature', function () {
-        expect(typeof commsUtil._postMsgToPc).toBe('function');
-        expect(typeof commsUtil._sendMsgToPc).toBe('function');
+        expect(typeof commsUtil.postMsgToPc).toBe('function');
     });
 
-    it('should allow sending simple messages to PC', () => {
-        spyOn(commsUtil, '_postMsgToPc');
-
-        commsUtil._sendMsgToPc('mySimpleCommand');
-
-        expect(commsUtil._postMsgToPc).toHaveBeenCalledWith({action: 'mySimpleCommand'}, '*');
-    });
-
-    it('should allow sending messages with options to PC', () => {
-        spyOn(commsUtil, '_postMsgToPc');
-
-        commsUtil._sendMsgToPc('myTestCommand', {foo: 1});
-
-        expect(commsUtil._postMsgToPc).toHaveBeenCalledWith({action: 'myTestCommand', foo: 1}, '*');
-    });
-
-    it('should not leak internals into user space', () => {
-        spyOn(commsUtil, '_postMsgToPc');
-
-        let cmdOptions = {foo: 1};
-
-        commsUtil._sendMsgToPc('myTestCommand', cmdOptions);
-
-        expect(commsUtil._postMsgToPc).toHaveBeenCalledWith({action: 'myTestCommand', foo: 1}, '*');
-        expect(cmdOptions.action).toBe(undefined);
+    it('should not work with null window/parent params', () => {
+        expect(() => {
+            commsUtil.postMsgToPc('message', '*', undefined, null, null, null);
+        }).toThrowError();
     });
 
     it('should not work without a window instance', () => {
         expect(() => {
-            commsUtil._postMsgToPc('message', '*', undefined, null, {}, null);
+            commsUtil.postMsgToPc('message', '*', undefined, null, {}, null);
         }).toThrowError();
     });
 
@@ -48,16 +26,15 @@ module.exports = describe('comms util', () => {
         };
 
         expect(() => {
-            commsUtil._postMsgToPc('message', '*', undefined, myWindow, myParent, null);
+            commsUtil.postMsgToPc('message', '*', undefined, myWindow, myParent, null);
         }).toThrowError();
     });
 
     it('should require the postMessage api', () => {
-        let myWindow, myParent;
-        myWindow = myParent = {};
+        let myWindow = {}, myParent = {};
 
         expect(() => {
-            commsUtil._postMsgToPc('message', '*', undefined, myWindow, myParent, null);
+            commsUtil.postMsgToPc('message', '*', undefined, myWindow, myParent, null);
         }).toThrowError();
     });
 
@@ -73,7 +50,7 @@ module.exports = describe('comms util', () => {
 
         spyOn(myConsole, 'error');
 
-        commsUtil._postMsgToPc('message', '*', undefined, myWindow, myParent, myConsole);
+        commsUtil.postMsgToPc('message', '*', undefined, myWindow, myParent, myConsole);
 
         expect(myConsole.error).toHaveBeenCalled();
     });
@@ -89,7 +66,7 @@ module.exports = describe('comms util', () => {
 
         spyOn(myParent, 'postMessage');
 
-        commsUtil._postMsgToPc('message', '*', undefined, myWindow, myParent);
+        commsUtil.postMsgToPc('message', '*', undefined, myWindow, myParent);
 
         expect(myParent.postMessage).toHaveBeenCalledWith('message', '*', undefined);
     });

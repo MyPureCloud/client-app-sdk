@@ -1,16 +1,59 @@
 # Client Apps SDK
 
-## Referencing the library
+A JavaScript library to deeply integrate a 3rd-party applications within PureCloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, plese use the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
 
-### CDN
+* [API](https://developer.mypurecloud.com/api/client-apps/client-app-sdk.html)
+* [Developer Guides](https://developer.mypurecloud.com/api/client-apps/index.html)
+* [User Guides](https://help.mypurecloud.com/articles/about-custom-client-application-integrations/)
 
-SDK is available from
+## Install
 
-https://sdk-cdn.mypurecloud.com/client-apps/{taggedversion}/purecloud-client-app-sdk.js
+### JS Package Managers
 
-https://sdk-cdn.mypurecloud.com/client-apps/{taggedversion}/purecloud-client-app-sdk.min.js
+```bash
+$ npm install purecloud-client-app-sdk
+# -or-
+$ yarn add purecloud-client-app-sdk
+```
 
-## Creating a new application
+### PureCloud CDN
+
+```
+https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk.js
+https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk-<hash>.min.js
+```
+
+## Building a PureCloud App
+
+In the simpliest form, a PureCloud App is simply a web page that enhances or extends PureCloud functionality.  If you have a deployed web site, you could have a PureCloud app!
+
+### Minimum Requirements
+
+* Served over HTTPS
+* Allowed to be embedded as an iframe
+* Conforms to the [PureCloud Style Guide for Apps](https://developer.mypurecloud.com/partners/)
+
+### Integrating with PureCloud UI
+
+Use this API to improve the integration of your app with PureCloud.  Navigate, notify, and request attention all through a simple JS API.
+
+[Live API Docs](https://developer.mypurecloud.com/api/client-apps/client-app-sdk.html)
+
+### Accessing PureCloud Data
+
+Use the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html) to access PureCloud data within your app.
+
+## Registering a PureCloud App
+
+After you've built your app, you will need to configure it to appear in your org.
+
+### UI
+
+PureCloud Apps can be added via the PureCloud UI under Admin > Integrations > Web
+
+### Programmatically
+
+Alternatively, you can use the REST API or PureCloud SDKs to programmatically create a PureCloud App.
 
 1. Create the app (i.e. integration instance)
 
@@ -83,61 +126,6 @@ PATCH /api/v2/integrations/{integrationInstanceId}
     "intendedState": "ENABLED"
 }
 ~~~
-
-## Development
-
-### Building
-Builds can be made for node/npm, browsers, and docs.  Builds are currently handled by gulp but are being transitioned to npm scripts along with the rest of the development tooling.
-
-#### Node/NPM:
-`gulp build`
-
-Artifacts are not committed to the repo.  This is run on npm install automatically for node development.
-
-#### Browsers:
-`gulp build-browser`
-
-Artifacts are not committed to the repo.  This output will eventually be pushed to bower and other CDNs.
-
-#### Docs:
-`gulp doc` or `npm run docs`
-
-Artifacts will be committed to the repo for easy consumption on github.
-
-### Testing/Running:
-
-`npm run watch:test` will start the tests and monitor for changes
-
-`gulp build-browser` and use the generated script in an app for live testing
-
-`npm run serve` Starts a test server with the examples using the local sdk build
-
-## Contributing
-1. Fork the repo
-1. Add your code (Don't forget the unit tests!)
-1. Run the docs build (occurs as part of a standard build) to update the docs
-1. Test your code
-  * `npm test` -or- `npm run watch:test`
-  * `npm run build` and try the version in an app -or- `npm run serve` and try the example in PC
-1. Rebase onto upstream/master
-1. Push your branch up to your remote
-  * Note: pre-push hooks will ensure your code lints, builds, and passes the test suite
-1. Open a PR to `https://github.com/MyPureCloud/client-app-sdk`
-
-## Publishing:
-
-### Examples
-Examples live on the `gh-pages` branch of the repo.
-
-To update these, simply
-1. Update the examples
-1. Commit the examples via direct push or PR
-1. `npm run publish-examples` to add `examples/**/*` to gh-pages
-1. Optional: Kick a new build to update and tag the master branch
-
-[Note 1:] The script requires you to have push access to origin/gh-pages.  If this is not the case, you can submit a PR to the `gh-pages` branch.
-
-[Note 2:] The script is set to *ADD* the examples vs replacing everything on the gh-pages branch.  This is because there are examples in `gh-pages` that are not in the examples directory.  If you have need to remove items in `gh-pages` you will need to do so manually.
 
 ## Credit
 

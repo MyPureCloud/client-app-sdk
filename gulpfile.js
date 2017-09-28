@@ -3,113 +3,236 @@
 'use strict';
 
 var pkg = require('./package.json');
+var path = require('path');
+var fs   = require('fs');
+let fsThen = require('fs-then-native');
+var mkdirp = require('mkdirp');
 
 var gulp = require('gulp');
-var gutil = require('gutil');
+var gutil = require('gulp-util');
 var del = require('del');
-var fs   = require('fs');
-var babel = require('gulp-babel');
-var gulpJsdoc2md = require('gulp-jsdoc-to-markdown');
-var rename = require('gulp-rename');
 var replace = require('gulp-replace');
-var uglify = require('gulp-uglify');
+var runSequence = require('run-sequence');
 
-// Browser Bundling Modules
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
+var rollup = require('rollup');
+var rollupPluginCommonJs = require('rollup-plugin-commonjs');
+var rollupPluginNodeResolve = require('rollup-plugin-node-resolve');
+var rollupPluginJson = require('rollup-plugin-json');
+var rollupPluginBabel = require('rollup-plugin-babel');
+var rollupPluginUglify = require('rollup-plugin-uglify');
 
 // Development Server Utils
 var browserSync = require('browser-sync');
 
-var DEST_DIR = 'dist';
-var BROWSER_OUTPUT_DIR = 'dist-browser';
-var API_EXPORT_NAME = 'purecloud.apps';
-
-var build = function() {
-    gulp.src('src/**/*.js')
-        .pipe(babel({
-            presets: ['es2015']
-        }))
-        .pipe(gulp.dest(DEST_DIR));
+const DEST_DIR = 'dist';
+const GLOBAL_LIBRARY_NAME = 'purecloud.apps.ClientApp';
+const CJS_FILENAME = 'main.js';
+const ES_FILENAME = 'main.mjs';
+const BROWSER_FILENAME = `${pkg.name}.js`;
+const PROD_BROWSER_EXT = '.min.js';
+const DEFAULT_ROLLUP_CONFIG = {
+    input: './src/index.js',
+    plugins: [
+        rollupPluginCommonJs(),
+        rollupPluginNodeResolve(),
+        rollupPluginJson(),
+        rollupPluginBabel({
+            exclude: 'node_modules/**'
+        })
+    ],
+    cache: false
 };
 
-var buildDoc = function(){
-  return gulp.src('dist-browser/purecloud-client-app-sdk.js')
-    .pipe(gulpJsdoc2md({
-        template: fs.readFileSync('./doc/doc.hbs', 'utf8') ,
-        partial: "./doc/partials//**/*.hbs"
-    })) //uses dmd to create readme, can find templates here https://github.com/jsdoc2md/dmd/tree/master/partials
-    .on('error', function (err) {
-      gutil.log(gutil.colors.red('jsdoc2md failed'), err.message);
-    })
-    .pipe(rename(function (path) {
-      path.extname = '.md';
-      path.basename = 'doc';
-    }))
-    .pipe(replace(/```/g, '~~~'))  // play nicely with kramdown
-    .pipe(gulp.dest('doc'));
+var build = function () {
+   return Promise.all([buildStdDists(), buildProdBrowserDist()]);
 };
 
-var buildBrowser = function(destPath=BROWSER_OUTPUT_DIR) {
-    return browserify({entries: './src/index.js', standalone: API_EXPORT_NAME, debug: true})
-        .transform('babelify', {presets: ['es2015']})
-        .bundle()
-        .pipe(source(pkg.name + '.js'))
-        .pipe(gulp.dest(destPath))
-        .pipe(buffer())
-        .pipe(uglify())
-        .pipe(rename({extname: '.min.js'}))
-        .pipe(gulp.dest(destPath));
+/**
+ * Builds std formats subtable for use with browsers, cjs, browserify, webpack, rollup, and other bundlers depending on
+ * the output format.  All transpilation is complete (except for es modules when applicable),
+ * comments are maintained, and the result is not minified.
+ *
+ * @param {string} The path to the destination directory in which the formats should be outputted
+ *
+ * @returns {Promise} resolves on success of all formats; rejects otherwise
+ */
+function buildStdDists(destDirPath=path.resolve(DEST_DIR)) {
+    return rollup.rollup(DEFAULT_ROLLUP_CONFIG).then(bundle => {
+        return Promise.all([
+            bundle.write({
+                file: path.resolve(destDirPath, CJS_FILENAME),
+                format: 'cjs'
+            }),
+            bundle.write({
+                file: path.resolve(destDirPath, ES_FILENAME),
+                format: 'es'
+            }),
+            bundle.write({
+                name: GLOBAL_LIBRARY_NAME,
+                file: path.resolve(destDirPath, BROWSER_FILENAME),
+                format: 'umd'
+            })
+        ]);
+    });
+}
+
+/**
+ * Builds prod-level, browser distribution in the specified directory. The bundle includes the
+ * minified and uglified source, hashed file name, and a source map.
+ *
+ * @param {string} destDirPath - The path to the directory in which to generate the distribution.  Defaults to the default dist directory.
+ *
+ * @returns - A promise resolved with the details of the bundle or rejected on error.
+ */
+function buildProdBrowserDist(destDirPath=path.resolve(DEST_DIR)) {
+    let prodBrowserCfg = Object.assign({}, DEFAULT_ROLLUP_CONFIG, {plugins:[]});
+    prodBrowserCfg.plugins.push(...DEFAULT_ROLLUP_CONFIG.plugins, rollupPluginUglify());
+
+    let nonHashedPath = path.resolve(destDirPath, `${pkg.name}${PROD_BROWSER_EXT}`);
+    return rollup.rollup(prodBrowserCfg).then(bundle => {
+        return bundle.write({
+            name: GLOBAL_LIBRARY_NAME,
+            file: nonHashedPath,
+            format: 'umd',
+            sourcemap: true
+        });
+    }).then(() => {
+        let hasha = require('hasha');
+
+        return hasha.fromFile(nonHashedPath, {algorithm: 'md5'}).then(hash => {
+            let hashedFilename = `${pkg.name}-${hash}${PROD_BROWSER_EXT}`;
+            return new Promise((resolve, reject) => {
+                fs.rename(nonHashedPath, path.resolve(destDirPath, hashedFilename), err => {
+                    if (err) {
+                        reject();
+                    } else {
+                        resolve(hashedFilename);
+                    }
+                });
+            });
+        });
+    }).then(hashedFilename => {
+        return {
+            jsFilename: hashedFilename
+        };
+    });
+}
+
+var buildDoc = function() {
+    let jsdoc2md = require('jsdoc-to-markdown');
+    let docSrcDirPath = path.resolve('doc');
+    let docDestDirPath = path.resolve(DEST_DIR, 'docs');
+
+    // Create docs dest dir, if not already present
+    mkdirp.sync(docDestDirPath);
+
+    let docPromises = [];
+
+    // Initiate index copy - Add to promise array for concurrency
+    docPromises.push(
+        fsThen.readFile(path.join(docSrcDirPath, 'index.md'), {encoding: 'UTF-8'}).then(buffer => {
+            buffer = buffer.replace(/```/g, '~~~'); // play nicely with kramdown
+            return fsThen.writeFile(path.join(docDestDirPath, 'index.md'), buffer, {encoding: 'UTF-8'});
+        })
+    );
+
+    // Generate Class docs from jsdoc in src
+    let partialsPattern = path.join(docSrcDirPath, 'partials', '**', '*.hbs');
+    let helpers = path.join(docSrcDirPath, 'helpers.js');
+
+    return jsdoc2md.getTemplateData({
+        cache: null,
+        files: 'src/**/*.js'
+    }).then(templateData => {
+        templateData.forEach(currIdentifier => {
+            if (!currIdentifier || currIdentifier.kind !== 'class') {
+                return;
+            }
+
+            let {name:className} = currIdentifier;
+            if (className) {
+                // Remove the module as the parent of the classes for the purposes of doc generation
+                currIdentifier.scope = 'global';
+                currIdentifier.memberof = '';
+
+                let template = `{{#class name="${className}"}}{{>docs}}{{/class}}`;
+
+                docPromises.push(
+                    jsdoc2md.render({
+                        data: templateData,
+                        template: template,
+                        partial: partialsPattern,
+                        helper: helpers,
+                        'heading-depth': 1,
+                        'example-lang': 'js'
+                    }).then(output => {
+                        output = output.replace(/```/g, '~~~'); // play nicely with kramdown
+                        return fsThen.writeFile(path.join(docDestDirPath, `${className}.md`), output);
+                    })
+                );
+            }
+        });
+
+        return Promise.all(docPromises);
+    }).catch(reason => {
+        let errMsg = 'Documentation generation failed';
+        gutil.log(gutil.colors.red(errMsg), reason);
+        return Promise.reject(errMsg);
+    });
 };
 
-var buildExamples = function (destPath=BROWSER_OUTPUT_DIR, sdkUrl=null) {
+var buildExamples = function (destPath=DEST_DIR, sdkUrl=null) {
     gulp.src('examples/**')
         .pipe(replace(/(\s*<script.*src=")([^"]+client-app-sdk[^"]+)(".*<\/script>\s*)/i, '$1' + (sdkUrl || '$2') + '$3\n'))
         .pipe(gulp.dest(destPath));
 };
 
 // Tasks
-gulp.task('default', ['clean', 'build', 'build-browser','doc']);
+gulp.task('default', function (done) {
+    runSequence('clean', ['build', 'doc'], done);
+});
 
 gulp.task('clean', function() {
-    return del([DEST_DIR, BROWSER_OUTPUT_DIR]);
+    return del([DEST_DIR]);
 });
 
-gulp.task('build', ['clean'], build);
+gulp.task('build', build);
 
-gulp.task('build-browser', ['clean'], () => {
-    return buildBrowser();
-});
-
-gulp.task('doc', ['build-browser'], buildDoc);
+gulp.task('doc', buildDoc);
 
 gulp.task('watch', function() {
-    var watcher = gulp.watch('src/**/*.js', function() {
+    var watcher = gulp.watch('src/**/*.js', () => {
+        console.log('SDK Changed.  Rebuilding.');
         build();
-        buildBrowser();
     });
 });
 
 gulp.task('serve', ['clean'], function() {
-    let buildSdkForServer = buildBrowser.bind(this, 'dist/vendor');
-    let buildExamplesForServer = buildExamples.bind(this, 'dist', 'vendor/purecloud-client-app-sdk.js');
+    let buildSdkForDevServer = buildStdDists.bind(this, path.resolve(DEST_DIR, 'vendor'));
+    let buildExamplesForDevServer = buildExamples.bind(this, DEST_DIR, `vendor/${BROWSER_FILENAME}`);
 
-    buildSdkForServer();
-    buildExamplesForServer();
+    return buildSdkForDevServer().then(() => {
+        buildExamplesForDevServer();
 
-    browserSync({
-        server: {
-            baseDir: 'dist',
-            directory: true
-        },
-        port: 8443,
-        https: {
-            key: 'sslcert-dev/key.pem',
-            cert: 'sslcert-dev/cert.pem'
-        }
+        browserSync({
+            server: {
+                baseDir: DEST_DIR,
+                directory: true
+            },
+            port: 8443,
+            https: {
+                key: 'sslcert-dev/key.pem',
+                cert: 'sslcert-dev/cert.pem'
+            }
+        });
+
+        gulp.watch('src/**/*.js', () => {
+            console.log('SDK Changed.  Rebuilding.');
+            buildSdkForDevServer();
+        });
+        gulp.watch('examples/**', () => {
+            console.log('Examples changed.  Rebuilding.');
+            buildExamplesForDevServer();
+        });
     });
-
-    gulp.watch('src/**/*.js', buildSdkForServer);
-    gulp.watch('examples/**', buildExamplesForServer);
 });

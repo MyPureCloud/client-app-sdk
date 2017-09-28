@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-var pcClientApi = require('../dist/index');
+var ClientApp = require('../dist/main.js');
 
 (function(){
-    console.log(pcClientApi.about());
+    console.log('Version:', ClientApp.version);
+    console.log(ClientApp.about());
 })();
