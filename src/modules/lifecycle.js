@@ -1,35 +1,46 @@
-/* jshint node: true */
-
 /**
- * Utilities for integrating with a PureCloud App's Lifecycle
- * @module lifecycle
+ * Utilities for monitoring and updating the lifecycle of a PureCloud Client App
+ *
+ * @module modules/lifecycle
+ *
  * @since 1.0.0
  */
 
-const comms = require('../utils/comms');
+import BaseApi from './base';
 
 /**
- * Signals PureCloud that this app has finished its initialization work and
- * can be shown to the user.
+ * Utilities for monitoring and updating the lifecycle of a PureCloud Client App
+ *
+ * @extends module:modules/base~BaseApi
  *
  * @since 1.0.0
- *
- * @example
- * purecloud.apps.lifecycle.bootstrapped();
  */
-exports.bootstrapped = function () {
-    comms._sendMsgToPc('bootstrapped');
-};
+class LifecycleApi extends BaseApi {
+    /**
+     * Signals PureCloud that this app has finished its initialization work and
+     * can be shown to the user.
+     *
+     * @example
+     * myClientApp.lifecycle.bootstrapped();
+     *
+     * @since 1.0.0
+     */
+    bootstrapped() {
+        super.sendMsgToPc('bootstrapped');
+    }
 
-/**
- * Signals PureCloud that this app has finished its tear down work and the iframe
- * can be removed from purecloud permanently.
- *
- * @since 1.0.0
- *
- * @example
- * purecloud.apps.lifecycle.stopped();
- */
-exports.stopped = function () {
-    comms._sendMsgToPc('stopped');
-};
+    /**
+     * Signals PureCloud that this app has finished its tear down work and the iframe
+     * can be removed from purecloud permanently.
+     *
+     * @example
+     * myClientApp.lifecycle.stopped();
+     *
+     * @since 1.0.0
+     */
+    stopped() {
+        super.sendMsgToPc('stopped');
+    }
+}
+
+export default LifecycleApi;
