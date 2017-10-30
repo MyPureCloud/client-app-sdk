@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.12/purecloud-client-app-sdk.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0-alpha.1/purecloud-client-app-sdk-427f1cba7147e82484ac546fd015fb48.min.js"></script>
 
         <style>
             body {
@@ -131,32 +131,20 @@
                     <button type="submit" class="btn btn-primary send-toast">Send Toast</button>
                 </div>
             </div>
-            <div class="col-sm-offset-1">
-                <button type="confirm" class="btn btn-primary increase-btn">Increase Attention Count</button>
-                <button type="cancel" class="btn btn-primary clear-btn">Clear Attention Count</button>
-            </div>
         </form>
 
-        <script>$(function () {
-                var count = 0;
-                var $increaseBtn = $('.increase-btn');
-                var $clearBtn = $('.clear-btn');
+        <h1>Request Attention</h1>
+        <div class="attention-controls">
+            <button class="btn btn-primary increase-attn-btn">Increase Attention Count</button>
+            <button class="btn btn-primary clear-attn-btn">Clear Attention Count</button>
+        </div>
 
+        <script>$(function () {
+                let myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: 'pcEnvironment'});
+
+                // Toast
                 var $titleField = $('input#title');
                 var $msgField = $('textarea#message');
-
-                $increaseBtn.on('click', incrementCount);
-                $clearBtn.on('click', clearCount);
-
-                function incrementCount () {
-                    ++count;
-                    purecloud.apps.alerting.setAttentionCount(count);
-                }
-
-                function clearCount () {
-                    count = 0;
-                    purecloud.apps.alerting.setAttentionCount(0);
-                }
 
                 function canSubmitForm () {
                     return !!($titleField.val() && $msgField.val());
@@ -189,7 +177,7 @@
                         options.timeout = timeoutInt;
                     }
 
-                    purecloud.apps.alerting.showToastPopup($titleField.val(), $msgField.val(), options);
+                    myClientApp.alerting.showToastPopup($titleField.val(), $msgField.val(), options);
                     $titleField.val('');
                     $msgField.val('');
                     setFormSubmissionState();
@@ -197,6 +185,24 @@
 
                 setFormSubmissionState();
                 $titleField.focus();
+
+                // Attention
+                var count = 0;
+                var $increaseBtn = $('.increase-attn-btn');
+                var $clearBtn = $('.clear-attn-btn');
+
+                $increaseBtn.on('click', incrementCount);
+                $clearBtn.on('click', clearCount);
+
+                function incrementCount () {
+                    ++count;
+                    myClientApp.alerting.setAttentionCount(count);
+                }
+
+                function clearCount () {
+                    count = 0;
+                    myClientApp.alerting.setAttentionCount(0);
+                }
             });
         </script>
     </body>
