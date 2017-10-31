@@ -87,7 +87,15 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
         "url" : "https://mypurecloud.github.io/client-app-sdk/help.html",
         "sandbox" : "allow-forms,allow-modals,allow-popups,allow-presentation,allow-same-origin,allow-scripts",
         "displayType": "standalone", // standalone, widget
-        "featureCategory": "" // directory, contactCenterInsights
+        "featureCategory": "", // directory, contactCenterInsights
+        /*
+         * PC Group IDs identifying users who will be able to see this embedded-client-app.
+         *
+         * Note: This only affects display within the PureCloud UI.  App developers should not rely on
+         * this mechanism alone for user authorization.  Check server-side before granting access to a
+         * user.
+         */
+        "groups": []
     },
     "advanced": {
         "i10n": {
