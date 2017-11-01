@@ -1,15 +1,10 @@
----
-title: Client App SDK
-ispreview: true
----
-
 A JavaScript library to deeply integrate a 3rd-party applications within PureCloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, plese use the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
 
 [Source Code](https://github.com/MyPureCloud/client-app-sdk)
 
-# Obtaining the library
+## Obtaining the library
 
-## NPM/Yarn
+### NPM/Yarn
 
 ```bash
 $ npm install purecloud-client-app-sdk
@@ -24,17 +19,17 @@ https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app
 https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk-<hash>.min.js
 ```
 
-# Accessing the Library
+## Accessing the Library
 
 The Client Apps SDK is bundled in several formats to support your build ecosystem and deployment model.
 
 _*Note:*_ Although a CJS format is provided, it is to be consumed by tooling.  This library is client-side and will not run in a node environment.
 
-## Best Practice 
+### Best Practice
 
 We recommend importing and using the library via a build tool such as webpack, rollup, broccoli, browserify, etc.  This provides optimal control with respect to resource loading and bootstrapping.  A UMD browser bundle is available for prototyping, quick demos, and build-less environments.
 
-## The Formats
+### The Formats
 
 * [JavaScript/EcmaScript Modules (dist/main.mjs)](#formats-es)
 * [CommonJS Module (dist/main.js)](#formats-cjs)
@@ -42,7 +37,8 @@ We recommend importing and using the library via a build tool such as webpack, r
     * Global: `purecloud.apps.ClientApp`
 
 <a name="formats-es"></a>
-### JavaScript/EcmaScript Modules (dist/main.mjs) 
+
+#### JavaScript/EcmaScript Modules (dist/main.mjs)
 
 ```js
 // JS/ES Modules
@@ -57,7 +53,8 @@ myClientApp.alerting.showToastPopup('Hello', 'PureCloud');
 ```
 
 <a name="formats-cjs"></a>
-### CommonJS Module (dist/main.js)
+
+#### CommonJS Module (dist/main.js)
 
 ```js
 // CommonJS
@@ -71,7 +68,8 @@ myClientApp.alerting.showToastPopup('Hello', 'PureCloud');
 ```
 
 <a name="formats-umd"></a>
-### Browser UMD Module (dist/purecloud-client-app-sdk.js)
+
+#### Browser UMD Module (dist/purecloud-client-app-sdk.js)
 
 ```html
 <!-- Script Tag -->
@@ -96,11 +94,11 @@ myClientApp.alerting.showToastPopup('Hello', 'PureCloud');
 </script>
 ```
 
-# Environments
+## Environments
 
 The ClientApp instance must be configured to match the PureCloud environment in which it is being run. The environment defaults to `mypurecloud.com`; however, you will likely need to support other environments.
 
-## Best Practice
+### Best Practice
 
 We recommend configuring your app so the PC environment can be seeded into the url.  This allows the SDK to dynamically determine the environment at runtime and simplifies your code.
 
@@ -108,19 +106,19 @@ We recommend configuring your app so the PC environment can be seeded into the u
 1. Include `pcEnvironmentQueryParam: 'pcEnvironment'` in your ClientApp config to dynamically determine the environment
 1. Use `myClientApp.pcEnvironment` to access the environment later when needed (e.g. to pass to the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html)).
 
-## Manual Configuration
+### Manual Configuration
 
 You can also manually specify the PureCloud environment or origin.  For details on supported options, see [ClientApp](./ClientApp.md)
 
-# Modules
+## Modules
 
 Features of the SDK are bundled into modules and can be accessed from the root [ClientApp](./ClientApp.md) instance.
 
-# Versioning
+## Versioning
 
 The Client Apps SDK uses [SemVer](http://semver.org/) to manage releases.  SemVer enables you to safely upgrade in most cases without concern for breaking existing code.  Note that this library's version does not relate to the version of the PureCloud hosting app or the js platform SDK.
 
-# More Resources
+## More Resources
 
 * [Dev Center Guides](https://developer.mypurecloud.com/api/client-apps/index.html)
 * [Client Apps User Guide](https://help.mypurecloud.com/articles/about-custom-client-application-integrations/)

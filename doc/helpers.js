@@ -15,7 +15,11 @@ exports.link = function (longname, options) {
     if (longname && typeof longname === 'string') {
         let parseResult = MODULE_REGEXP.exec(longname);
         if (parseResult) {
-            result = result.replace(MD_URL_REPLACE_REGEXP, `(./${parseResult[1]}.md)`);
+            let ext = '.md';
+            if (options.data.root.options.purecloudCustom.outputFormat === 'websiteSrc') {
+                ext = '.html';
+            }
+            result = result.replace(MD_URL_REPLACE_REGEXP, `(./${parseResult[1]}${ext})`);
         }
     }
 
