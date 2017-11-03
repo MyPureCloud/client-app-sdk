@@ -43,6 +43,15 @@ const DEFAULT_ROLLUP_CONFIG = {
     cache: false
 };
 
+let flagDocsAsPreview = true;
+if (process.env.FLAG_DOCS_AS_PREVIEW) {
+   ['false', 'f', '0'].forEach(currFalseValue => {
+       if (process.env.FLAG_DOCS_AS_PREVIEW === currFalseValue) {
+           flagDocsAsPreview = false;
+       }
+   });
+}
+
 var build = function () {
    return Promise.all([buildStdDists(), buildProdBrowserDist()]);
 };
@@ -118,6 +127,19 @@ function buildProdBrowserDist(destDirPath=path.resolve(DEST_DIR)) {
     });
 }
 
+function buildDocHeader(title) {
+    let result = `---\ntitle: ${title}`;
+    if (flagDocsAsPreview) {
+        result += '\nispreview: true';
+    }
+    result += '\n---\n\n';
+
+    return result;
+}
+
+/**
+ * Builds markdown docs suitable for ingestion into the website generator
+ */
 var buildDoc = function() {
     let jsdoc2md = require('jsdoc-to-markdown');
     let docSrcDirPath = path.resolve('doc');
@@ -131,6 +153,8 @@ var buildDoc = function() {
     // Initiate index copy - Add to promise array for concurrency
     docPromises.push(
         fsThen.readFile(path.join(docSrcDirPath, 'index.md'), {encoding: 'UTF-8'}).then(buffer => {
+            buffer = buildDocHeader('Client App SDK') + buffer;
+
             buffer = buffer.replace(/```/g, '~~~'); // play nicely with kramdown
             return fsThen.writeFile(path.join(docDestDirPath, 'index.md'), buffer, {encoding: 'UTF-8'});
         })
@@ -163,9 +187,14 @@ var buildDoc = function() {
                         template: template,
                         partial: partialsPattern,
                         helper: helpers,
-                        'heading-depth': 1,
-                        'example-lang': 'js'
+                        'heading-depth': 2,
+                        'example-lang': 'js',
+                        purecloudCustom: {
+                            outputFormat: 'websiteSrc'
+                        }
                     }).then(output => {
+                        output = buildDocHeader(className) + output;
+
                         output = output.replace(/```/g, '~~~'); // play nicely with kramdown
                         return fsThen.writeFile(path.join(docDestDirPath, `${className}.md`), output);
                     })
