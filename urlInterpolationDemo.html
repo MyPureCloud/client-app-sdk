@@ -5,7 +5,6 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.11/purecloud-client-app-sdk.js"></script>
 
         <style>
             body {
@@ -71,6 +70,7 @@
                 $('.ex-url').text(window.location);
                 var queryString = window.location.search.substring(1);
                 var pairs = queryString.split('&');
+                var pcEnv = null;
                 for (var i = 0; i < pairs.length; i++)
                 {
                     var currParam = pairs[i].split('=');
@@ -79,13 +79,19 @@
                     if(currParam[0] === 'langTag') {
                         langTag = getParamValue(currParam);
                         currLi = '<dt>{{pcLangTag}}</dt><dd>' + langTag + '</dd>';
-                    } else if(currParam[0] === 'environment') {
-                        currLi = '<dt>{{pcEnvironment}}</dt><dd>' + getParamValue(currParam) + '</dd>';
+                    } else if(currParam[0] === 'pcEnvironment') {
+                        pcEnv = getParamValue(currParam);
+                    } else if(currParam[0] === 'environment' && pcEnv === null) {
+                        pcEnv = getParamValue(currParam);
                     }
 
                     if (currLi) {
                         $('dl.url-vars').append(currLi);
                     }
+                }
+
+                if (pcEnv) {
+                    $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt><dd>' + pcEnv + '</dd>');
                 }
 
                 $('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);
