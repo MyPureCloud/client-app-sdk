@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0-alpha.3/purecloud-client-app-sdk-bd0e8c49b8d5434d681bf8a4148a5303.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.11/purecloud-client-app-sdk.js"></script>
 
         <style>
             body {
@@ -116,8 +116,6 @@
             var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
 
             jQuery(function () {
-                let myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: 'pcEnvironment'});
-
                 $window = jQuery(window);
 
                 $window.on('message onmessage', onPostMessage);
@@ -141,9 +139,9 @@
                             case 'bootstrap':
                                 // Simulating bootstrap delay of 500ms
                                 window.setTimeout(() => {
-                                    myClientApp.lifecycle.bootstrapped();
+                                    purecloud.apps.lifecycle.bootstrapped();
 
-                                    myClientApp.alerting.showToastPopup(
+                                    purecloud.apps.alerting.showToastPopup(
                                         lifecycleStatusMessageTitle,
                                         'Bootstrap Complete (500ms delay)', {
                                             id: lifecycleStatusMessageId,
@@ -155,7 +153,7 @@
                                 }, 500);
                                 break;
                             case 'focus':
-                                myClientApp.alerting.showToastPopup(
+                                purecloud.apps.alerting.showToastPopup(
                                     lifecycleStatusMessageTitle,
                                     'App Focused', {
                                         id: lifecycleStatusMessageId
@@ -163,7 +161,7 @@
                                 );
                                 break;
                             case 'blur':
-                                myClientApp.alerting.showToastPopup(
+                                purecloud.apps.alerting.showToastPopup(
                                     lifecycleStatusMessageTitle,
                                     'App Blurred', {
                                         id: lifecycleStatusMessageId
@@ -175,9 +173,9 @@
 
                                 // Simulating delay of 500ms
                                 window.setTimeout(() => {
-                                    myClientApp.lifecycle.stopped();
+                                    purecloud.apps.lifecycle.stopped();
 
-                                    myClientApp.alerting.showToastPopup(
+                                    purecloud.apps.alerting.showToastPopup(
                                         lifecycleStatusMessageTitle,
                                         'App Stopped (500ms delay)', {
                                             id: lifecycleStatusMessageId,
