@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/0.0.1-beta.11/purecloud-client-app-sdk.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0-alpha.3/purecloud-client-app-sdk-bd0e8c49b8d5434d681bf8a4148a5303.min.js"></script>
 
         <style>
             body {
@@ -133,8 +133,28 @@
             </div>
         </form>
 
-        <script>
-            $(function () {
+        <h1>Request Attention</h1>
+        <div class="attention-controls">
+            <button class="btn btn-primary increase-attn-btn">Increase Attention Count</button>
+            <button class="btn btn-primary clear-attn-btn">Clear Attention Count</button>
+        </div>
+
+        <script>$(function () {
+                let myClientApp = null;
+
+                // Note: This manual check for query string is for backwards compatibility of this
+                // deployed example.  In your own apps, you can assume the query param will be
+                // provided by PureCloud if you have configured it in your app's config.
+                let envQueryParamName = 'pcEnvironment';
+                if (window && window.location && typeof window.location.search === 'string' &&
+                    window.location.search.indexOf(envQueryParamName) >= 0) {
+                    myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
+                } else {
+                    // Use default PureCloud region
+                    myClientApp = new window.purecloud.apps.ClientApp();
+                }
+
+                // Toast
                 var $titleField = $('input#title');
                 var $msgField = $('textarea#message');
 
@@ -169,7 +189,7 @@
                         options.timeout = timeoutInt;
                     }
 
-                    purecloud.apps.alerting.showToastPopup($titleField.val(), $msgField.val(), options);
+                    myClientApp.alerting.showToastPopup($titleField.val(), $msgField.val(), options);
                     $titleField.val('');
                     $msgField.val('');
                     setFormSubmissionState();
@@ -177,6 +197,24 @@
 
                 setFormSubmissionState();
                 $titleField.focus();
+
+                // Attention
+                var count = 0;
+                var $increaseBtn = $('.increase-attn-btn');
+                var $clearBtn = $('.clear-attn-btn');
+
+                $increaseBtn.on('click', incrementCount);
+                $clearBtn.on('click', clearCount);
+
+                function incrementCount () {
+                    ++count;
+                    myClientApp.alerting.setAttentionCount(count);
+                }
+
+                function clearCount () {
+                    count = 0;
+                    myClientApp.alerting.setAttentionCount(0);
+                }
             });
         </script>
     </body>
