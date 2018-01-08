@@ -4,7 +4,9 @@
  * {@link https://developer.mypurecloud.com/api/client-apps/index.html}
  *
  * @module pcClientAppSdk
- * @author Genesys
+ * @author Genesys Telecommunications Laboratories, Inc.
+ * @copyright Copyright (C) 2018 Genesys Telecommunications Laboratories, Inc.
+ * @license MIT
  * @since 1.0.0
  */
 
