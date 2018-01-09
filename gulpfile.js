@@ -30,6 +30,16 @@ const CJS_FILENAME = 'main.js';
 const ES_FILENAME = 'main.mjs';
 const BROWSER_FILENAME = `${pkg.name}.js`;
 const PROD_BROWSER_EXT = '.min.js';
+
+const LEGAL_TEXT = `/*
+* ${pkg.name}
+* @copyright Copyright (C) ${new Date().getUTCFullYear()} Genesys Telecommunications Laboratories, Inc.}
+* @license MIT
+*
+* This software comprises other FOSS software.
+* Attribution and license information can be found at https://github.com/MyPureCloud/client-app-sdk/blob/master/README.md
+*/`;
+
 const DEFAULT_ROLLUP_CONFIG = {
     input: './src/index.js',
     plugins: [
@@ -69,14 +79,17 @@ function buildStdDists(destDirPath=path.resolve(DEST_DIR)) {
     return rollup.rollup(DEFAULT_ROLLUP_CONFIG).then(bundle => {
         return Promise.all([
             bundle.write({
+                intro: LEGAL_TEXT,
                 file: path.resolve(destDirPath, CJS_FILENAME),
                 format: 'cjs'
             }),
             bundle.write({
+                intro: LEGAL_TEXT,
                 file: path.resolve(destDirPath, ES_FILENAME),
                 format: 'es'
             }),
             bundle.write({
+                intro: LEGAL_TEXT,
                 name: GLOBAL_LIBRARY_NAME,
                 file: path.resolve(destDirPath, BROWSER_FILENAME),
                 format: 'umd'
@@ -95,11 +108,23 @@ function buildStdDists(destDirPath=path.resolve(DEST_DIR)) {
  */
 function buildProdBrowserDist(destDirPath=path.resolve(DEST_DIR)) {
     let prodBrowserCfg = Object.assign({}, DEFAULT_ROLLUP_CONFIG, {plugins:[]});
-    prodBrowserCfg.plugins.push(...DEFAULT_ROLLUP_CONFIG.plugins, rollupPluginUglify());
+
+    let includedCommentsRegExp = /@copyright|@license|@cc_on/i;
+    prodBrowserCfg.plugins.push(...DEFAULT_ROLLUP_CONFIG.plugins, rollupPluginUglify({
+        output: {
+            comments: function(node, comment) {
+                if (comment.type === "comment2") {
+                    // multiline comment
+                    return includedCommentsRegExp.test(comment.value);
+                }
+            }
+        }
+    }));
 
     let nonHashedPath = path.resolve(destDirPath, `${pkg.name}${PROD_BROWSER_EXT}`);
     return rollup.rollup(prodBrowserCfg).then(bundle => {
         return bundle.write({
+            banner: LEGAL_TEXT,
             name: GLOBAL_LIBRARY_NAME,
             file: nonHashedPath,
             format: 'umd',
