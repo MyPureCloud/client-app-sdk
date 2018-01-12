@@ -1,3 +1,4 @@
+/* eslint-env jasmine */
 import commsUtil from './comms';
 
 export default describe('comms util', () => {
@@ -31,7 +32,8 @@ export default describe('comms util', () => {
     });
 
     it('should require the postMessage api', () => {
-        let myWindow = {}, myParent = {};
+        let myWindow = {};
+        let myParent = {};
 
         expect(() => {
             commsUtil.postMsgToPc('message', '*', undefined, myWindow, myParent, null);

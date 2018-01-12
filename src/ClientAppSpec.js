@@ -1,3 +1,4 @@
+/* eslint-env jasmine */
 import ClientApp from './index';
 import BaseApi from './modules/base';
 import {name, version} from '../package.json';
@@ -22,6 +23,7 @@ export default describe('ClientApp', () => {
     });
 
     describe('Constructor', () => {
+        /* eslint-disable no-new */
         it(`should default the enviroment to ${VALID_DEFAULT_PC_ENVIRONMENT} if no environment/origin config is provided`, () => {
             let myClientApp = new ClientApp();
             expect(myClientApp.pcEnvironment).toBe(VALID_DEFAULT_PC_ENVIRONMENT);
@@ -141,5 +143,6 @@ export default describe('ClientApp', () => {
                 });
             });
         });
+        /* eslint-enable no-new */
     });
 });

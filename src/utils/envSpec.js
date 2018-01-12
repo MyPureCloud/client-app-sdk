@@ -1,3 +1,4 @@
+/* eslint-env jasmine */
 import envUtils from './env';
 
 export default describe('env utils', () => {
