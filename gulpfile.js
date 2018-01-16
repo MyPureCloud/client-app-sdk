@@ -1,10 +1,9 @@
-/* jshint node: true */
-
+/* eslint-env node */
 'use strict';
 
 var pkg = require('./package.json');
 var path = require('path');
-var fs   = require('fs');
+var fs = require('fs');
 let fsThen = require('fs-then-native');
 var mkdirp = require('mkdirp');
 
@@ -55,15 +54,15 @@ const DEFAULT_ROLLUP_CONFIG = {
 
 let flagDocsAsPreview = true;
 if (process.env.FLAG_DOCS_AS_PREVIEW) {
-   ['false', 'f', '0'].forEach(currFalseValue => {
-       if (process.env.FLAG_DOCS_AS_PREVIEW === currFalseValue) {
-           flagDocsAsPreview = false;
-       }
-   });
+    ['false', 'f', '0'].forEach(currFalseValue => {
+        if (process.env.FLAG_DOCS_AS_PREVIEW === currFalseValue) {
+            flagDocsAsPreview = false;
+        }
+    });
 }
 
 var build = function () {
-   return Promise.all([buildStdDists(), buildProdBrowserDist()]);
+    return Promise.all([buildStdDists(), buildProdBrowserDist()]);
 };
 
 /**
@@ -75,7 +74,7 @@ var build = function () {
  *
  * @returns {Promise} resolves on success of all formats; rejects otherwise
  */
-function buildStdDists(destDirPath=path.resolve(DEST_DIR)) {
+function buildStdDists(destDirPath = path.resolve(DEST_DIR)) {
     return rollup.rollup(DEFAULT_ROLLUP_CONFIG).then(bundle => {
         return Promise.all([
             bundle.write({
@@ -106,14 +105,14 @@ function buildStdDists(destDirPath=path.resolve(DEST_DIR)) {
  *
  * @returns - A promise resolved with the details of the bundle or rejected on error.
  */
-function buildProdBrowserDist(destDirPath=path.resolve(DEST_DIR)) {
-    let prodBrowserCfg = Object.assign({}, DEFAULT_ROLLUP_CONFIG, {plugins:[]});
+function buildProdBrowserDist(destDirPath = path.resolve(DEST_DIR)) {
+    let prodBrowserCfg = Object.assign({}, DEFAULT_ROLLUP_CONFIG, {plugins: []});
 
     let includedCommentsRegExp = /@copyright|@license|@cc_on/i;
     prodBrowserCfg.plugins.push(...DEFAULT_ROLLUP_CONFIG.plugins, rollupPluginUglify({
         output: {
-            comments: function(node, comment) {
-                if (comment.type === "comment2") {
+            comments: function (node, comment) {
+                if (comment.type === 'comment2') {
                     // multiline comment
                     return includedCommentsRegExp.test(comment.value);
                 }
@@ -138,7 +137,7 @@ function buildProdBrowserDist(destDirPath=path.resolve(DEST_DIR)) {
             return new Promise((resolve, reject) => {
                 fs.rename(nonHashedPath, path.resolve(destDirPath, hashedFilename), err => {
                     if (err) {
-                        reject();
+                        reject(err);
                     } else {
                         resolve(hashedFilename);
                     }
@@ -165,7 +164,7 @@ function buildDocHeader(title) {
 /**
  * Builds markdown docs suitable for ingestion into the website generator
  */
-var buildDoc = function() {
+var buildDoc = function () {
     let jsdoc2md = require('jsdoc-to-markdown');
     let docSrcDirPath = path.resolve('doc');
     let docDestDirPath = path.resolve(DEST_DIR, 'docs');
@@ -198,7 +197,7 @@ var buildDoc = function() {
                 return;
             }
 
-            let {name:className} = currIdentifier;
+            let {name: className} = currIdentifier;
             if (className) {
                 // Remove the module as the parent of the classes for the purposes of doc generation
                 currIdentifier.scope = 'global';
@@ -235,7 +234,7 @@ var buildDoc = function() {
     });
 };
 
-var buildExamples = function (destPath=DEST_DIR, sdkUrl=null) {
+var buildExamples = function (destPath = DEST_DIR, sdkUrl = null) {
     gulp.src('examples/**')
         .pipe(replace(/(\s*<script.*src=")([^"]+client-app-sdk[^"]+)(".*<\/script>\s*)/i, '$1' + (sdkUrl || '$2') + '$3\n'))
         .pipe(gulp.dest(destPath));
@@ -246,7 +245,7 @@ gulp.task('default', function (done) {
     runSequence('clean', ['build', 'doc'], done);
 });
 
-gulp.task('clean', function() {
+gulp.task('clean', function () {
     return del([DEST_DIR]);
 });
 
@@ -254,14 +253,14 @@ gulp.task('build', build);
 
 gulp.task('doc', buildDoc);
 
-gulp.task('watch', function() {
-    var watcher = gulp.watch('src/**/*.js', () => {
+gulp.task('watch', function () {
+    gulp.watch('src/**/*.js', () => {
         console.log('SDK Changed.  Rebuilding.');
         build();
     });
 });
 
-gulp.task('serve', ['clean'], function() {
+gulp.task('serve', ['clean'], function () {
     let buildSdkForDevServer = buildStdDists.bind(this, path.resolve(DEST_DIR, 'vendor'));
     let buildExamplesForDevServer = buildExamples.bind(this, DEST_DIR, `vendor/${BROWSER_FILENAME}`);
 

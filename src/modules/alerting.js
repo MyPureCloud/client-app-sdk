@@ -69,7 +69,7 @@ class AlertingApi extends BaseApi {
         };
 
         if (options && typeof options === 'object') {
-            if(options.type && typeof options.type === 'string') {
+            if (options.type && typeof options.type === 'string') {
                 let requestedType = options.type.trim().toLowerCase();
 
                 if (VALID_MESSAGE_TYPES.indexOf(requestedType) > -1) {

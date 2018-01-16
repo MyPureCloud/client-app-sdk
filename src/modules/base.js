@@ -32,7 +32,7 @@ class BaseApi {
      *
      * @since 1.0.0
      */
-    constructor (cfg = {}) {
+    constructor(cfg = {}) {
         this._targetPcOrigin = cfg.targetPcOrigin || '*';
 
         this._protocolDetails = {
@@ -62,7 +62,7 @@ class BaseApi {
      *
      * @since 1.0.0
      */
-    sendMsgToPc (actionName, msgPayload) {
+    sendMsgToPc(actionName, msgPayload) {
         this._commsUtils.postMsgToPc(this.buildSdkMsgPayload(...arguments), this._targetPcOrigin);
     }
 
@@ -80,7 +80,7 @@ class BaseApi {
      *
      * @since 1.0.0
      */
-    buildSdkMsgPayload(actionName, msgPayload=null) {
+    buildSdkMsgPayload(actionName, msgPayload = null) {
         let result = {};
 
         // Clone the payload

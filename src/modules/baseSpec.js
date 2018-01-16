@@ -1,3 +1,4 @@
+/* eslint-env jasmine */
 import BaseApi from './base';
 import {name as pkgName, version as pkgVersion} from '../../package.json';
 
@@ -56,6 +57,7 @@ export default describe('BaseApi', () => {
 
         let complexPayload = baseApi.buildSdkMsgPayload(action, actionPayload);
         expect(actionPayload).toEqual(origPayload);
+        expect(complexPayload).not.toEqual(origPayload);
     });
 
     it('should target the specified origin', () => {
