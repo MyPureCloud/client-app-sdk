@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0-alpha.3/purecloud-client-app-sdk-bd0e8c49b8d5434d681bf8a4148a5303.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0-alpha.6/purecloud-client-app-sdk-a20a25fabf871b4181b94c0a38aaeaef.min.js"></script>
 
         <style>
             body {
@@ -130,81 +130,72 @@
                     myClientApp = new window.purecloud.apps.ClientApp();
                 }
 
-                $window = jQuery(window);
+                myClientApp.lifecycle.addBootstrapListener(() => {
+                    logLifecycleEvent('App Lifecycle Event: bootstrap', true);
 
-                $window.on('message onmessage', onPostMessage);
+                    // Simulating bootstrap delay of 500ms
+                    window.setTimeout(() => {
+                        myClientApp.lifecycle.bootstrapped();
 
-                function onPostMessage(evt) {
-                    let msgEventData, appId, localMsg = false;
+                        myClientApp.alerting.showToastPopup(
+                            lifecycleStatusMessageTitle,
+                            'Bootstrap Complete (500ms delay)', {
+                                id: lifecycleStatusMessageId,
+                                type: 'success'
+                            }
+                        );
 
-                    if (!(msgEventData = evt.originalEvent.data) ||
-                        msgEventData.purecloudEventType !== 'appLifecycleHook' ||
-                        !msgEventData.hook ||
-                        !evt.originalEvent.source ||
-                        evt.originalEvent.source !== window.parent) {
-                        // Not a valid app event
-                        return;
-                    }
+                        logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
+                    }, 500);
+                });
 
-                    if (evt) {
-                        logLifecycleEvent('App Lifecycle Event: ' + msgEventData.hook, true);
+                function onAppFocus () {
+                    logLifecycleEvent('App Lifecycle Event: focus', true);
 
-                        switch(msgEventData.hook) {
-                            case 'bootstrap':
-                                // Simulating bootstrap delay of 500ms
-                                window.setTimeout(() => {
-                                    myClientApp.lifecycle.bootstrapped();
-
-                                    myClientApp.alerting.showToastPopup(
-                                        lifecycleStatusMessageTitle,
-                                        'Bootstrap Complete (500ms delay)', {
-                                            id: lifecycleStatusMessageId,
-                                            type: 'success'
-                                        }
-                                    );
-
-                                    logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
-                                }, 500);
-                                break;
-                            case 'focus':
-                                myClientApp.alerting.showToastPopup(
-                                    lifecycleStatusMessageTitle,
-                                    'App Focused', {
-                                        id: lifecycleStatusMessageId
-                                    }
-                                );
-                                break;
-                            case 'blur':
-                                myClientApp.alerting.showToastPopup(
-                                    lifecycleStatusMessageTitle,
-                                    'App Blurred', {
-                                        id: lifecycleStatusMessageId
-                                    }
-                                );
-                                break;
-                            case 'stop':
-                                $window.off('message onmessage', onPostMessage);
-
-                                // Simulating delay of 500ms
-                                window.setTimeout(() => {
-                                    myClientApp.lifecycle.stopped();
-
-                                    myClientApp.alerting.showToastPopup(
-                                        lifecycleStatusMessageTitle,
-                                        'App Stopped (500ms delay)', {
-                                            id: lifecycleStatusMessageId,
-                                            type: 'error',
-                                            showCloseButton: true
-                                        }
-                                    );
-
-                                    logLifecycleEvent('Notified PC of Successful App Stop', false);
-                                }, 500);
-
-                                break;
+                    myClientApp.alerting.showToastPopup(
+                        lifecycleStatusMessageTitle,
+                        'App Focused', {
+                            id: lifecycleStatusMessageId
                         }
-                    }
+                    );
                 }
+                myClientApp.lifecycle.addFocusListener(onAppFocus);
+
+                function onAppBlur () {
+                    logLifecycleEvent('App Lifecycle Event: blur', true);
+
+                    myClientApp.alerting.showToastPopup(
+                        lifecycleStatusMessageTitle,
+                        'App Blurred', {
+                            id: lifecycleStatusMessageId
+                        }
+                    );
+                }
+                myClientApp.lifecycle.addBlurListener(onAppBlur);
+
+                myClientApp.lifecycle.addStopListener(() => {
+                    logLifecycleEvent('App Lifecycle Event: stop', true);
+
+                    // Clean up other, persistent listeners
+                    myClientApp.lifecycle.removeFocusListener(onAppFocus);
+                    myClientApp.lifecycle.removeBlurListener(onAppBlur);
+
+                    // Simulating delay of 500ms
+                    window.setTimeout(() => {
+                        myClientApp.lifecycle.stopped();
+
+                        myClientApp.alerting.showToastPopup(
+                            lifecycleStatusMessageTitle,
+                            'App Stopped (500ms delay)', {
+                                id: lifecycleStatusMessageId,
+                                type: 'error',
+                                showCloseButton: true
+                            }
+                        );
+
+                        logLifecycleEvent('Notified PC of Successful App Stop', false);
+                    }, 500);
+                });
 
                 function logLifecycleEvent(logText, incommingEvent) {
                     $tgt = jQuery('.lifecycle-events .log')
