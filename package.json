@@ -51,7 +51,6 @@
     "url": "https://github.com/MyPureCloud/client-app-sdk.git"
   },
   "license": "MIT",
-  "private": true,
   "engines": {
     "node": ">= 6.9.4"
   },
