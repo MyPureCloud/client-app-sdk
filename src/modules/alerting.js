@@ -24,13 +24,13 @@ class AlertingApi extends BaseApi {
      *
      * @param {string} title - Toast title.
      * @param {string} message - Toast Message.  Supports emoticons, emoji (unicode, shortcodes) and markdown (with markdwownMessage boolean).
-     * @param {string=} options - Additonal toast options.
+     * @param {object=} options - Additonal toast options.
      * @param {string=} options.id - The id of the message.  Duplicate IDs will replace each other in the toast display.  All IDs will be
      *  namespaced with your app ID to avoid collisions.  (Default will just be your app's namespace and will not support multiple messages)
      * @param {string=} options.type - Toast type, valid options are 'error', 'info', 'success'.  (Default is 'info')
-     * @param {string=} options.markdownMessage - Boolean indicating if the message is in MD.  (Default is true)
+     * @param {boolean=} options.markdownMessage - Boolean indicating if the message is in MD.  (Default is true)
      * @param {number=} options.timeout - Time in seconds to show the toast.  Set to 0 to disable automatic dismissal. (Default is 5)
-     * @param {string=} options.showCloseButton - Boolean indicating if the close button should be shown. (Defalt is false)
+     * @param {boolean=} options.showCloseButton - Boolean indicating if the close button should be shown. (Defalt is false)
      *
      * @example
      * myClientApp.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?");
