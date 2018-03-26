@@ -1,6 +1,6 @@
 {
   "name": "purecloud-client-app-sdk",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-beta.1",
   "description": "Javascript API for integrating 3rd-party apps with PureCloud",
   "main": "dist/main.js",
   "jsnext:main": "dist/main.mjs",
