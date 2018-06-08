@@ -9,7 +9,7 @@ A JavaScript library to deeply integrate a 3rd-party applications within PureClo
 ```bash
 $ npm install purecloud-client-app-sdk
 # -or-
-$ yarn install purecloud-client-app-sdk
+$ yarn add purecloud-client-app-sdk
 ```
 
 ### PureCloud CDN
