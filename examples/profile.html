@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+    <!--
+        Demo to illustrate fetching PureCloud data and the showProfile(...) SDK method
+
+        Note:  Although this example is hosted with the others here on github; it won't work without
+          configuring an OAuth Client and hosting it elsewhere. See js code below for details.
+
+        Reminder: This example is using CDNs and simple javascript to illustrate the SDK. Both the
+          PureCloud SDK and Apps SDK can be obtained via npm and support many build tools
+          and javascript libraries to fit within your development environment.
+    -->
+    <head>
+        <title>PureCloud Profile Example</title>
+
+        <script src="https://sdk-cdn.mypurecloud.com/javascript/27.0.0/purecloud-platform-client-v2.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0-beta.1/purecloud-client-app-sdk-b5085f736353d8b32c6f7e6726ce18e9.min.js"></script>
+
+        <style>
+            body {
+                margin: 20px;
+                padding: 0;
+                width: 100%;
+            }
+
+            a:link, a:visited, a:hover, a:active {
+                color: #000000;
+                text-decoration: none;
+            }
+
+            .user-profile {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                align-items: center;
+            }
+
+            .user-profile .profile-link {
+                flex: 0 2 auto;
+            }
+
+            .user-profile .profile-pic {
+                max-width: 200px;
+                max-height: 200px;
+                border-radius: 50%;
+            }
+
+            .user-profile .placeholder-pic {
+                font-size: 200px;
+                line-height: 200px;
+                width: 200px;
+                text-align: center;
+                background-color: #C0C0C0;
+                border-radius: 50%;
+            }
+
+            .user-profile .base-info {
+                flex: 0 1 auto;
+            }
+
+            .hidden {
+                display: none
+            }
+        </style>
+    </head>
+
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <section class="authenticating hidden">
+            Authenticating to PureCloud ...
+        </section>
+        <section class="failure hidden">
+            Sorry, an error has occurred.
+        </section>
+        <section class="user-profile hidden">
+            <a href="#" class="profile-link" aria-label="Click to view user's profile in PureCloud">
+                <div class="placeholder-pic" aria-label="User profile picture missing">?</div>
+                <img class="profile-pic" src="" aria-label="Profile picture for User">
+            </a>
+            <div class="base-info">
+                <div class="name"></div>
+                <div class="title"></div>
+                <div class="department"></div>
+            </div>
+        </section>
+
+        <script>document.addEventListener('DOMContentLoaded', function () {
+          /*
+           * The Client Apps SDK can interpolate the current PC Environment into your app's URL
+           * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
+           *
+           * Reading the PC Environment from the query string or state param returned from OAuth2 response
+           */
+          let pcEnvironment = getEmbeddingPCEnv();
+          if (!pcEnvironment) {
+              setErrorState('Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?');
+              return;
+          }
+
+          /*
+           * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
+           * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
+           * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
+           */
+          let pcOAuthClientIds = {'mypurecloud.com': 'implicit-oauth-client-id-here'};
+
+          let clientId = pcOAuthClientIds[pcEnvironment];
+          if (!clientId) {
+              setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Environment');
+              return;
+          }
+
+          let platformClient = window.require('platformClient');
+          let client = platformClient.ApiClient.instance;
+          client.setEnvironment(pcEnvironment);
+
+          let clientApp = null;
+          try {
+            clientApp = new window.purecloud.apps.ClientApp({
+                pcEnvironment: pcEnvironment
+            });
+          } catch (e) {
+              setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Embed Context');
+              return;
+          }
+
+          let redirectUrl = window.location.origin;
+          if (!redirectUrl) {
+              redirectUrl = window.location.protocol + window.location.host;
+          }
+          redirectUrl += window.location.pathname;
+
+          // Authenticate with PureCloud
+          let authenticated = false;
+          let authenticatingEl = document.querySelector('.authenticating');
+          setHidden(authenticatingEl, false);
+          client.loginImplicitGrant(clientId, redirectUrl, {state: ('pcEnvironment=' + pcEnvironment)})
+            .then(function() {
+                authenticated = true;
+
+                return new platformClient.UsersApi().getUsersMe();
+            })
+            .then(function(profileData) {
+                setHidden(authenticatingEl, true);
+
+                let profileEl = document.querySelector('.user-profile');
+                renderUserProfile(profileEl, profileData);
+                setHidden(profileEl, false);
+            })
+            .catch(function(err) {
+                setHidden(authenticatingEl, true);
+
+                setErrorState(!authenticated ? 'Failed to Authenticate with PureCloud' :
+                    'Failed to fetch/display your profile');
+            });
+
+            // ----- Helper Functions
+
+            /**
+             * Sets the base mode of the app to error and show the provided message
+             */
+            function setErrorState(errorMsg) {
+                let failureEl = document.querySelector('.failure');
+                failureEl.textContent = errorMsg;
+                setHidden(failureEl, false);
+            }
+
+            let profileLinkListener = null;
+            /**
+             * Updates the provided User Profile element state
+             * with the provided profileData
+             */
+            function renderUserProfile(profileRootEl, profileData) {
+                let linkEl = profileRootEl.querySelector('.profile-link');
+
+                if (profileLinkListener) {
+                    linkEl.removeEventListener('click', profileLinkListener);
+                    profileLinkListener = null;
+                }
+
+                profileLinkListener = function (evt) {
+                    evt.preventDefault();
+
+                    if (profileData.id) {
+                        clientApp.users.showProfile(profileData.id);
+                    } else {
+                        console.info('No user ID available to route to user profile');
+                    }
+                }
+                linkEl.addEventListener('click', profileLinkListener);
+
+                let bestImage = {
+                    size: 0,
+                    uri: null
+                };
+                if (profileData.images) {
+                    profileData.images.forEach(function(currImg) {
+                        if (!currImg.resolution || !currImg.imageUri) {
+                            return;
+                        }
+
+                        let currRes = parseInt(currImg.resolution.substr(1), 10);
+                        if (currRes && !isNaN(currRes) && currRes > bestImage.size && currRes <= 400) {
+                            bestImage.size = currRes;
+                            bestImage.uri = currImg.imageUri;
+                        }
+                    });
+                }
+
+                let placeholderPicEl = profileRootEl.querySelector('.placeholder-pic');
+                let picEl = profileRootEl.querySelector('.profile-pic');
+                if (bestImage.size) {
+                    setHidden(placeholderPicEl, true);
+
+                    picEl.setAttribute('src', bestImage.uri);
+                    picEl.setAttribute('aria-label', 'Profile picture for ' + (profileData.name || 'User'));
+                    setHidden(picEl, false);
+                } else {
+                    setHidden(placeholderPicEl, false);
+                    setHidden(picEl, true);
+                }
+
+                profileRootEl.querySelector('.base-info .name').innerText = profileData.name || 'Unknown User';
+
+                let titleEl = profileRootEl.querySelector('.base-info .title');
+                titleEl.innerText = profileData.title || '';
+                setHidden(titleEl, !profileData.title);
+
+                let deptEl = profileRootEl.querySelector('.base-info .department');
+                deptEl.innerText = profileData.department || '';
+                setHidden(deptEl, !profileData.department);
+            }
+
+            /**
+             * Determine the embedding PureCloud environment seeded on the query string or
+             * being returned through the OAuth2 Implicit grant state hash param.
+             *
+             * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.
+             */
+            function getEmbeddingPCEnv() {
+              let result = null;
+
+              if (window.location.hash && window.location.hash.indexOf('access_token') >= 0) {
+                let oauthParams = extractParams(window.location.hash.substring(1));
+                if (oauthParams && oauthParams.access_token && oauthParams.state) {
+                  // OAuth2 spec dictates this encoding
+                  // See: https://tools.ietf.org/html/rfc6749#appendix-B
+                  let stateSearch = unescape(oauthParams.state);
+                  result = extractParams(stateSearch).pcEnvironment;
+                }
+              }
+
+              if (!result && window.location.search) {
+                result = extractParams(window.location.search.substring(1)).pcEnvironment || null;
+              }
+
+              return result;
+            }
+
+            // ----- Utility Functions
+
+            function setHidden(el, hidden) {
+                if (hidden) {
+                    el.classList.add('hidden');
+                } else {
+                    el.classList.remove('hidden');
+                }
+            }
+
+            function extractParams(paramStr) {
+              let result = {};
+
+              if (paramStr) {
+                  let params = paramStr.split('&');
+                  params.forEach(function(currParam) {
+                    if (currParam) {
+                        let paramTokens = currParam.split('=');
+                        let paramName = paramTokens[0];
+                        let paramValue = paramTokens[1];
+                        if (paramName) {
+                            paramName = decodeURIComponent(paramName);
+                            paramValue = paramValue ? decodeURIComponent(paramValue) : null;
+
+                            if (!result.hasOwnProperty(paramName)) {
+                                result[paramName] = paramValue;
+                            } else if (Array.isArray(result[paramName])) {
+                                result[paramName].push(paramValue);
+                            } else {
+                                result[paramName] = [result[paramName], paramValue];
+                            }
+                        }
+                    }
+                  });
+              }
+
+              return result;
+            }
+          });
+        </script>
+    </body>
+</html>
