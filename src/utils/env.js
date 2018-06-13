@@ -3,7 +3,8 @@ const PC_ENV_TLDS = [
     'mypurecloud.com',
     'mypurecloud.com.au',
     'mypurecloud.ie',
-    'mypurecloud.jp'
+    'mypurecloud.jp',
+    'mypurecloud.de'
 ];
 
 let DEFAULT_PC_ENV = null;
