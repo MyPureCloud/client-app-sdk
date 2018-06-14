@@ -6,7 +6,8 @@ export default describe('env utils', () => {
         'mypurecloud.com',
         'mypurecloud.com.au',
         'mypurecloud.ie',
-        'mypurecloud.jp'
+        'mypurecloud.jp',
+        'mypurecloud.de'
     ];
 
     it('should provide the default environment', () => {
@@ -17,6 +18,7 @@ export default describe('env utils', () => {
     it('should parse valid TLDs and return the environment object', () => {
         VALID_PC_TLDS.forEach(currTld => {
             let resolvedEnv = envUtils.lookupPcEnv(currTld);
+            expect(resolvedEnv).not.toBeNull();
             expect(resolvedEnv.pcEnvTld).toBe(currTld);
             expect(resolvedEnv.pcAppOrigin).toBe(`https://apps.${currTld}`);
         });
