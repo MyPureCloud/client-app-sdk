@@ -27,12 +27,16 @@ class ConversationsApi extends BaseApi {
      * to the conversation.
      *
      * @param {function} listener - The function to call when the current agent has been assigned
-     * the conversation.  This function will be passed the conversationId and
-     * does not augment the this context.
+     * the conversation.  This function will be passed an object containing the conversation ID.
+     * Users can use this listener to easily monitor conversations in traditional apps (widget/standalone)
+     * or to register interaction based apps via registerConversationApps.
+     * The this context of the listener function will not be modified.
+     *
      * @param {boolean} once - If the listener should only be invoked once or repeatedly; false by default.
      *
      * @example
-     * myClientApp.conversations.addCurrAgentAssignedListener((conversationId) => {
+     * myClientApp.conversations.addCurrAgentAssignedListener(evt => {
+     *   let conversationId = evt.conversationId;
      *   // Lookup conversation details in PureCloud
      *   // Simulate lookup with 500ms delay
      *   window.setTimeout(() => {
@@ -42,7 +46,7 @@ class ConversationsApi extends BaseApi {
      *       sandbox: ['allow-same-origin']
      *       url: `apps.example.com/interactionApp?pcEnvironment={{pcEnvironment}}&pcLangTag={{pcLangTag}}&conversationId=${conversationId}`
      *       assets: {
-     *
+     *         // icon sizes and formats
      *       }
      *       preferredLayoutFlow: 'horizontal|vertical'
      *       featureCategory: 'profile|wrapUp|'
@@ -69,7 +73,10 @@ class ConversationsApi extends BaseApi {
     */
     registerConversationApps(conversationId, appConfigs) {
         // TODO Validation
-        super.sendMsgToPc('registerConversationApps', appConfigs);
+        super.sendMsgToPc('registerConversationApps', {
+            conversationId,
+            appConfigs
+        });
     }
 }
 
