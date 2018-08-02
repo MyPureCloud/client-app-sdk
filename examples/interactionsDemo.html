@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+    <!--
+        Demo to illustrate fetching PureCloud data and the showInteractionDetails(...) SDK method
+
+        Note:  Although this example is hosted with the others here on github; it won't work without
+          configuring an OAuth Client and hosting it elsewhere. See js code below for details.
+
+        Reminder: This example is using CDNs and simple javascript to illustrate the SDK. Both the
+          PureCloud SDK and Apps SDK can be obtained via npm and support many build tools
+          and javascript libraries to fit within your development environment.
+    -->
+    <head>
+        <meta charset="utf-8">
+        <title>PureCloud App Help Demo</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+            crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0/purecloud-client-app-sdk-ed1f20f5244ee2bb9cc242f669369639.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/javascript/27.0.0/purecloud-platform-client-v2.min.js"></script>
+
+        <style>
+            body {
+                margin-left: 20px;
+                max-width: 450px;
+            }
+
+            #submitConversationIDButton {
+                margin-top: 10px;
+                justify-content: flex-end;
+            }
+
+            .hoverRow:hover {
+                cursor: pointer;
+            }
+
+            .userDetails {
+                display: flex;
+            }
+
+            #reloadButton {
+                margin-left: auto;
+                height: 63px;
+            }
+
+            .failure {
+                color: red;
+            }
+
+            .reloading {
+                margin: 10px;
+                text-align: center;
+                width: 100%;
+            }
+
+            .pulse {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: red;
+                box-shadow: 0 0 0 rgba(204, 44, 44, 0.4);
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(204, 44, 44, 0.4);
+                }
+                70% {
+                    box-shadow: 0 0 0 10px rgba(204, 44, 44, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(204, 44, 44, 0);
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <h1>Show Interaction Details (Past 30 days)</h1>
+
+        <section class="authenticating hidden">
+            Authenticating to PureCloud <span class="fas fa-spinner fa-spin"></span>
+        </section>
+        <section class="failure hidden">
+            Sorry, an error has occurred.
+        </section>
+
+        <div class="userDetails hidden">
+            <div>
+                <h4 id="name">Name:</h4>
+                <h5 id="role">Role:</h5>
+            </div>
+            <button type="button" id="reloadButton" class="btn btn-primary fas fa-sync-alt" aria-label="reload" disabled></button>
+        </div>
+
+        <table id="table" class="table table-hover hidden">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Agent</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Wrap Up</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+        <section class="reloading fas fa-spinner fa-spin fa-3x hidden">
+        </section>
+
+        <h4>This bypasses client-side permission checks for testing purposes.</h4>
+        <div class="form-group conversationID">
+            <label for="conversationID">Conversation ID:</label>
+            <input type="text" class="form-control" id="conversationID">
+            <button type="button" id="submitConversationIDButton" class="btn btn-primary">Submit</button>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                let platformClient = window.require('platformClient');
+
+                /*
+                * The Client Apps SDK can interpolate the current PC Environment into your app's URL
+                * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
+                *
+                * Reading the PC Environment from the query string or state param returned from OAuth2 response
+                */
+                let pcEnvironment = getEmbeddingPCEnv();
+                if (!pcEnvironment) {
+                    setErrorState('Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?');
+                    return;
+                }
+
+                /*
+                * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
+                * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
+                * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
+                */
+                let pcOAuthClientIds = { 'mypurecloud.com': 'implicit-oauth-client-id-here' };
+                let clientId = pcOAuthClientIds[pcEnvironment];
+                if (!clientId) {
+                    setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Environment');
+                    return;
+                }
+
+                client = platformClient.ApiClient.instance;
+                client.setEnvironment(pcEnvironment);
+
+                let clientApp = null;
+                try {
+                    clientApp = new window.purecloud.apps.ClientApp({
+                        pcEnvironment: pcEnvironment
+                    });
+                } catch (e) {
+                    setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Embed Context');
+                    return;
+                }
+
+                let redirectUrl = window.location.origin;
+                if (!redirectUrl) {
+                    redirectUrl = window.location.protocol + window.location.host;
+                }
+                redirectUrl += window.location.pathname;
+
+                let reloadingEl = document.querySelector('.reloading');
+
+                /**
+                 *  For testing purposes using the text box to manually find a conversation by ID,
+                 *  does not care about permissions to view interactions.
+                 */
+                $('#submitConversationIDButton').on('click', function() {
+                    let conversationId = $('#conversationID').val().trim();
+                    clientApp.conversations.showInteractionDetails(conversationId);
+                });
+
+                // Authenticate with PureCloud
+                let authenticatingEl = document.querySelector('.authenticating');
+                let userDetailsEl = document.querySelector('.userDetails');
+
+                setHidden(authenticatingEl, false);
+
+                let authenticated = false;
+                let canViewInteraction = false;
+                let canViewWrapUpCodes = false;
+
+                client.loginImplicitGrant(clientId, redirectUrl, { state: ('pcEnvironment=' + pcEnvironment) })
+                    .then(function () {
+                        authenticated = true;
+                        setHidden(userDetailsEl, false);
+                        return new platformClient.UsersApi().getUsersMe({ 'expand': ['authorization'] });
+                    })
+                    .then(function (profileData) {
+                        $('#name').append(' ' + profileData.name);
+
+                        // Check if the current user will be able to even view the interaction before making the request
+                        let permissions = profileData.authorization.permissions;
+                        if (checkPermission(permissions, 'analytics:conversationDetail:view') &&
+                            (checkPermission(permissions, 'conversation:communication:view') ||
+                             checkPermission(permissions, 'quality:evaluation:add') ||
+                             checkPermission(permissions, 'quality:calibration:view') ||
+                             checkPermission(permissions, 'quality:evaluation:editScore'))) {
+                                canViewInteraction = true;
+                                $('#role').append(' Supervisor');
+                        } else {
+                                $('#role').append(' Agent');
+                        }
+
+                        if (checkPermission(permissions, 'routing:wrapupCode:view')) {
+                            canViewWrapUpCodes = true;
+                        }
+
+                        setHidden(authenticatingEl, true);
+
+                        $('#reloadButton').on('click', function () {
+                            $('.failure').text('');
+                            $(this).attr('disabled', '');
+                            setHidden(reloadingEl, false);
+                            $('#tableBody tr').remove();
+
+                            // 30 days in the past
+                            let today = new Date();
+                            let today30 = (new Date(new Date().setDate(today.getDate() - 30))).toISOString();
+
+                            return (function() {
+                                var body = {
+                                    "interval": today30 + "/" + today.toISOString(),
+                                    "order": "asc",
+                                    "orderBy": "conversationStart",
+                                    "paging": {
+                                        "pageSize": 25,
+                                        "pageNumber": 1
+                                    },
+                                    "segmentFilters": [
+                                        {
+                                            "type": "and",
+                                            "predicates": [
+                                                {
+                                                    "type": "dimension",
+                                                    "dimension": "userId",
+                                                    "operator": "matches",
+                                                    "value": profileData.id
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                };
+
+                                new platformClient.AnalyticsApi().postAnalyticsConversationsDetailsQuery(body)
+                                    .then(function (profileConversations) {
+                                        if (!profileConversations.hasOwnProperty('conversations')) {
+                                            throw 'No conversations were found for you in the past 30 days';
+                                        }
+                                        let conversationsTable = document.getElementById('table');
+                                        let conversationsTableBody = document.getElementById('tableBody');
+
+                                        setHidden(conversationsTable, false);
+
+                                        // Populates the table with the conversations from the API response
+                                        profileConversations.conversations.forEach(function (conversation, index) {
+
+                                            var conversationId = conversation.conversationId;
+                                            let row = conversationsTableBody.insertRow(index);
+                                            let cellConversationID = row.insertCell(0);
+                                            let cellAgentName = row.insertCell(1);
+                                            let cellCustomerName = row.insertCell(2);
+                                            let cellMediaType = row.insertCell(3);
+                                            let cellWrapUp = row.insertCell(4);
+                                            cellConversationID.innerHTML = "";
+                                            cellAgentName.innerHTML = "";
+                                            cellCustomerName.innerHTML = "";
+                                            cellMediaType.innerHTML = "";
+                                            cellWrapUp.innerHTML = "";
+
+                                            if (!conversation.hasOwnProperty('conversationEnd')) {
+                                                cellConversationID.innerHTML += '<span class="pulse"></span> ';
+                                            }
+                                            cellConversationID.innerHTML += conversationId;
+                                            conversation.participants.some(function (participant) {
+                                                if (participant.purpose === 'agent') {
+                                                    if (typeof participant.participantName != 'undefined') {
+                                                        cellAgentName.innerHTML = participant.participantName;
+                                                    }
+                                                    return true;
+                                                }
+                                            });
+                                            conversation.participants.some(function (participant) {
+                                                if (participant.purpose === 'customer') {
+                                                    if (typeof participant.participantName != 'undefined') {
+                                                        cellCustomerName.innerHTML = participant.participantName;
+                                                    }
+                                                    return true;
+                                                }
+                                            });
+                                            conversation.participants.some(function (participant) {
+                                                if (participant.purpose === 'acd') {
+                                                    let mediaType = participant.sessions[0].mediaType;
+                                                    cellMediaType.style.paddingLeft = "15px";
+                                                    cellMediaType.style.color = "#337ab7";
+                                                    cellMediaType.style.display = "table-cell";
+                                                    switch (mediaType) {
+                                                        case 'email':
+                                                            cellMediaType.classList += " fa fa-envelope";
+                                                            cellMediaType.setAttribute('aria-label', 'email');
+                                                            break;
+                                                        case 'voice':
+                                                        case 'callback':
+                                                            cellMediaType.classList += " fas fa-phone";
+                                                            cellMediaType.setAttribute('aria-label', 'voice or callback');
+                                                            break;
+                                                        case 'chat':
+                                                            cellMediaType.classList += " fas fa-comments";
+                                                            cellMediaType.setAttribute('aria-label', 'chat');
+                                                            break;
+                                                        case 'screenshare':
+                                                        case 'cobrowse':
+                                                            cellMediaType.classList += " fas fa-desktop";
+                                                            cellMediaType.setAttribute('aria-label', 'screenshare or cobrowse');
+                                                            break;
+                                                        default:
+                                                            if (typeof mediaType != 'undefined') {
+                                                                cellMediaType.innerHTML = mediaType;
+                                                                cellMediaType.paddingLeft = "0px";
+                                                            }
+                                                    }
+                                                    return true;
+                                                }
+                                            });
+
+                                            if (canViewWrapUpCodes) {
+                                                conversation.participants.forEach(function (participant) {
+                                                    participant.sessions.forEach(function (session) {
+                                                        session.segments.some(function (segment) {
+                                                            if (segment.hasOwnProperty('wrapUpCode') && typeof segment.wrapUpCode != 'undefined' && segment.wrapUpCode != '') {
+                                                                new platformClient.RoutingApi().getRoutingWrapupcode(segment.wrapUpCode)
+                                                                    .then(function (wrapUpDetails) {
+                                                                        cellWrapUp.innerHTML = wrapUpDetails.name;
+                                                                    })
+                                                                    .catch(function (err) {
+                                                                        console.error(err);
+                                                                    });
+                                                                return true;
+                                                            }
+                                                        });
+                                                    });
+                                                });
+                                            }
+
+                                            if (canViewInteraction) {
+                                                row.classList += " hoverRow";
+                                            } else {
+                                                conversationsTable.classList.remove('table-hover');
+                                            }
+                                            row.addEventListener('click', function () {
+                                                if (canViewInteraction) {
+                                                    clientApp.conversations.showInteractionDetails(conversationId);
+                                                } else {
+                                                    setErrorState('You do not have the proper permissions to view interactions.');
+                                                }
+                                            });
+                                        });
+
+                                        setHidden(reloadingEl, true);
+                                        $('#reloadButton').removeAttr('disabled');
+                                    })
+                                    .catch(function (err) {
+                                        setHidden(reloadingEl, true);
+                                        $('#reloadButton').removeAttr('disabled');
+                                        if (err === 'No conversations were found for you in the past 30 days') {
+                                            setErrorState(err);
+                                        }
+                                    });
+                            })()
+                        }).trigger('click');
+                    })
+                    .catch(function (err) {
+                        setHidden(authenticatingEl, true);
+                        setHidden(userDetailsEl, false);
+                        if (!authenticated) {
+                            setErrorState('Failed to Authenticate with PureCloud');
+                        }
+                    });
+
+                // -- Utility Functions
+
+                function setHidden(el, hidden) {
+                    if (hidden) {
+                        el.classList.add('hidden');
+                    } else {
+                        el.classList.remove('hidden');
+                    }
+                }
+
+                function extractParams(paramStr) {
+                    let result = {};
+
+                    if (paramStr) {
+                        let params = paramStr.split('&');
+                        params.forEach(function(currParam) {
+                            if (currParam) {
+                                let paramTokens = currParam.split('=');
+                                let paramName = paramTokens[0];
+                                let paramValue = paramTokens[1];
+                                if (paramName) {
+                                    paramName = decodeURIComponent(paramName);
+                                    paramValue = paramValue ? decodeURIComponent(paramValue) : null;
+
+                                    if (!result.hasOwnProperty(paramName)) {
+                                        result[paramName] = paramValue;
+                                    } else if (Array.isArray(result[paramName])) {
+                                        result[paramName].push(paramValue);
+                                    } else {
+                                        result[paramName] = [result[paramName], paramValue];
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    return result;
+                }
+
+                /**
+                 * Determine the embedding PureCloud environment seeded on the query string or
+                 * being returned through the OAuth2 Implicit grant state hash param.
+                 *
+                 * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.
+                 */
+                function getEmbeddingPCEnv() {
+                    let result = null;
+
+                    if (window.location.hash && window.location.hash.indexOf('access_token') >= 0) {
+                        let oauthParams = extractParams(window.location.hash.substring(1));
+                        if (oauthParams && oauthParams.access_token && oauthParams.state) {
+                        // OAuth2 spec dictates this encoding
+                        // See: https://tools.ietf.org/html/rfc6749#appendix-B
+                        let stateSearch = unescape(oauthParams.state);
+                        result = extractParams(stateSearch).pcEnvironment;
+                        }
+                    }
+
+                    if (!result && window.location.search) {
+                        result = extractParams(window.location.search.substring(1)).pcEnvironment || null;
+                    }
+
+                    return result;
+                }
+
+                /**
+                 * Sets the base mode of the app to error and show the provided message
+                 */
+                function setErrorState(errorMsg) {
+                    let failureEl = document.querySelector('.failure');
+                    failureEl.textContent = errorMsg;
+                    setHidden(failureEl, false);
+                }
+
+                function isPermission(item, targetItem) {
+                    let isItem = item === '*' || targetItem === '*';
+                    if (!isItem) {
+                        isItem = item === targetItem;
+                    }
+                    return isItem;
+                }
+
+                /**
+                 * Parse the permissions array and check whether or not the match the specified required ones.
+                 *
+                 * @returns A boolean indicating if the user possesses the required permissions.
+                 */
+                function checkPermission(permissions, permissionValue) {
+                    let isAllowed = false;
+
+                    if (!permissions) {
+                        permissions = [];
+                    }
+
+                    if (permissionValue.match(/^[a-zA-Z0-9]+:\*$/)) {
+                        permissionValue = permissionValue.replace('*', '*:*');
+                    }
+
+                    const permissionsToValidate = permissionValue.split(':'),
+                        targetDomain = permissionsToValidate[0],
+                        targetEntity = permissionsToValidate[1],
+                        targetAction = permissionsToValidate[2];
+
+                    permissions.forEach(function (permission) {
+                        const permissions = permission.split(':'),
+                            domain = permissions[0],
+                            entity = permissions[1],
+                            actionSet = permissions[2];
+
+                        if (targetDomain === domain) {
+                            const matchesEntity = isPermission(targetEntity, entity),
+                                matchesAction = isPermission(targetAction, actionSet);
+
+                            if (matchesEntity && matchesAction) {
+                                isAllowed = true;
+                            }
+                        }
+                    });
+
+                    return isAllowed;
+                }
+            });
+        </script>
+    </body>
+</html>
