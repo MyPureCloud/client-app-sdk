@@ -102,7 +102,7 @@ The ClientApp instance must be configured to match the PureCloud environment in 
 
 We recommend configuring your app so the PC environment can be seeded into the url.  This allows the SDK to dynamically determine the environment at runtime and simplifies your code.
 
-1. When registering your app, configure the URL in the format: https://myapp.mydomain.com?pcEnvironment={{pcEnvironment}} 
+1. When registering your app, configure the URL in the format: https://myapp.mydomain.com?pcEnvironment={pcEnvironment} 
 1. Include `pcEnvironmentQueryParam: 'pcEnvironment'` in your ClientApp config to dynamically determine the environment
 1. Use `myClientApp.pcEnvironment` to access the environment later when needed (e.g. to pass to the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html)).
 
