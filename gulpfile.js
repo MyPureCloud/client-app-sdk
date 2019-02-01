@@ -61,6 +61,16 @@ if (process.env.FLAG_DOCS_AS_PREVIEW) {
     });
 }
 
+const GITHUB_FORMAT = 'github';
+const KRAMDOWN_FORMAT = 'kramdown';
+const PC_DEV_CENTER_FORMAT = 'purecloudDevCenter';
+const SUPPORTED_DOC_OUTPUT_FORMATS = [GITHUB_FORMAT, KRAMDOWN_FORMAT, PC_DEV_CENTER_FORMAT];
+let docMdOutputFormat = process.env.DOC_MD_OUTPUT_FORMAT || PC_DEV_CENTER_FORMAT;
+if (SUPPORTED_DOC_OUTPUT_FORMATS.indexOf(docMdOutputFormat) < 0) {
+    console.error(`Unknown MD Output Format Specified: '${docMdOutputFormat}'`);
+    process.exit(1);
+}
+
 var build = function () {
     return Promise.all([buildStdDists(), buildProdBrowserDist()]);
 };
@@ -179,7 +189,8 @@ var buildDoc = function () {
         fsThen.readFile(path.join(docSrcDirPath, 'index.md'), {encoding: 'UTF-8'}).then(buffer => {
             buffer = buildDocHeader('Client App SDK') + buffer;
 
-            buffer = buffer.replace(/```/g, '~~~'); // play nicely with kramdown
+            buffer = transformGithubMarkdown(buffer, docMdOutputFormat);
+
             return fsThen.writeFile(path.join(docDestDirPath, 'index.md'), buffer, {encoding: 'UTF-8'});
         })
     );
@@ -219,7 +230,8 @@ var buildDoc = function () {
                     }).then(output => {
                         output = buildDocHeader(className) + output;
 
-                        output = output.replace(/```/g, '~~~'); // play nicely with kramdown
+                        output = transformGithubMarkdown(output, docMdOutputFormat);
+
                         return fsThen.writeFile(path.join(docDestDirPath, `${className}.md`), output);
                     })
                 );
@@ -233,6 +245,31 @@ var buildDoc = function () {
         return Promise.reject(errMsg);
     });
 };
+
+/**
+ * Returns a copy of the github-flavored markdown srcBuffer transformed into the target format.
+ *
+ * @param {string} srcBuffer The base github-flavored markdown format
+ * @param {string} targetFormat The desired markdwon format of the response
+ */
+function transformGithubMarkdown(srcBuffer, targetFormat) {
+    let result = srcBuffer;
+
+    if (targetFormat === PC_DEV_CENTER_FORMAT) {
+        // Transform ``` javascript to ``` {"language": "javascript"}
+        let codeFenceRegExp = /^[ \t]*```[ \t]*(\S*)[ \t]*$/gm;
+        result = result.replace(codeFenceRegExp, (match, language) => {
+            return '```' + (language ? ` {"language": "${language}"}` : '');
+        });
+    }
+
+    if (targetFormat === KRAMDOWN_FORMAT) {
+        // Kramdown uses ~~~ for code blocks
+        result = result.replace(/```/g, '~~~');
+    }
+
+    return result;
+}
 
 var buildExamples = function (destPath = DEST_DIR, sdkUrl = null) {
     gulp.src('examples/**')
