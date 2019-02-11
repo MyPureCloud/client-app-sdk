@@ -160,7 +160,7 @@ class ClientApp {
          *   pcEnvironmentQueryParam: 'pcEnvironment'
          * });
          *
-         * clientApp.conversationsApi.someMethod(...);
+         * clientApp.conversations.someMethod(...);
          */
         this.conversations = new ConversationsApi(apiCfg);
     }

@@ -12,13 +12,12 @@
     -->
     <head>
         <meta charset="utf-8">
-        <title>PureCloud App Help Demo</title>
+        <title>PureCloud client-app-sdk Interactions Demo</title>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
             crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0/purecloud-client-app-sdk-ed1f20f5244ee2bb9cc242f669369639.min.js"></script>
         <script src="https://sdk-cdn.mypurecloud.com/javascript/27.0.0/purecloud-platform-client-v2.min.js"></script>
 
@@ -28,26 +27,17 @@
                 max-width: 450px;
             }
 
-            #submitConversationIDButton {
-                margin-top: 10px;
-                justify-content: flex-end;
-            }
-
-            .hoverRow:hover {
-                cursor: pointer;
-            }
-
-            .userDetails {
-                display: flex;
-            }
-
-            #reloadButton {
-                margin-left: auto;
-                height: 63px;
-            }
-
             .failure {
                 color: red;
+            }
+
+            section.interactions-example .header {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            button.reload-interactions {
+                align-self: center;
             }
 
             .reloading {
@@ -56,7 +46,24 @@
                 width: 100%;
             }
 
-            .pulse {
+            table.interactions tbody tr {
+                cursor: pointer;
+            }
+
+            table.interactions tr td.media-type {
+                padding-left: 15px;
+                color: #337ab7;
+                display: table-cell;
+            }
+
+            table.interactions tr td.media-type.text-only {
+                padding-left: 0;
+                color: inherit;
+            }
+
+            table.interactions tbody tr.in-progress td.conversation-id::before {
+                content: "";
+                margin-right: 5px;
                 display: inline-block;
                 width: 10px;
                 height: 10px;
@@ -77,6 +84,11 @@
                     box-shadow: 0 0 0 0 rgba(204, 44, 44, 0);
                 }
             }
+
+            .tester-note {
+                font-size: .75em;
+                text-align: center;
+            }
         </style>
     </head>
 
@@ -85,7 +97,7 @@
             For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
         </noscript>
 
-        <h1>Show Interaction Details (Past 30 days)</h1>
+        <h1 class="sr-only">Test UIs for Interaction SDK</h1>
 
         <section class="authenticating hidden">
             Authenticating to PureCloud <span class="fas fa-spinner fa-spin"></span>
@@ -94,36 +106,44 @@
             Sorry, an error has occurred.
         </section>
 
-        <div class="userDetails hidden">
-            <div>
-                <h4 id="name">Name:</h4>
-                <h5 id="role">Role:</h5>
+        <section class="interactions-example hidden">
+            <h2>Recent Interactions</h2>
+            <div class="header">
+                <div>
+                    <h4 class="user-name">Name:</h4>
+                    <h5 class="interaction-detail-access">Interaction Detail Access:</h5>
+                </div>
+                <button type="button" class="reload-interactions btn btn-primary fas fa-sync-alt" aria-label="reload"></button>
             </div>
-            <button type="button" id="reloadButton" class="btn btn-primary fas fa-sync-alt" aria-label="reload" disabled></button>
-        </div>
 
-        <table id="table" class="table table-hover hidden">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Agent</th>
-                    <th scope="col">Customer</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Wrap Up</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
-        </table>
-        <section class="reloading fas fa-spinner fa-spin fa-3x hidden">
+            <table class="interactions table table-hover hidden">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Wrap Up</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <section class="reloading fas fa-spinner fa-spin fa-3x hidden">
+            </section>
         </section>
 
-        <h4>This bypasses client-side permission checks for testing purposes.</h4>
-        <div class="form-group conversationID">
-            <label for="conversationID">Conversation ID:</label>
-            <input type="text" class="form-control" id="conversationID">
-            <button type="button" id="submitConversationIDButton" class="btn btn-primary">Submit</button>
-        </div>
+        <section class="manual-example">
+            <h2>Manual Tester</h2>
+            <div class="form-group conversation-id">
+                <label for="conversation-id">Conversation ID:</label>
+                <input type="text" class="form-control" id="conversation-id">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+            <div class="form-group">
+                <div class="tester-note">[Note:] This tester intentionally bypasses client-side permission checks.</div>
+            </div>
+        </section>
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -166,227 +186,133 @@
                     return;
                 }
 
+                /*
+                 *  Set up manual tester now; no PC Auth required
+                 *
+                 *  This UI is used for testing purposes to manually navigate to a conversation by ID.
+                 *  It purposefully ignores the fact that a user may not be authorized to view interactions.
+                 */
+                 document.querySelector('.manual-example button').addEventListener('click', function() {
+                    let conversationId = document.querySelector('#conversation-id').value.trim();
+                    if (conversationId) {
+                        clientApp.conversations.showInteractionDetails(conversationId);
+                    }
+                });
+
                 let redirectUrl = window.location.origin;
                 if (!redirectUrl) {
-                    redirectUrl = window.location.protocol + window.location.host;
+                    redirectUrl = window.location.protocol + '//' + window.location.host;
                 }
                 redirectUrl += window.location.pathname;
 
-                let reloadingEl = document.querySelector('.reloading');
-
-                /**
-                 *  For testing purposes using the text box to manually find a conversation by ID,
-                 *  does not care about permissions to view interactions.
-                 */
-                $('#submitConversationIDButton').on('click', function() {
-                    let conversationId = $('#conversationID').val().trim();
-                    clientApp.conversations.showInteractionDetails(conversationId);
-                });
-
                 // Authenticate with PureCloud
                 let authenticatingEl = document.querySelector('.authenticating');
-                let userDetailsEl = document.querySelector('.userDetails');
-
                 setHidden(authenticatingEl, false);
 
                 let authenticated = false;
+                let userDataAcquired = false;
                 let canViewInteraction = false;
                 let canViewWrapUpCodes = false;
 
                 client.loginImplicitGrant(clientId, redirectUrl, { state: ('pcEnvironment=' + pcEnvironment) })
                     .then(function () {
                         authenticated = true;
-                        setHidden(userDetailsEl, false);
                         return new platformClient.UsersApi().getUsersMe({ 'expand': ['authorization'] });
                     })
                     .then(function (profileData) {
-                        $('#name').append(' ' + profileData.name);
+                        userDataAcquired = true;
 
-                        // Check if the current user will be able to even view the interaction before making the request
+                        // Check if the current user will be able to view interaction details
                         let permissions = profileData.authorization.permissions;
                         if (checkPermission(permissions, 'analytics:conversationDetail:view') &&
+                            checkPermission(permissions, 'analytics:conversationAggregate:view') &&
                             (checkPermission(permissions, 'conversation:communication:view') ||
                              checkPermission(permissions, 'quality:evaluation:add') ||
                              checkPermission(permissions, 'quality:calibration:view') ||
                              checkPermission(permissions, 'quality:evaluation:editScore'))) {
-                                canViewInteraction = true;
-                                $('#role').append(' Supervisor');
-                        } else {
-                                $('#role').append(' Agent');
+                            canViewInteraction = true;
                         }
 
                         if (checkPermission(permissions, 'routing:wrapupCode:view')) {
                             canViewWrapUpCodes = true;
                         }
 
+                        let interactionExampleEl = document.querySelector('section.interactions-example');
+                        let interactionsHeaderEl = document.querySelector('section.interactions-example .header');
+                        let reloadButtonEl = document.querySelector('button.reload-interactions');
+                        let reloadingEl = document.querySelector('.reloading');
+                        let conversationsTable = document.querySelector('table.interactions');
+                        let conversationsTableBody = conversationsTable.querySelector('tbody');
+
                         setHidden(authenticatingEl, true);
 
-                        $('#reloadButton').on('click', function () {
-                            $('.failure').text('');
-                            $(this).attr('disabled', '');
+                        // Update user data markup
+                        interactionsHeaderEl.querySelector('.user-name').appendChild(document.createTextNode(' ' + profileData.name));
+                        interactionsHeaderEl.querySelector('.interaction-detail-access').appendChild(document.createTextNode(' ' + (canViewInteraction ? 'Yes' : 'No')));
+
+                        function reloadInteractions() {
+                            if (reloadButtonEl.disabled) {
+                                // Poor man's debounce: A click event snuck through before js could disable; ignore it
+                                return;
+                            }
+
+                            reloadButtonEl.disabled = true;
+
+                            // Set base state for reload op
+                            setErrorState(null);
                             setHidden(reloadingEl, false);
-                            $('#tableBody tr').remove();
+                            setHidden(conversationsTable, true);
+                            // Remove all rows of table
+                            while (conversationsTableBody.firstChild) {
+                                conversationsTableBody.removeChild(conversationsTableBody.firstChild);
+                            }
 
-                            // 30 days in the past
-                            let today = new Date();
-                            let today30 = (new Date(new Date().setDate(today.getDate() - 30))).toISOString();
+                            getUserConversationHistory(profileData.id, 30, canViewWrapUpCodes).then(function (conversations) {
+                                setHidden(reloadingEl, true);
 
-                            return (function() {
-                                var body = {
-                                    "interval": today30 + "/" + today.toISOString(),
-                                    "order": "asc",
-                                    "orderBy": "conversationStart",
-                                    "paging": {
-                                        "pageSize": 25,
-                                        "pageNumber": 1
-                                    },
-                                    "segmentFilters": [
-                                        {
-                                            "type": "and",
-                                            "predicates": [
-                                                {
-                                                    "type": "dimension",
-                                                    "dimension": "userId",
-                                                    "operator": "matches",
-                                                    "value": profileData.id
-                                                }
-                                            ]
+                                if (conversations.length === 0) {
+                                    setErrorState('No conversations were found for you in the past 30 days');
+                                    return;
+                                }
+
+                                conversations.forEach(function (currConvo) {
+                                    // Build listener
+                                    let currClickListener = function () {
+                                        if (canViewInteraction) {
+                                            clientApp.conversations.showInteractionDetails(currConvo.conversationId);
+                                        } else {
+                                            // Note: Normally, we wouldn't show a user an action they can't perform;
+                                            // however, this is a dev tool and missing permissions is valuable information to convey
+                                            setErrorState('You do not have the proper permissions to view interactions.');
                                         }
-                                    ]
-                                };
+                                    }
+                                    conversationsTableBody.appendChild(buildTrFromConversation(currConvo, canViewWrapUpCodes, currClickListener));
+                                });
 
-                                new platformClient.AnalyticsApi().postAnalyticsConversationsDetailsQuery(body)
-                                    .then(function (profileConversations) {
-                                        if (!profileConversations.hasOwnProperty('conversations')) {
-                                            throw 'No conversations were found for you in the past 30 days';
-                                        }
-                                        let conversationsTable = document.getElementById('table');
-                                        let conversationsTableBody = document.getElementById('tableBody');
+                                setHidden(conversationsTable, false);
+                                reloadButtonEl.disabled = false;
+                            }).catch(function (reason) {
+                                reloadButtonEl.disabled = false;
+                                setHidden(reloadingEl, true);
+                                setErrorState('Failed to fetch your conversations');
+                            });
+                        }
 
-                                        setHidden(conversationsTable, false);
+                        reloadButtonEl.addEventListener('click', reloadInteractions);
 
-                                        // Populates the table with the conversations from the API response
-                                        profileConversations.conversations.forEach(function (conversation, index) {
+                        // Trigger initial fetch of interactions, will set state accordingly (i.e. disable the button)
+                        reloadInteractions();
 
-                                            var conversationId = conversation.conversationId;
-                                            let row = conversationsTableBody.insertRow(index);
-                                            let cellConversationID = row.insertCell(0);
-                                            let cellAgentName = row.insertCell(1);
-                                            let cellCustomerName = row.insertCell(2);
-                                            let cellMediaType = row.insertCell(3);
-                                            let cellWrapUp = row.insertCell(4);
-                                            cellConversationID.innerHTML = "";
-                                            cellAgentName.innerHTML = "";
-                                            cellCustomerName.innerHTML = "";
-                                            cellMediaType.innerHTML = "";
-                                            cellWrapUp.innerHTML = "";
-
-                                            if (!conversation.hasOwnProperty('conversationEnd')) {
-                                                cellConversationID.innerHTML += '<span class="pulse"></span> ';
-                                            }
-                                            cellConversationID.innerHTML += conversationId;
-                                            conversation.participants.some(function (participant) {
-                                                if (participant.purpose === 'agent') {
-                                                    if (typeof participant.participantName != 'undefined') {
-                                                        cellAgentName.innerHTML = participant.participantName;
-                                                    }
-                                                    return true;
-                                                }
-                                            });
-                                            conversation.participants.some(function (participant) {
-                                                if (participant.purpose === 'customer') {
-                                                    if (typeof participant.participantName != 'undefined') {
-                                                        cellCustomerName.innerHTML = participant.participantName;
-                                                    }
-                                                    return true;
-                                                }
-                                            });
-                                            conversation.participants.some(function (participant) {
-                                                if (participant.purpose === 'acd') {
-                                                    let mediaType = participant.sessions[0].mediaType;
-                                                    cellMediaType.style.paddingLeft = "15px";
-                                                    cellMediaType.style.color = "#337ab7";
-                                                    cellMediaType.style.display = "table-cell";
-                                                    switch (mediaType) {
-                                                        case 'email':
-                                                            cellMediaType.classList += " fa fa-envelope";
-                                                            cellMediaType.setAttribute('aria-label', 'email');
-                                                            break;
-                                                        case 'voice':
-                                                        case 'callback':
-                                                            cellMediaType.classList += " fas fa-phone";
-                                                            cellMediaType.setAttribute('aria-label', 'voice or callback');
-                                                            break;
-                                                        case 'chat':
-                                                            cellMediaType.classList += " fas fa-comments";
-                                                            cellMediaType.setAttribute('aria-label', 'chat');
-                                                            break;
-                                                        case 'screenshare':
-                                                        case 'cobrowse':
-                                                            cellMediaType.classList += " fas fa-desktop";
-                                                            cellMediaType.setAttribute('aria-label', 'screenshare or cobrowse');
-                                                            break;
-                                                        default:
-                                                            if (typeof mediaType != 'undefined') {
-                                                                cellMediaType.innerHTML = mediaType;
-                                                                cellMediaType.paddingLeft = "0px";
-                                                            }
-                                                    }
-                                                    return true;
-                                                }
-                                            });
-
-                                            if (canViewWrapUpCodes) {
-                                                conversation.participants.forEach(function (participant) {
-                                                    participant.sessions.forEach(function (session) {
-                                                        session.segments.some(function (segment) {
-                                                            if (segment.hasOwnProperty('wrapUpCode') && typeof segment.wrapUpCode != 'undefined' && segment.wrapUpCode != '') {
-                                                                new platformClient.RoutingApi().getRoutingWrapupcode(segment.wrapUpCode)
-                                                                    .then(function (wrapUpDetails) {
-                                                                        cellWrapUp.innerHTML = wrapUpDetails.name;
-                                                                    })
-                                                                    .catch(function (err) {
-                                                                        console.error(err);
-                                                                    });
-                                                                return true;
-                                                            }
-                                                        });
-                                                    });
-                                                });
-                                            }
-
-                                            if (canViewInteraction) {
-                                                row.classList += " hoverRow";
-                                            } else {
-                                                conversationsTable.classList.remove('table-hover');
-                                            }
-                                            row.addEventListener('click', function () {
-                                                if (canViewInteraction) {
-                                                    clientApp.conversations.showInteractionDetails(conversationId);
-                                                } else {
-                                                    setErrorState('You do not have the proper permissions to view interactions.');
-                                                }
-                                            });
-                                        });
-
-                                        setHidden(reloadingEl, true);
-                                        $('#reloadButton').removeAttr('disabled');
-                                    })
-                                    .catch(function (err) {
-                                        setHidden(reloadingEl, true);
-                                        $('#reloadButton').removeAttr('disabled');
-                                        if (err === 'No conversations were found for you in the past 30 days') {
-                                            setErrorState(err);
-                                        }
-                                    });
-                            })()
-                        }).trigger('click');
+                        // Now, safe to show the interactions example
+                        setHidden(interactionExampleEl, false);
                     })
                     .catch(function (err) {
                         setHidden(authenticatingEl, true);
-                        setHidden(userDetailsEl, false);
+
                         if (!authenticated) {
                             setErrorState('Failed to Authenticate with PureCloud');
+                        } else if (!userDataAcquired) {
+                            setErrorState('Failed to locate user in PureCloud');
                         }
                     });
 
@@ -441,10 +367,10 @@
                     if (window.location.hash && window.location.hash.indexOf('access_token') >= 0) {
                         let oauthParams = extractParams(window.location.hash.substring(1));
                         if (oauthParams && oauthParams.access_token && oauthParams.state) {
-                        // OAuth2 spec dictates this encoding
-                        // See: https://tools.ietf.org/html/rfc6749#appendix-B
-                        let stateSearch = unescape(oauthParams.state);
-                        result = extractParams(stateSearch).pcEnvironment;
+                            // OAuth2 spec dictates this encoding
+                            // See: https://tools.ietf.org/html/rfc6749#appendix-B
+                            let stateSearch = unescape(oauthParams.state);
+                            result = extractParams(stateSearch).pcEnvironment;
                         }
                     }
 
@@ -460,8 +386,8 @@
                  */
                 function setErrorState(errorMsg) {
                     let failureEl = document.querySelector('.failure');
-                    failureEl.textContent = errorMsg;
-                    setHidden(failureEl, false);
+                    failureEl.textContent = errorMsg || '';
+                    setHidden(failureEl, !errorMsg);
                 }
 
                 function isPermission(item, targetItem) {
@@ -510,6 +436,226 @@
                     });
 
                     return isAllowed;
+                }
+
+                function buildTrFromConversation(conversation, includeWrapUpDetails, clickListener) {
+                    let row = document.createElement('tr');
+
+                    var conversationId = conversation.conversationId;
+                    let cellConversationId = row.insertCell();
+                    cellConversationId.classList.add('conversation-id');
+                    let cellCustomerName = row.insertCell();
+                    let cellMediaType = row.insertCell();
+                    cellMediaType.classList.add('media-type');
+                    let cellWrapUp = row.insertCell();
+
+                    // Mark row as active if applicable
+                    if (!conversation.hasOwnProperty('conversationEnd')) {
+                        row.classList.add('in-progress');
+                    }
+
+                    // ID Cell
+                    cellConversationId.appendChild(document.createTextNode(conversationId));
+
+                    // Customer Cell
+                    let latestCustomer = getMostRecentParticipant(conversation, 'customer');
+                    if (latestCustomer && latestCustomer.participantName) {
+                        cellCustomerName.appendChild(document.createTextNode(latestCustomer.participantName));
+                    }
+
+                    // MediaType Cell
+                    let mediaType;
+                    let latestAcd = getMostRecentParticipant(conversation, 'acd');
+                    if (latestAcd && latestAcd.sessions) {
+                        mediaType = latestAcd.sessions[0].mediaType;
+                    }
+
+                    switch (mediaType) {
+                        case 'email':
+                            cellMediaType.classList.add('fa', 'fa-envelope');
+                            cellMediaType.setAttribute('aria-label', 'email');
+                            break;
+                        case 'voice':
+                        case 'callback':
+                            cellMediaType.classList.add('fas', 'fa-phone');
+                            cellMediaType.setAttribute('aria-label', 'voice or callback');
+                            break;
+                        case 'chat':
+                            cellMediaType.classList.add('fas', 'fa-comments');
+                            cellMediaType.setAttribute('aria-label', 'chat');
+                            break;
+                        case 'screenshare':
+                        case 'cobrowse':
+                            cellMediaType.classList.add('fas', 'fa-desktop');
+                            cellMediaType.setAttribute('aria-label', 'screenshare or cobrowse');
+                            break;
+                        default:
+                            if (typeof mediaType != 'undefined') {
+                                cellMediaType.classList.add('text-only');
+                                cellMediaType.appendChild(document.createTextNode(mediaType));
+                            }
+                    }
+
+                    // Wrap-up Cell
+                    let wrapUpSeg = getMostRecentWrapUpSegment(conversation);
+                    if (wrapUpSeg && wrapUpSeg._custom_wrapUp) {
+                        cellWrapUp.appendChild(document.createTextNode(wrapUpSeg._custom_wrapUp.name));
+                    }
+
+                    // Add Listener to row if specified
+                    if (clickListener) {
+                        row.addEventListener('click', clickListener);
+                    }
+
+                    return row;
+                }
+
+                // Holds wrapUpCode lookup results to improve downsteam fetches
+                let wrapUpCodeDetailsMap = {};
+
+                // Get user's convo history over specified range; optionally expanding wrapup
+                function getUserConversationHistory(userId, numDays, expandWrapup) {
+                    let intervalEnd = new Date();
+                    let intervalStart = (new Date(new Date().setDate(intervalEnd.getDate() - numDays)));
+
+                    let query = {
+                        "interval": intervalStart.toISOString() + "/" + intervalEnd.toISOString(),
+                        "order": "asc",
+                        "orderBy": "conversationStart",
+                        "paging": {
+                            "pageSize": 25,
+                            "pageNumber": 1
+                        },
+                        "segmentFilters": [
+                            {
+                                "type": "and",
+                                "predicates": [
+                                    {
+                                        "type": "dimension",
+                                        "dimension": "userId",
+                                        "operator": "matches",
+                                        "value": userId
+                                    }
+                                ]
+                            }
+                        ]
+                    };
+
+                    return new platformClient.AnalyticsApi().postAnalyticsConversationsDetailsQuery(query)
+                        .then(function (results) {
+                            if (!results || !results.conversations) {
+                                // No conversations is returned as an empty object; return an empty array
+                                return [];
+                            }
+
+                            if (!expandWrapup) {
+                                return results.conversations;
+                            } else {
+                                let outstandingWrapupPromises = [];
+                                // Map of wrapUpCodes to segments that need to be updated when the wrap-up text returns
+                                let wrapUpToSegments = {};
+
+                                // Find and Issue requests for any unknown wrapup code details and return with promises as necessary
+                                // Note: Some duplicate requests here, but not terrible for a demo
+                                results.conversations.forEach(function (conversation, index) {
+                                    let latestWrapUp = getMostRecentWrapUpSegment(conversation);
+
+                                    if (latestWrapUp && latestWrapUp.wrapUpCode) {
+                                        let wrapUpCode = latestWrapUp.wrapUpCode;
+
+                                        let knownDetails = wrapUpCodeDetailsMap[wrapUpCode];
+                                        if (knownDetails) {
+                                            // We've previously fetched this wrap-up; insert it now
+                                            latestWrapUp._custom_wrapUp = knownDetails;
+                                        } else {
+                                            // Unknown wrap-up code; need to fetch it
+                                            let segmentsToUpdate = wrapUpToSegments[wrapUpCode];
+
+                                            if (segmentsToUpdate) {
+                                                // Additional segment for outstanding wrapup xhr request; add to list
+                                                segmentsToUpdate.push(latestWrapUp);
+                                            } else {
+                                                // First request for this wrap-up code
+                                                wrapUpToSegments[wrapUpCode] = [latestWrapUp];
+                                                outstandingWrapupPromises.push(
+                                                    new platformClient.RoutingApi().getRoutingWrapupcode(wrapUpCode)
+                                                        .then(function (wrapUpDetails) {
+                                                            // Persist for future use
+                                                            wrapUpCodeDetailsMap[wrapUpCode] = wrapUpDetails;
+                                                            // Update all associated segments
+                                                            wrapUpToSegments[wrapUpCode].forEach(function (currSegment) {
+                                                                currSegment._custom_wrapUp = wrapUpDetails;
+                                                            });
+                                                        })
+                                                        .catch(function (err) {
+                                                            console.error('Failed to look up wrapUpCode', err);
+                                                            // Update all associated segments
+                                                            wrapUpToSegments[wrapUpCode].forEach(function (currSegment) {
+                                                                currSegment._custom_wrapUp = null;
+                                                            });
+                                                        })
+                                                );
+                                            }
+                                        }
+                                    }
+                                });
+
+                                if (outstandingWrapupPromises.length === 0) {
+                                    return results.conversations;
+                                } else {
+                                    // Wait for all the outstanding wrap-up code fetches, then resolve with the convos
+                                    return Promise.all(outstandingWrapupPromises).then(function () {
+                                        return results.conversations;
+                                    });
+                                }
+                            }
+                        }
+                    );
+                }
+
+                function getMostRecentParticipant(conversation, participantPurpose) {
+                    if (!conversation.participants) {
+                        return null;
+                    }
+
+                    let result = null;
+
+                    for (let index=conversation.participants.length - 1; !result && index >= 0; index--) {
+                        let currParticipant = conversation.participants[index];
+                        if (currParticipant.purpose === participantPurpose) {
+                            result = currParticipant;
+                        }
+                    }
+
+                    return result;
+                }
+
+                function getMostRecentSegment(session, segmentType) {
+                    if (!session.segments) {
+                        return null;
+                    }
+
+                    let result = null;
+
+                    for (let index=session.segments.length - 1; !result && index >= 0; index--) {
+                        let currSegment = session.segments[index];
+                        if (currSegment.segmentType === segmentType) {
+                            result = currSegment;
+                        }
+                    }
+
+                    return result;
+                }
+
+                function getMostRecentWrapUpSegment(conversation) {
+                    let result = null;
+
+                    let lastAgent = getMostRecentParticipant(conversation, 'agent');
+                    if (lastAgent && lastAgent.sessions) {
+                        result = getMostRecentSegment(lastAgent.sessions[lastAgent.sessions.length - 1], 'wrapup')
+                    }
+
+                    return result;
                 }
             });
         </script>
