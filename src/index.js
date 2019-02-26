@@ -17,6 +17,7 @@ import AlertingApi from './modules/alerting';
 import LifecycleApi from './modules/lifecycle';
 import CoreUiApi from './modules/ui';
 import UsersApi from './modules/users';
+import ConversationsApi from './modules/conversations';
 
 /**
  * Provides bi-directional communication and integration between this instance of a PureCloud Client Application
@@ -148,6 +149,20 @@ class ClientApp {
          * clientApp.users.someMethod(...);
          */
         this.users = new UsersApi(apiCfg);
+
+        /**
+         * The ConversationsApi instance.
+         *
+         * @type {module:modules/conversations~ConversationsApi}
+         *
+         * @example
+         * let clientApp = new ClientApp({
+         *   pcEnvironmentQueryParam: 'pcEnvironment'
+         * });
+         *
+         * clientApp.conversations.someMethod(...);
+         */
+        this.conversations = new ConversationsApi(apiCfg);
     }
 
     /**
