@@ -13,8 +13,8 @@
     <head>
         <title>PureCloud Profile Example</title>
 
-        <script src="https://sdk-cdn.mypurecloud.com/javascript/27.0.0/purecloud-platform-client-v2.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0/purecloud-client-app-sdk-ed1f20f5244ee2bb9cc242f669369639.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/javascript/45.0.0/purecloud-platform-client-v2.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.1.0/purecloud-client-app-sdk-67d9718ee63219ce11a7ad61904ae155.min.js"></script>
 
         <style>
             body {
@@ -130,7 +130,7 @@
 
           let redirectUrl = window.location.origin;
           if (!redirectUrl) {
-              redirectUrl = window.location.protocol + window.location.host;
+              redirectUrl = window.location.protocol + '//' + window.location.host;
           }
           redirectUrl += window.location.pathname;
 
