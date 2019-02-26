@@ -272,6 +272,7 @@
 
                                 if (conversations.length === 0) {
                                     setErrorState('No conversations were found for you in the past 30 days');
+                                    reloadButtonEl.disabled = false;
                                     return;
                                 }
 
@@ -292,9 +293,9 @@
                                 setHidden(conversationsTable, false);
                                 reloadButtonEl.disabled = false;
                             }).catch(function (reason) {
-                                reloadButtonEl.disabled = false;
                                 setHidden(reloadingEl, true);
                                 setErrorState('Failed to fetch your conversations');
+                                reloadButtonEl.disabled = false;
                             });
                         }
 
