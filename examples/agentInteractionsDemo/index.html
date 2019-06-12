@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Agent-level Evaluations Page</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://sdk-cdn.mypurecloud.com/javascript/50.0.0/purecloud-platform-client-v2.min.js"></script>
+    <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.1.0/purecloud-client-app-sdk-67d9718ee63219ce11a7ad61904ae155.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="app.css" />
+</head>
+
+<body>
+    <section class="authenticating hidden">
+        Authenticating to PureCloud ...
+    </section>
+    <section class="failure hidden">
+        Sorry, an error has occurred.
+    </section>
+    <section class="user-profile hidden">
+        <div class="card">
+            <div class="profile-link">
+                <a href="#" aria-label="Click to view user's profile in PureCloud">
+                    <div class="placeholder-pic" aria-label="User profile picture missing">?</div>
+                    <img class="profile-pic" src="" aria-label="Profile picture for User">
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="search hidden">
+        <form>
+            <div class="form-group">
+                Start Date:<br>
+                <input type="date" id="starttime" name="starttime">
+            </div>
+            <div class="form-group">
+                End Date:<br>
+                <input type="date" id="endtime" name="endtime">
+            </div>
+            <div class="form-group">
+                <button id="search" type="button">
+                  Search
+                </button>
+            </div>
+        </form>
+    </section>
+    <section class="evaluation-list hidden">
+        <h4>List of Evaluations</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+    <script src="app.js"></script>
+</body>
+
+</html>
