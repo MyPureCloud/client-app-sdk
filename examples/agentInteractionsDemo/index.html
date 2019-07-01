@@ -25,6 +25,20 @@
 </head>
 
 <body>
+    <!-- template for the authenticating component -->
+    <script type="text/x-template" id="authenticating-template">
+        <div>
+            <section class="authenticating"
+                    v-bind:class="{'hidden':this.authenticated || this.errorMessage}">
+                Authenticating to PureCloud ...
+            </section>
+            <section class="failure"
+                    v-bind:class="{'hidden':!this.errorMessage}">
+                {{this.errorMessage}}
+            </section>
+        </div>
+    </script>
+
     <!-- template for the profile component -->
     <script type="text/x-template" id="profile-template">
         <section class="user-profile">
@@ -45,7 +59,7 @@
     <!-- template for the conversations component -->
     <script type="text/x-template" id="conversations-template">
         <section class="conversation-list">
-            <div class=".form-container">
+            <div class="form-container">
                 <form @submit.prevent="filterCards">
                     <div class="conversation-list-filter">
                         <div class="date-picker">
@@ -98,7 +112,6 @@
                         </p>
                         <div class="dropdown dropright">
                             <button v-if="convEvalMap.has(conv.id)"
-                                    @click="selectConversation(conv.id)"
                                     id="dropdownMenuBtn"
                                     class="view-evaluations btn btn-secondary dropdown-toggle"
                                     data-toggle="dropdown"
@@ -121,26 +134,61 @@
         </section>
     </script>
 
+    <!-- template for the conversations component -->
+    <script type="text/x-template" id="tester-template">
+        <section class="manual-tester">
+            <form @submit.prevent="getConversationOrEvaluation">
+                <h2>Manual Tester</h2>
+                <div class="form-group conversation-id">
+                    <label for="conversation-id">Conversation ID:</label>
+                    <input type="text"
+                        class="form-control"
+                        id="conversation-id"
+                        v-model="convId">
+                </div>
+                <div class="form-group evaluation-id">
+                    <label for="evaluation-id">Evaluation ID:</label>
+                    <input type="text"
+                        class="form-control"
+                        id="evaluation-id"
+                        v-model="evalId">
+                </div>
+                <div class="form-group">
+                    <button type="submit"
+                        class="btn btn-primary"
+                        v-bind:class="{'disabled':!this.convId}">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </section>
+    </script>
+
     <!-- app -->
     <div id="app">
         <!-- authenticating placeholder-->
-        <section class="authenticating hidden">
-            Authenticating to PureCloud ...
-        </section>
-        <section class="failure hidden">
-            Sorry, an error has occurred.
-        </section>
+        <authenticating :error-message="errorMessage"
+                        :authenticated="authenticated">
+
+        </authenticating>
 
         <!-- user profile -->
-        <profile :profile-data="profileData">
+        <profile :profile-data="profileData"
+                v-bind:class="{'hidden':!this.authenticated}">
 
         </profile>
 
         <!-- evaluation list -->
         <conversations :evaluations-data="evaluationsData"
-                    :conversations-data="conversationsData">
+                    :conversations-data="conversationsData"
+                    v-bind:class="{'hidden':!this.authenticated}">
 
         </conversations>
+
+        <!-- manual tester -->
+        <tester v-bind:class="{'hidden':!this.authenticated}">
+
+        </tester>
     </div>
 
     <script src="app.js"></script>

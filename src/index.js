@@ -176,6 +176,8 @@ class ClientApp {
          * });
          *
          * clientApp.myConversations.someMethod(...);
+         *
+         * @since 1.3.0
          */
         this.myConversations = new MyConversationsApi(apiCfg);
     }

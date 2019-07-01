@@ -3,7 +3,7 @@
  *
  * @module modules/myConversations
  *
- * @since 1.1.0
+ * @since 1.3.0
  */
 import BaseApi from './base';
 
@@ -12,7 +12,7 @@ import BaseApi from './base';
  *
  * @extends module:modules/base~BaseApi
  *
- * @since 1.1.0
+ * @since 1.3.0
  */
 
 class MyConversationsApi extends BaseApi {
@@ -30,7 +30,7 @@ class MyConversationsApi extends BaseApi {
      *   'B1B0B92B-B944-4F5D-AF62-8E5BAFFC9298',
      * );
      *
-     * @since 1.1.0
+     * @since 1.3.0
      */
 
     showInteractionDetails(conversationId) {
@@ -54,7 +54,7 @@ class MyConversationsApi extends BaseApi {
      *   '0E3759CE-2275-4480-BB15-3D4717446F93',
      * );
      *
-     * @since 1.1.0
+     * @since 1.3.0
      */
     showEvaluationDetails(conversationId, evaluationId) {
         super.sendMsgToPc('showMyEvaluationDetails', {

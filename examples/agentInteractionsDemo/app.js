@@ -5,6 +5,11 @@ Vue.prototype.$usersApi = null;
 Vue.prototype.$qualityApi = null;
 Vue.prototype.$conversationsApi = null;
 
+const authenticatingComponent = {
+    props: ['errorMessage', 'authenticated'],
+    template: '#authenticating-template'
+}
+
 const profileComponent = {
     props: ['profileData'],
 
@@ -35,7 +40,6 @@ const conversationsComponent = {
 
     data: function() {
         return {
-            selectedConv: "",
             startDate: moment('1997-01-01').toISOString(),
             endDate: moment().toISOString(),
             titles: [
@@ -95,6 +99,35 @@ const conversationsComponent = {
     template: '#conversations-template'
 };
 
+const testerComponent = {
+    data: function() {
+        return {
+            convId: "",
+            evalId: ""
+        }
+    },
+
+    methods: {
+        viewInteraction: function(convId) {
+            Vue.prototype.$clientApp.myConversations.showInteractionDetails(convId);
+        },
+        viewEvaluation: function(convId, evalId) {
+            Vue.prototype.$clientApp.myConversations.showEvaluationDetails(convId, evalId);
+        },
+        getConversationOrEvaluation: function(evt) {
+            if (this.convId) {
+                if (this.evalId) {
+                    this.viewEvaluation(this.convId, this.evalId);
+                } else {
+                    this.viewInteraction(this.convId);
+                }
+            }
+        }
+    },
+
+    template: '#tester-template'
+}
+
 new Vue({
     el: '#app',
 
@@ -110,22 +143,22 @@ new Vue({
         conversationsData: {
             conversations: [],
             convEvalMap: new Map()
-        }
+        },
+        errorMessage: "",
+        authenticated: false
     },
 
     components: {
+        'authenticating': authenticatingComponent,
         'profile': profileComponent,
-        'conversations': conversationsComponent
+        'conversations': conversationsComponent,
+        'tester': testerComponent
     },
 
     beforeMount() {
-        const failureEl = $('.failure')[0];
         let pcEnvironment = getEmbeddingPCEnv();
         if (!pcEnvironment) {
-            setErrorState(
-                failureEl,
-                'Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?'
-            );
+            this.errorMessage = 'Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?';
             return;
         }
 
@@ -134,16 +167,11 @@ new Vue({
             * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
             * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
             */
-        let pcOAuthClientIds = {
-            'mypurecloud.com': 'implicit-oauth-client-id-here'
-        };
+        let pcOAuthClientIds = {'mypurecloud.com': 'implicit-oauth-client-id-here'};
 
         let clientId = pcOAuthClientIds[pcEnvironment];
         if (!clientId) {
-            setErrorState(
-                failureEl,
-                pcEnvironment + ': Unknown/Unsupported PureCloud Environment'
-            );
+            this.errorMessage = pcEnvironment + ': Unknown/Unsupported PureCloud Environment';
             return;
         }
 
@@ -159,10 +187,7 @@ new Vue({
             Vue.prototype.$clientApp = clientApp;
         } catch (e) {
             console.log(e);
-            setErrorState(
-                failureEl,
-                pcEnvironment + ": Unknown/Unsupported PureCloud Embed Context"
-            );
+            this.errorMessage = pcEnvironment + ": Unknown/Unsupported PureCloud Embed Context";
             return;
         }
 
@@ -175,7 +200,6 @@ new Vue({
         Vue.prototype.$conversationsApi = conversationsApi;
 
         let authenticated = false;
-        let authenticatingEl = $('.authenticating')[0];
         let agentUserId = "";
 
         let redirectUrl = window.location.origin;
@@ -195,9 +219,7 @@ new Vue({
                 // Process agent's profile data
                 this.profileData = profileData;
                 agentUserId = profileData.id;
-                setHidden(authenticatingEl, true);
-                let profileEl = $(".user-profile")[0];
-                setHidden(profileEl, false);
+                this.authenticated = true;
 
                 // Get evaluations data
                 const startTime = moment('1997-01-01').toISOString();
@@ -254,12 +276,8 @@ new Vue({
             })
             .catch((err) => {
                 console.log(err);
-                setHidden(authenticatingEl, true);
-                setErrorState(
-                    authenticatingEl,
-                    !authenticated ? "Failed to Authenticate with PureCloud" :
-                    "Failed to fetch/display profile"
-                );
+                this.errorMessage = !authenticated ? "Failed to Authenticate with PureCloud" :
+                                    "Failed to fetch/display profile";
             });
     },
 });
