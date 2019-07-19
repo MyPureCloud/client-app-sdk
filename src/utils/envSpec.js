@@ -7,7 +7,8 @@ export default describe('env utils', () => {
         'mypurecloud.com.au',
         'mypurecloud.ie',
         'mypurecloud.jp',
-        'mypurecloud.de'
+        'mypurecloud.de',
+        'usw2.pure.cloud'
     ];
 
     it('should provide the default environment', () => {
@@ -62,7 +63,8 @@ export default describe('env utils', () => {
             `https://apps.${seedTld}`, // FQDN
             `. ${seedTld} /`, // Inner whitespace
             'mypurecloud.io', // Valid TLD, but invalid PC Env TLD
-            'mypurecloud.com.evil.com' // Evil subdomains
+            'mypurecloud.com.evil.com', // Evil subdomains
+            'usw3.pure.cloud' // Valid PC Env TLD, but invalid subdomain
         ];
 
         variations.forEach(currTld => {
