@@ -17,12 +17,15 @@ import BaseApi from './base';
 
 class MyConversationsApi extends BaseApi {
     /**
-     * Show an interaction by ID.
+     * Show an agent his/her interaction by ID.
      *
      * Required Permissions:
      * * ALL Of
-     *     * quality:evaluation:view
-     * * Must be participant of conversation
+     *     * User must be an Agent participant on the conversation
+     *     * ONE Of
+     *         * Implicit Conversation Access via participant on the Conversation
+     *         * conversation:communication:view
+     *
      * @param {String} conversationId
      *
      * @example
@@ -40,13 +43,15 @@ class MyConversationsApi extends BaseApi {
     }
 
     /**
-     * Show evaluation details by ID.
+     * Show an agent his/her evaluation details by conversation and evaluation IDs.
      *
      * Required Permissions:
      * * ALL Of
+     *     * User must be the Agent evaluated on the specified conversation/evaluation
      *     * quality:evaluation:view
-     * * Must be the agent evaluated
+     *
      * @param {String} conversationId
+     * @param {String} evaluationId
      *
      * @example
      * myClientApp.myConversations.showEvaluationDetails(
