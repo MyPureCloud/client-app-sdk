@@ -24,7 +24,6 @@ const profileComponent = {
             evt.preventDefault();
 
             if (this.profileData.id) {
-                console.log(evt);
                 Vue.prototype.$clientApp.users.showProfile(this.profileData.id);
             } else {
                 console.info("No user ID available to route to user profile");
@@ -36,7 +35,7 @@ const profileComponent = {
 };
 
 const conversationsComponent = {
-    props: ['evaluationsData', 'conversationsData'],
+    props: ['conversationsData'],
 
     data: function() {
         return {
@@ -137,9 +136,6 @@ new Vue({
             email: "ron@swanson.com",
             department: "Parks and Rec"
         },
-        evaluationsData: {
-            evals: []
-        },
         conversationsData: {
             conversations: [],
             convEvalMap: new Map()
@@ -224,13 +220,11 @@ new Vue({
                 // Get evaluations data
                 const startTime = moment('1997-01-01').toISOString();
                 const endTime = moment().toISOString();
-                const evaluationListPromise = getEvaluations(qualityApi, startTime, endTime, agentUserId);
-                const conversationsPromise = conversationsApi.getConversations();
-                evaluationListPromise
+
+                getEvaluations(qualityApi, startTime, endTime, agentUserId)
                     .then((data) => {
                         // Process evaluations data
                         const evaluations = data.entities;
-                        this.evaluationsData = evaluations;
                         evaluations.forEach((eval) => {
                             conversationsApi.getConversation(eval.conversation.id)
                                 .then((conv) => {
@@ -245,10 +239,6 @@ new Vue({
                                     } else {
                                         this.conversationsData.convEvalMap.set(conv.id, [eval]);
                                     }
-                                    if (this.conversationsData.conversations.length>4) {
-                                        console.log(this.conversationsData.conversations);
-                                        console.log(this.conversationsData.convEvalMap);
-                                    }
                                 })
                                 .catch((err) => {
                                     console.log(`Error: ${err}`);
@@ -258,7 +248,8 @@ new Vue({
                     .catch((err) => {
                         console.log(`Error: ${err}`);
                     });
-                conversationsPromise
+
+                conversationsApi.getConversations()
                     .then((data) => {
                         data.entities.forEach((conv) => {
                             let newConv = conv;

@@ -1,17 +1,4 @@
 // ----- Utility Functions
-function setErrorState(el, errorMsg) {
-    el.textContent = errorMsg;
-    setHidden(el, false);
-}
-
-function setHidden(el, hidden) {
-    if (hidden) {
-        el.classList.add("hidden");
-    } else {
-        el.classList.remove("hidden");
-    }
-}
-
 function extractParams(paramStr) {
     let result = {};
 
@@ -99,22 +86,5 @@ function getEvaluations(qualityApi, startTime, endTime, agentUserId) {
         expand: ["evaluator"],
         sortOrder: "asc",
     };
-    console.log(opts);
-    return qualityApi.getQualityEvaluationsQuery(opts);
-}
-
-/**
- * Function used to fetch evaluationListing
- */
-function getEvaluations(qualityApi, startTime, endTime, agentUserId) {
-    const opts = {
-        agentUserId,
-        startTime,
-        endTime,
-        expandAnswerTotalScores: true,
-        expand: ["evaluator"],
-        sortOrder: "asc",
-    };
-    console.log(opts);
     return qualityApi.getQualityEvaluationsQuery(opts);
 }
