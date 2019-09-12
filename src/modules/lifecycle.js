@@ -20,7 +20,31 @@ const STOP_HOOK_FILTER = HOOK_NAME_FILTER.bind(undefined, 'stop');
 /**
  * Utilities for monitoring and updating the lifecycle of a PureCloud Client App
  *
+ * ### Lifecycle Hooks
+ *
+ * These utilities require the app to be opted into the appropriate lifecycle hook via
+ * advanced configuration.  This can be set via the API, Admin UI, or hard-coded for Premium Apps.
+ * The format of lifecycle hooks in advanced configuration is as follows:
+ *
+ * ```json
+ * {
+ *   "lifecycle": {
+ *     "ephemeral": <boolean>,
+ *     "hooks": {
+ *       "stop": <boolean>,
+ *       "blur": <boolean>,
+ *       "focus": <boolean>,
+ *       "bootstrap": <boolean>
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * See [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events) for more details.
+ *
  * @extends module:modules/base~BaseApi
+ *
+ * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
  *
  * @since 1.0.0
  */
@@ -32,6 +56,9 @@ class LifecycleApi extends BaseApi {
      * work with PureCloud.  Implementers should call bootstrapped() after initialization work is
      * complete.  PureCloud will eventually timeout and show the app anyway if the bootstrapped()
      * function is not called in a timely manor.
+     *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `bootstrap`
      *
      * @param {function} listener - The function to call when PureCloud is ready for the app to
      * perform post-load initialization work.  This function will be passed the lifecycle event and
@@ -48,6 +75,8 @@ class LifecycleApi extends BaseApi {
      *   }, 500);
      * });
      *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
+     *
      * @since 1.0.0
      */
     addBootstrapListener(listener, once = true) {
@@ -61,8 +90,13 @@ class LifecycleApi extends BaseApi {
      * Signals PureCloud that this app has finished its initialization work and
      * can be shown to the user.
      *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `bootstrap`
+     *
      * @example
      * myClientApp.lifecycle.bootstrapped();
+     *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
      *
      * @since 1.0.0
      */
@@ -72,6 +106,9 @@ class LifecycleApi extends BaseApi {
 
     /**
      * Remove a previously registered bootstrap lifecycle event listener.
+     *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `bootstrap`
      *
      * @param {function} listener - The previously registered bootstrap event listener.
      * @param {boolean} once - false if once was explicitly set as false when adding the listener;
@@ -87,6 +124,8 @@ class LifecycleApi extends BaseApi {
      * // Note once must be set to false or the listener will be auto-removed by default
      * myClientApp.lifecycle.addBootstrapListener(onBootstrap, false);
      *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
+     *
      * @since 1.0.0
      */
     removeBootstrapListener(listener, once = true) {
@@ -99,6 +138,9 @@ class LifecycleApi extends BaseApi {
     /**
      * Attach a listener function to be called when the user has re-focused your app.
      * [Note:] Focus is not called on initial show.  Use the bootstrap listener for that work.
+     *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `focus`
      *
      * @param {function} listener - The function to call when the user has re-focused your
      * app in the UI.
@@ -115,6 +157,8 @@ class LifecycleApi extends BaseApi {
      *   myClientApp.lifecycle.removeFocusListener(onFocus);
      * });
      *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
+     *
      * @since 1.0.0
      */
     addFocusListener(listener, once = false) {
@@ -126,6 +170,9 @@ class LifecycleApi extends BaseApi {
 
     /**
      * Remove a previously registered focus lifecycle event listener
+     *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `focus`
      *
      * @param {function} listener - The previously registered focus event listener.
      * @param {boolean} once - true if once was explicitly set as true when adding the listener;
@@ -142,6 +189,8 @@ class LifecycleApi extends BaseApi {
      *   myClientApp.lifecycle.removeFocusListener(onFocus);
      * });
      *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
+     *
      * @since 1.0.0
      */
     removeFocusListener(listener, once = false) {
@@ -153,6 +202,9 @@ class LifecycleApi extends BaseApi {
 
     /**
      * Attach a listener function to be called when the user has left/blurred your app.
+     *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `blur`
      *
      * @param {function} listener - The function to call when the user has left your
      * app in the UI.
@@ -169,6 +221,8 @@ class LifecycleApi extends BaseApi {
      *   myClientApp.lifecycle.removeBlurListener(onBlur);
      * });
      *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
+     *
      * @since 1.0.0
      */
     addBlurListener(listener, once = false) {
@@ -180,6 +234,9 @@ class LifecycleApi extends BaseApi {
 
     /**
      * Remove a previously registered blur lifecycle event listener
+     *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `blur`
      *
      * @param {function} listener - The previously registered blur event listener.
      * @param {boolean} once - true if once was explicitly set as true when adding the listener;
@@ -195,6 +252,8 @@ class LifecycleApi extends BaseApi {
      * myClientApp.lifecycle.addStopListener(() => {
      *   myClientApp.lifecycle.removeBlurListener(onBlur);
      * });
+     *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
      *
      * @since 1.0.0
      */
@@ -214,6 +273,9 @@ class LifecycleApi extends BaseApi {
      * stopped() after shutdown work is complete.  PureCloud will eventually timeout and permanenty
      * remove the app anyway if stopped() is not called in a timely manor.
      *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `stop`
+     *
      * @param {function} listener - The function to call when PureCloud is about to stop this app.
      * This function will be passed the lifecycle event and does not augment the this context.
      * @param {boolean} once - If the listener should only be invoked once or repeatedly; true by default.
@@ -228,6 +290,8 @@ class LifecycleApi extends BaseApi {
      *   }, 500);
      * });
      *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
+     *
      * @since 1.0.0
      */
     addStopListener(listener, once = true) {
@@ -241,8 +305,13 @@ class LifecycleApi extends BaseApi {
      * Signals PureCloud that this app has finished its tear down work and the iframe
      * can be removed from purecloud permanently.
      *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `stop`
+     *
      * @example
      * myClientApp.lifecycle.stopped();
+     *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
      *
      * @since 1.0.0
      */
@@ -252,6 +321,9 @@ class LifecycleApi extends BaseApi {
 
     /**
      * Remove a previously registered stop lifecycle event listener.
+     *
+     * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
+     * * `stop`
      *
      * @param {function} listener - The previously registered stop event listener.
      * @param {boolean} once - false if once was explicitly set as false when adding the listener;
@@ -270,6 +342,8 @@ class LifecycleApi extends BaseApi {
      * };
      * // Note: once must be set to false or the listener will be auto-removed by default
      * myClientApp.lifecycle.addStopListener(onStop, false);
+     *
+     * @see [Advanced Application Concepts - Lifecycle Events](/api/client-apps/advanced.html#lifecycle_events)
      *
      * @since 1.0.0
      */
