@@ -1,0 +1,106 @@
+a:link,
+a:visited {
+    color: #2258f9;
+}
+
+a:hover,
+a:active {
+    color: red;
+}
+
+.user-profile {
+    width: 420px;
+    margin-left: 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-profile .profile-link {
+    border: 0;
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
+    transition: 0.3s;
+    border-radius: 1%;
+    text-align: center;
+}
+
+.user-profile .profile-link .profile-pic {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+}
+
+.user-profile .profile-link .placeholder-pic {
+    font-size: 150px;
+    line-height: 150px;
+    width: 150px;
+    text-align: center;
+    background-color: #C0C0C0;
+    border-radius: 50%;
+}
+
+.user-profile .base-info .name {
+    font-size: 1.5em;
+}
+
+.user-profile .base-info .email {
+    color: #8B8B8B;
+}
+
+.user-profile .base-info .department {
+    color: #8B8B8B;
+}
+
+.conversation-list .form-group {
+    margin-bottom: 0.5rem;
+}
+
+.conversation-list-filter {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+input[type="date"] {
+    padding: 0 6px;
+}
+
+.date-picker {
+    padding-left: 10px;
+}
+
+.submit {
+    padding-left: 20px;
+}
+
+.submit input {
+    padding: 1px 6px;
+}
+
+.card {
+    width: 480px;
+    margin: 10px 0;
+}
+
+.card .card-body .btn-link {
+    padding: 0;
+}
+
+.view-evaluations {
+    color: #FFF;
+}
+
+.live-header {
+    color: green;
+}
+
+.hidden {
+    display: none;
+}
+
+section {
+    margin: 20px 10px;
+}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Agent-level Evaluations Page</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://sdk-cdn.mypurecloud.com/javascript/52.1.1/purecloud-platform-client-v2.min.js"></script>
+    <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.2.0/purecloud-client-app-sdk-ec66d96860238a6e72d23a28203ac0fc.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+    <script src="util.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="app.css" />
+</head>
+
+<body>
+    <!-- template for the authenticating component -->
+    <script type="text/x-template" id="authenticating-template">
+        <div>
+            <section class="authenticating"
+                    v-bind:class="{'hidden':this.authenticated || this.errorMessage}">
+                Authenticating to PureCloud ...
+            </section>
+            <section class="failure"
+                    v-bind:class="{'hidden':!this.errorMessage}">
+                {{this.errorMessage}}
+            </section>
+        </div>
+    </script>
+
+    <!-- template for the profile component -->
+    <script type="text/x-template" id="profile-template">
+        <section class="user-profile">
+            <div @click="profileLinkListener" class="profile-link">
+                <a href="#" aria-label="Click to view user's profile in PureCloud">
+                    <div v-bind:class="{'placeholder-pic':true, hidden:imageUri}" aria-label="User profile picture missing">?</div>
+                    <img v-bind:class="{'profile-pic':true, hidden:!imageUri}" v-bind:src="imageUri" aria-label="Profile picture for User">
+                </a>
+            </div>
+            <div class="base-info">
+                <div class="name">{{ profileData.name }}</div>
+                <div class="email">{{ profileData.email }}</div>
+                <div class="department">{{ profileData.department }}</div>
+            </div>
+        </section>
+    </script>
+
+    <!-- template for the conversations component -->
+    <script type="text/x-template" id="conversations-template">
+        <section class="conversation-list">
+            <div class="form-container">
+                <form @submit.prevent="filterCards">
+                    <div class="conversation-list-filter">
+                        <div class="date-picker">
+                            <div class="form-group row">
+                                <label for="starttime" class="col-2 col-form-label">From</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="date" id="starttime" name="starttime">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="endtime" class="col-2 col-form-label">To</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="date" id="endtime" name="endtime">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group submit">
+                            <input type="submit" class="btn btn-outline-dark" value="Filter" id="filter">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="conversations">
+                <div v-if="conv.id" v-for="conv in conversations"
+                    class="card">
+                    <div class="card-header">
+                        <span class="live-header" v-if="!conv.endTime">
+                            Live
+                        </span>
+                        <span class="evaluated-header" v-else-if="convEvalMap.has(conv.id)">
+                            Evaluated
+                        </span>
+                        <span class="finished-header" v-else>
+                            Finished
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-link">
+                            <h5>
+                                <a @click="viewInteraction(conv.id)">
+                                    {{conv.customer.name}}
+                                </a>
+                            </h5>
+                        </button>
+                        <p class="card-text mb-2 text-muted">
+                            Start: {{moment(conv.startTime).format('MMM Do YYYY, h:mm:ss A')}}
+                        </p>
+                        <p v-if="conv.endTime" class="card-text mb-2 text-muted">
+                            End: &nbsp {{moment(conv.endTime).format('MMM Do YYYY, h:mm:ss A')}}
+                        </p>
+                        <div class="dropdown dropright">
+                            <button v-if="convEvalMap.has(conv.id)"
+                                    class="view-evaluations btn btn-secondary dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                View Evaluations
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuBtn">
+                                <a v-if="convEvalMap.has(conv.id)"
+                                    v-for="eval in convEvalMap.get(conv.id)"
+                                    @click="viewEvaluation(conv.id, eval.id)"
+                                    class="dropdown-item">
+                                    {{eval.evaluationForm.name}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </script>
+
+    <!-- template for the conversations component -->
+    <script type="text/x-template" id="tester-template">
+        <section class="manual-tester">
+            <form @submit.prevent="getConversationOrEvaluation">
+                <h2>Manual Tester</h2>
+                <div class="form-group conversation-id">
+                    <label for="conversation-id">Conversation ID:</label>
+                    <input type="text"
+                        class="form-control"
+                        id="conversation-id"
+                        v-model="convId">
+                </div>
+                <div class="form-group evaluation-id">
+                    <label for="evaluation-id">Evaluation ID:</label>
+                    <input type="text"
+                        class="form-control"
+                        id="evaluation-id"
+                        v-model="evalId">
+                </div>
+                <div class="form-group">
+                    <button type="submit"
+                        class="btn btn-primary"
+                        v-bind:class="{'disabled':!this.convId}">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </section>
+    </script>
+
+    <!-- app -->
+    <div id="app">
+        <!-- authenticating placeholder-->
+        <authenticating :error-message="errorMessage"
+                        :authenticated="authenticated">
+
+        </authenticating>
+
+        <!-- user profile -->
+        <profile :profile-data="profileData"
+                v-bind:class="{'hidden':!this.authenticated}">
+
+        </profile>
+
+        <!-- evaluation list -->
+        <conversations :conversations-data="conversationsData"
+                    v-bind:class="{'hidden':!this.authenticated}">
+
+        </conversations>
+
+        <!-- manual tester -->
+        <tester v-bind:class="{'hidden':!this.authenticated}">
+
+        </tester>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
