@@ -173,3 +173,14 @@ Example Icons made by [FreePik](http://www.flaticon.com/packs/color-communicatio
 
 ### Cursor Creative
 Example Icons made by [Cursor Creative](http://www.flaticon.com/authors/cursor-creative) from [www.flaticon.com](http://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
+
+### svgrepo
+Example Icons sourced from [svgrepo](https://www.svgrepo.com) are licensed by [CC 4.0 BY](https://creativecommons.org/licenses/by/4.0/)
+
+#### Packs:
+* [Vectors](https://www.svgrepo.com/vectors/)
+  * headphones-with-microphone
+* [Medical Set SVG Vectors](https://www.svgrepo.com/vectors/medical-set/)
+  * pulse (Pulse with Heart Background)
+* [Dialogue Assets SVG Vectors](https://www.svgrepo.com/vectors/dialogue-assets/)
+  * chat
