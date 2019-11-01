@@ -115,9 +115,52 @@
             var lifecycleStatusMessageTitle = 'Lifecycle Demo App';
             var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
 
+            function extractParams(paramStr) {
+                let result = {};
+
+                if (paramStr) {
+                    let params = paramStr.split('&');
+                    params.forEach(function(currParam) {
+                        if (currParam) {
+                            let paramTokens = currParam.split('=');
+                            let paramName = paramTokens[0];
+                            let paramValue = paramTokens[1];
+                            if (paramName) {
+                                paramName = decodeURIComponent(paramName);
+                                paramValue = paramValue ? decodeURIComponent(paramValue) : null;
+
+                                if (!result.hasOwnProperty(paramName)) {
+                                    result[paramName] = paramValue;
+                                } else if (Array.isArray(result[paramName])) {
+                                    result[paramName].push(paramValue);
+                                } else {
+                                    result[paramName] = [result[paramName], paramValue];
+                                }
+                            }
+                        }
+                    });
+                }
+
+                return result;
+            }
+
+            function getRequireManualToastDismissal() {
+                if (window.location.search) {
+                    let paramValue = extractParams(window.location.search.substring(1)).requireManualToastDismissal;
+                    if (paramValue === 'true') {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             jQuery(function () {
                 let myClientApp = null;
 
+                var requireManualToastDismissal = getRequireManualToastDismissal();
+
+                var count = 0;
                 // Note: This manual check for query string is for backwards compatibility of this
                 // deployed example.  In your own apps, you can assume the query param will be
                 // provided by PureCloud if you have configured it in your app's config.
@@ -136,14 +179,26 @@
                     // Simulating bootstrap delay of 500ms
                     window.setTimeout(() => {
                         myClientApp.lifecycle.bootstrapped();
-
-                        myClientApp.alerting.showToastPopup(
-                            lifecycleStatusMessageTitle,
-                            'Bootstrap Complete (500ms delay)', {
-                                id: lifecycleStatusMessageId,
-                                type: 'success'
-                            }
-                        );
+                        if (requireManualToastDismissal) {
+                            myClientApp.alerting.showToastPopup(
+                                lifecycleStatusMessageTitle,
+                                `Bootstrap Complete (500ms delay):${lifecycleStatusMessageId}-bootstrap-${count}`, {
+                                    id: `${lifecycleStatusMessageId}-bootstrap-${count}`,
+                                    type: 'success',
+                                    showCloseButton: true,
+                                    timeout: 0
+                                }
+                            );
+                            count++;
+                        } else {
+                            myClientApp.alerting.showToastPopup(
+                                lifecycleStatusMessageTitle,
+                                `Bootstrap Complete (500ms delay)`, {
+                                    id: lifecycleStatusMessageId,
+                                    type: 'success',
+                                }
+                            );
+                        }
 
                         logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
                     }, 500);
@@ -151,25 +206,49 @@
 
                 function onAppFocus () {
                     logLifecycleEvent('App Lifecycle Event: focus', true);
-
-                    myClientApp.alerting.showToastPopup(
+                    if (requireManualToastDismissal) {
+                        myClientApp.alerting.showToastPopup(
+                            lifecycleStatusMessageTitle,
+                            `App Focused:${lifecycleStatusMessageId}-focus-${count}`, {
+                                id: `${lifecycleStatusMessageId}-focus-${count}`,
+                                showCloseButton: true,
+                                timeout: 0
+                            }
+                        );
+                        count++;
+                    } else {
+                        myClientApp.alerting.showToastPopup(
                         lifecycleStatusMessageTitle,
-                        'App Focused', {
-                            id: lifecycleStatusMessageId
-                        }
-                    );
+                            'App Focused', {
+                                id: lifecycleStatusMessageId
+                            }
+                        );
+                    }
+
                 }
                 myClientApp.lifecycle.addFocusListener(onAppFocus);
 
                 function onAppBlur () {
                     logLifecycleEvent('App Lifecycle Event: blur', true);
+                    if (requireManualToastDismissal) {
+                        myClientApp.alerting.showToastPopup(
+                            lifecycleStatusMessageTitle,
+                            `App Blurred:${lifecycleStatusMessageId}-blur-${count}`, {
+                                id: `${lifecycleStatusMessageId}-blur-${count}`,
+                                showCloseButton: true,
+                                timeout: 0
+                            }
+                        );
+                        count++;
+                    } else {
+                        myClientApp.alerting.showToastPopup(
+                            lifecycleStatusMessageTitle,
+                            'App Blurred', {
+                                id: lifecycleStatusMessageId
+                            }
+                        );
+                    }
 
-                    myClientApp.alerting.showToastPopup(
-                        lifecycleStatusMessageTitle,
-                        'App Blurred', {
-                            id: lifecycleStatusMessageId
-                        }
-                    );
                 }
                 myClientApp.lifecycle.addBlurListener(onAppBlur);
 
@@ -183,15 +262,27 @@
                     // Simulating delay of 500ms
                     window.setTimeout(() => {
                         myClientApp.lifecycle.stopped();
-
-                        myClientApp.alerting.showToastPopup(
-                            lifecycleStatusMessageTitle,
-                            'App Stopped (500ms delay)', {
-                                id: lifecycleStatusMessageId,
-                                type: 'error',
-                                showCloseButton: true
-                            }
-                        );
+                        if (requireManualToastDismissal) {
+                            myClientApp.alerting.showToastPopup(
+                                lifecycleStatusMessageTitle,
+                                `App Stopped (500ms delay):${lifecycleStatusMessageId}-stop-${count}`, {
+                                    id: `${lifecycleStatusMessageId}-stop-${count}`,
+                                    type: 'error',
+                                    showCloseButton: true,
+                                    timeout: 0
+                                }
+                            );
+                            count++;
+                        } else {
+                            myClientApp.alerting.showToastPopup(
+                                lifecycleStatusMessageTitle,
+                                'App Stopped (500ms delay)', {
+                                    id: lifecycleStatusMessageId,
+                                    type: 'error',
+                                    showCloseButton: true
+                                }
+                            );
+                        }
 
                         logLifecycleEvent('Notified PC of Successful App Stop', false);
                     }, 500);
