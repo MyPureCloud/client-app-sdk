@@ -31,6 +31,21 @@ class ContactsApi extends BaseApi {
     showExternalContactProfile(contactId) {
         super.sendMsgToPc('showExternalContactProfile', {contactId: contactId});
     }
+    /**
+     * Show a organization by ID.
+     *
+     * Required Permissions:
+     * * ANY Of
+     *     * externalContacts:externalOrganization:view
+     *
+     * @example
+     * myClientApp.contacts.showExternalOrganizationProfile('bf2ef57F-9bc5-4436-8738-77c94869c81c');
+     *
+     * @since 1.4.0
+     */
+    showExternalOrganizationProfile(orgId) {
+        super.sendMsgToPc('showExternalOrganizationProfile', {orgId: orgId});
+    }
 }
 
 export default ContactsApi;

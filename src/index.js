@@ -19,6 +19,7 @@ import CoreUiApi from './modules/ui';
 import UsersApi from './modules/users';
 import ConversationsApi from './modules/conversations';
 import MyConversationsApi from './modules/myConversations';
+import ContactsApi from './modules/contacts.js';
 
 /**
  * Provides bi-directional communication and integration between this instance of a PureCloud Client Application
@@ -180,6 +181,22 @@ class ClientApp {
          * @since 1.3.0
          */
         this.myConversations = new MyConversationsApi(apiCfg);
+
+        /**
+         * The Contacts instance.
+         *
+         * @type {module:modules/contacts~ContactsApi}
+         *
+         * @example
+         * let clientApp = new ClientApp({
+         *   pcEnvironmentQueryParam: 'pcEnvironment'
+         * });
+         *
+         * clientApp.contacts.someMethod(...);
+         *
+         * @since 1.3.0
+         */
+        this.contacts = new ContactsApi(apiCfg);
     }
 
     /**
