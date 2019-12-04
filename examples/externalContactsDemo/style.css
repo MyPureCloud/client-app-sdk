@@ -1,0 +1,23 @@
+body {
+    padding: 10px;
+}
+
+#tableBody a {
+    cursor: pointer;
+}
+
+.authenticating .progress {
+    position: relative;
+    height: auto;
+    text-align: center;
+}
+
+.progress-bar {
+    position: absolute;
+    width: 0%;
+}
+
+.progress-label {
+    position: relative;
+    color: #000000;
+}
