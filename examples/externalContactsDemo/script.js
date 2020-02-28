@@ -98,6 +98,9 @@ document.addEventListener('DOMContentLoaded', function () {
             let permissions = profileData.authorization.permissions;
             if (checkPermission(permissions, 'externalContacts:contact:view')) {
                 requestExternalContacts().then(data => {
+                    // Hide progress bar after auth is done and promise resolved
+                    let authenticatingEl = document.querySelector('.authenticating');
+                    authenticatingEl.classList.add('hidden');
                     let entities = data.entities;
                     // Build table with data from api call
                     for (let i = 0; i < entities.length; i++) {
@@ -105,27 +108,31 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.getElementById('tableBody').insertAdjacentHTML('beforeend',
                             `<tr>
                                 <td>
-                                    <a id="entity-${i}">${entities[i].lastName}, ${entities[i].firstName}</a>
+                                    <a id="entity-${i}"></a>
                                 </td>
                                 <td>
-                                    <a id="org-${i}">${hasOrg ? entities[i].externalOrganization.id : ''}</a>
+                                    <a id="org-${i}"></a>
                                 </td>
                             </tr>`
                         );
                         // Attach listeners to entities to call sdk methods
-                        document.getElementById(`entity-${i}`).addEventListener('click', function () {
+                        let entity = document.getElementById(`entity-${i}`);
+                        entity.addEventListener('click', function () {
                             clientApp.externalContacts.showExternalContactProfile(entities[i].id);
                         });
+                        entity.appendChild(document.createTextNode(`${entities[i].lastName}, ${entities[i].firstName}`));
                         if (hasOrg) {
-                            document.getElementById(`org-${i}`).addEventListener('click', function () {
-                                clientApp.externalContacts.showExternalOrganizationProfile(entities[i].externalOrganization.id);
+                            let org = document.getElementById(`org-${i}`);
+                            let orgId = entities[i].externalOrganization.id;
+                            org.addEventListener('click', function () {
+                                clientApp.externalContacts.showExternalOrganizationProfile(orgId);
                             });
+                            org.appendChild(document.createTextNode(orgId));
                         }
                     }
+                }).catch(err => {
+                    setErrorState(err);
                 });
-                // Hide progress bar after auth is done
-                let authenticatingEl = document.querySelector('.authenticating');
-                authenticatingEl.classList.add('hidden');
             } else {
                 setErrorState('You do not have the proper permissions to view external contacts.');
             }
@@ -140,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function setErrorState(errorMsg) {
         // Display error text in progress bar
-        document.querySelector('.progress-label').innerHTML = errorMsg;
+        document.querySelector('.progress-label').innerText = errorMsg;
         document.querySelector('.progress-bar').className += ' progress-bar-danger';
         updateProgressBar(100);
     }
@@ -258,8 +265,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return apiInstance.getExternalcontactsContacts(opts)
             .then(data => {
                 return data;
-            }).catch(err => {
-                setErrorState(err);
             });
     }
 
