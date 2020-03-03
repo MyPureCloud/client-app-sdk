@@ -8,7 +8,10 @@ export default describe('env utils', () => {
         'mypurecloud.ie',
         'mypurecloud.jp',
         'mypurecloud.de',
-        'usw2.pure.cloud'
+        'usw2.pure.cloud',
+        'euw2.pure.cloud',
+        'cac1.pure.cloud',
+        'apne2.pure.cloud'
     ];
 
     it('should provide the default environment', () => {
