@@ -184,3 +184,5 @@ Example Icons sourced from [svgrepo](https://www.svgrepo.com) are licensed by [C
   * pulse (Pulse with Heart Background)
 * [Dialogue Assets SVG Vectors](https://www.svgrepo.com/vectors/dialogue-assets/)
   * chat
+* [Productivity 2 Vectors](https://www.svgrepo.com/vectors/productivity-2/)
+  * address-book (Set stroke as black and increased weight)
