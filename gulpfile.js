@@ -71,6 +71,11 @@ if (SUPPORTED_DOC_OUTPUT_FORMATS.indexOf(docMdOutputFormat) < 0) {
     process.exit(1);
 }
 
+let relativeLinkExtension = '.md';
+if (docMdOutputFormat === PC_DEV_CENTER_FORMAT) {
+    relativeLinkExtension = '.html';
+}
+
 var build = function () {
     return Promise.all([buildStdDists(), buildProdBrowserDist()]);
 };
@@ -191,6 +196,8 @@ var buildDoc = function () {
 
             buffer = transformGithubMarkdown(buffer, docMdOutputFormat);
 
+            buffer = transformRelativeLinks(buffer, relativeLinkExtension);
+
             return fsThen.writeFile(path.join(docDestDirPath, 'index.md'), buffer, {encoding: 'UTF-8'});
         })
     );
@@ -225,7 +232,7 @@ var buildDoc = function () {
                         'heading-depth': 2,
                         'example-lang': 'js',
                         purecloudCustom: {
-                            outputFormat: 'websiteSrc'
+                            linkExtension: relativeLinkExtension
                         }
                     }).then(output => {
                         output = buildDocHeader(className) + output;
@@ -245,6 +252,13 @@ var buildDoc = function () {
         return Promise.reject(errMsg);
     });
 };
+
+function transformRelativeLinks(buffer, ext) {
+    const RELATIVE_LINK_REPLACE_REGEXP = /\(\.\/([^)]+)\.[^)]+\)/gm;
+    return buffer.replace(RELATIVE_LINK_REPLACE_REGEXP, (match, name) => {
+        return `(./${name}${ext})`;
+    });
+}
 
 /**
  * Returns a copy of the github-flavored markdown srcBuffer transformed into the target format.
