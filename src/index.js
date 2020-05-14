@@ -229,7 +229,7 @@ class ClientApp {
     /**
      * Displays information about this version of the PureClound Client App SDK.
      *
-     * @returns A string of information describing this library
+     * @returns {string} A string of information describing this library
      *
      * @example
      * ClientApp.about(); // SDK details returned as a string
