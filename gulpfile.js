@@ -71,6 +71,17 @@ if (SUPPORTED_DOC_OUTPUT_FORMATS.indexOf(docMdOutputFormat) < 0) {
     process.exit(1);
 }
 
+let relativeLinkExtension = '.html';
+const SUPPORTED_EXTENSIONS = ['.html', '.md', ''];
+// allow empty string case for extensionless format
+if (process.env.RELATIVE_LINK_EXTENSION !== undefined) {
+    relativeLinkExtension = process.env.RELATIVE_LINK_EXTENSION;
+    if (SUPPORTED_EXTENSIONS.indexOf(relativeLinkExtension) < 0) {
+        console.error(`Unknown relative link extension specified: '${relativeLinkExtension}'`);
+        process.exit(1);
+    }
+}
+
 var build = function () {
     return Promise.all([buildStdDists(), buildProdBrowserDist()]);
 };
@@ -191,6 +202,8 @@ var buildDoc = function () {
 
             buffer = transformGithubMarkdown(buffer, docMdOutputFormat);
 
+            buffer = transformRelativeLinks(buffer, relativeLinkExtension);
+
             return fsThen.writeFile(path.join(docDestDirPath, 'index.md'), buffer, {encoding: 'UTF-8'});
         })
     );
@@ -225,7 +238,7 @@ var buildDoc = function () {
                         'heading-depth': 2,
                         'example-lang': 'js',
                         purecloudCustom: {
-                            outputFormat: 'websiteSrc'
+                            linkExtension: relativeLinkExtension
                         }
                     }).then(output => {
                         output = buildDocHeader(className) + output;
@@ -245,6 +258,13 @@ var buildDoc = function () {
         return Promise.reject(errMsg);
     });
 };
+
+function transformRelativeLinks(buffer, ext) {
+    const RELATIVE_LINK_REPLACE_REGEXP = /\(\.\/(.+)\..+\)/gm;
+    return buffer.replace(RELATIVE_LINK_REPLACE_REGEXP, (match, name) => {
+        return `(./${name}${ext})`;
+    });
+}
 
 /**
  * Returns a copy of the github-flavored markdown srcBuffer transformed into the target format.
