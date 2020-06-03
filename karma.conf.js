@@ -74,9 +74,11 @@ module.exports = function(config) {
                 exclude: 'node_modules/**'
             })
         ],
-        format: 'iife',         // Helps prevent naming collisions.
-        name: 'sdkTestBundle', // Required for 'iife' format.
-        sourcemap: 'inline'     // Sensible for testing.
+        output: {
+            format: 'iife',         // Helps prevent naming collisions.
+            name: 'sdkTestBundle', // Required for 'iife' format.
+            sourcemap: 'inline'     // Sensible for testing.
+        }
     }
   });
 };

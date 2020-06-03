@@ -9,8 +9,6 @@ Multiple builds are created for consumption in a wide variety of runtimes and bu
 $ yarn run build
 # -or-
 $ npm run build
-# -or-
-$ gulp build
 ```
 
 The default build command also builds the API documentation.  Artifacts are not committed to the repo.  The builds are run before publishing, so the artifacts will be immediately available for users of the API.
@@ -21,8 +19,6 @@ The default build command also builds the API documentation.  Artifacts are not 
 $ yarn run docs 
 # -or-
 $ npm run docs 
-# -or-
-$ gulp doc 
 ```
 
 The API sources live in `/doc` and are built to dist before publishing.  These are also deployed out on https://developer.mypurecloud.com.
