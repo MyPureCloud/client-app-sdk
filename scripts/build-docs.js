@@ -16,9 +16,9 @@ if (SUPPORTED_DOC_OUTPUT_FORMATS.indexOf(docMdOutputFormat) < 0) {
     process.exit(1);
 }
 
-let relativeLinkExtension = '.md';
-if (docMdOutputFormat === PC_DEV_CENTER_FORMAT) {
-    relativeLinkExtension = '.html';
+let linkExtension = '.md';
+if (docMdOutputFormat === PC_DEV_CENTER_FORMAT || docMdOutputFormat === KRAMDOWN_FORMAT) {
+    linkExtension = '.html';
 }
 
 let flagDocsAsPreview = true;
@@ -33,7 +33,10 @@ if (process.env.FLAG_DOCS_AS_PREVIEW) {
 // If invoked via "npm run docs" or "node scripts/build-docs.js" run immediately
 const calledFromCli = !module.parent;
 if (calledFromCli) {
-    buildDocs();
+    buildDocs().catch(error => {
+        console.error('Documentation generation failed', error);
+        process.exit(1);
+    });
 }
 
 function buildDocHeader(title) {
@@ -98,7 +101,7 @@ function buildDocs() {
 
             buffer = transformGithubMarkdown(buffer, docMdOutputFormat);
 
-            buffer = transformRelativeLinks(buffer, relativeLinkExtension);
+            buffer = transformRelativeLinks(buffer, linkExtension);
 
             return fsThen.writeFile(path.join(docDestDirPath, 'index.md'), buffer, {encoding: 'UTF-8'});
         })
@@ -133,9 +136,7 @@ function buildDocs() {
                         helper: helpers,
                         'heading-depth': 2,
                         'example-lang': 'js',
-                        purecloudCustom: {
-                            linkExtension: relativeLinkExtension
-                        }
+                        purecloudCustom: { linkExtension }
                     }).then(output => {
                         output = buildDocHeader(className) + output;
 
@@ -148,10 +149,6 @@ function buildDocs() {
         });
 
         return Promise.all(docPromises);
-    }).catch(reason => {
-        let errMsg = 'Documentation generation failed';
-        console.error(errMsg, reason);
-        return Promise.reject(errMsg);
     });
 }
 

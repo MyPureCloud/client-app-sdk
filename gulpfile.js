@@ -156,7 +156,12 @@ gulp.task('clean', function () {
     return del([DEST_DIR]);
 });
 
-gulp.task('docs', buildDocs);
+gulp.task('docs', () => {
+    return buildDocs().catch(error => {
+        console.error('Documentation generation failed', error);
+        return Promise.reject(error);
+    });
+});
 
 gulp.task('build', build);
 
