@@ -260,7 +260,7 @@ var buildDoc = function () {
 };
 
 function transformRelativeLinks(buffer, ext) {
-    const RELATIVE_LINK_REPLACE_REGEXP = /\(\.\/(.+)\..+\)/gm;
+    const RELATIVE_LINK_REPLACE_REGEXP = /\(\.\/([^)]+)\.[^)]+\)/gm;
     return buffer.replace(RELATIVE_LINK_REPLACE_REGEXP, (match, name) => {
         return `(./${name}${ext})`;
     });
