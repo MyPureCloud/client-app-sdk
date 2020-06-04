@@ -71,15 +71,9 @@ if (SUPPORTED_DOC_OUTPUT_FORMATS.indexOf(docMdOutputFormat) < 0) {
     process.exit(1);
 }
 
-let relativeLinkExtension = '.html';
-const SUPPORTED_EXTENSIONS = ['.html', '.md', ''];
-// allow empty string case for extensionless format
-if (process.env.RELATIVE_LINK_EXTENSION !== undefined) {
-    relativeLinkExtension = process.env.RELATIVE_LINK_EXTENSION;
-    if (SUPPORTED_EXTENSIONS.indexOf(relativeLinkExtension) < 0) {
-        console.error(`Unknown relative link extension specified: '${relativeLinkExtension}'`);
-        process.exit(1);
-    }
+let relativeLinkExtension = '.md';
+if (docMdOutputFormat === PC_DEV_CENTER_FORMAT) {
+    relativeLinkExtension = '.html';
 }
 
 var build = function () {
