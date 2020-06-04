@@ -4,11 +4,8 @@
 var pkg = require('./package.json');
 var path = require('path');
 var fs = require('fs');
-let fsThen = require('fs-then-native');
-var mkdirp = require('mkdirp');
 
 var gulp = require('gulp');
-var gutil = require('gulp-util');
 var del = require('del');
 var replace = require('gulp-replace');
 var runSequence = require('run-sequence');
@@ -22,6 +19,8 @@ var rollupPluginUglify = require('rollup-plugin-uglify');
 
 // Development Server Utils
 var browserSync = require('browser-sync');
+
+const { buildDocs } = require('./scripts/build-docs');
 
 const DEST_DIR = 'dist';
 const GLOBAL_LIBRARY_NAME = 'purecloud.apps.ClientApp';
@@ -51,30 +50,6 @@ const DEFAULT_ROLLUP_CONFIG = {
     ],
     cache: false
 };
-
-let flagDocsAsPreview = true;
-if (process.env.FLAG_DOCS_AS_PREVIEW) {
-    ['false', 'f', '0'].forEach(currFalseValue => {
-        if (process.env.FLAG_DOCS_AS_PREVIEW === currFalseValue) {
-            flagDocsAsPreview = false;
-        }
-    });
-}
-
-const GITHUB_FORMAT = 'github';
-const KRAMDOWN_FORMAT = 'kramdown';
-const PC_DEV_CENTER_FORMAT = 'purecloudDevCenter';
-const SUPPORTED_DOC_OUTPUT_FORMATS = [GITHUB_FORMAT, KRAMDOWN_FORMAT, PC_DEV_CENTER_FORMAT];
-let docMdOutputFormat = process.env.DOC_MD_OUTPUT_FORMAT || PC_DEV_CENTER_FORMAT;
-if (SUPPORTED_DOC_OUTPUT_FORMATS.indexOf(docMdOutputFormat) < 0) {
-    console.error(`Unknown MD Output Format Specified: '${docMdOutputFormat}'`);
-    process.exit(1);
-}
-
-let relativeLinkExtension = '.md';
-if (docMdOutputFormat === PC_DEV_CENTER_FORMAT) {
-    relativeLinkExtension = '.html';
-}
 
 var build = function () {
     return Promise.all([buildStdDists(), buildProdBrowserDist()]);
@@ -166,125 +141,6 @@ function buildProdBrowserDist(destDirPath = path.resolve(DEST_DIR)) {
     });
 }
 
-function buildDocHeader(title) {
-    let result = `---\ntitle: ${title}`;
-    if (flagDocsAsPreview) {
-        result += '\nispreview: true';
-    }
-    result += '\n---\n\n';
-
-    return result;
-}
-
-/**
- * Builds markdown docs suitable for ingestion into the website generator
- */
-var buildDoc = function () {
-    let jsdoc2md = require('jsdoc-to-markdown');
-    let docSrcDirPath = path.resolve('doc');
-    let docDestDirPath = path.resolve(DEST_DIR, 'docs');
-
-    // Create docs dest dir, if not already present
-    mkdirp.sync(docDestDirPath);
-
-    let docPromises = [];
-
-    // Initiate index copy - Add to promise array for concurrency
-    docPromises.push(
-        fsThen.readFile(path.join(docSrcDirPath, 'index.md'), {encoding: 'UTF-8'}).then(buffer => {
-            buffer = buildDocHeader('Client App SDK') + buffer;
-
-            buffer = transformGithubMarkdown(buffer, docMdOutputFormat);
-
-            buffer = transformRelativeLinks(buffer, relativeLinkExtension);
-
-            return fsThen.writeFile(path.join(docDestDirPath, 'index.md'), buffer, {encoding: 'UTF-8'});
-        })
-    );
-
-    // Generate Class docs from jsdoc in src
-    let partialsPattern = path.join(docSrcDirPath, 'partials', '**', '*.hbs');
-    let helpers = path.join(docSrcDirPath, 'helpers.js');
-
-    return jsdoc2md.getTemplateData({
-        cache: null,
-        files: 'src/**/*.js'
-    }).then(templateData => {
-        templateData.forEach(currIdentifier => {
-            if (!currIdentifier || currIdentifier.kind !== 'class') {
-                return;
-            }
-
-            let {name: className} = currIdentifier;
-            if (className) {
-                // Remove the module as the parent of the classes for the purposes of doc generation
-                currIdentifier.scope = 'global';
-                currIdentifier.memberof = '';
-
-                let template = `{{#class name="${className}"}}{{>docs}}{{/class}}`;
-
-                docPromises.push(
-                    jsdoc2md.render({
-                        data: templateData,
-                        template: template,
-                        partial: partialsPattern,
-                        helper: helpers,
-                        'heading-depth': 2,
-                        'example-lang': 'js',
-                        purecloudCustom: {
-                            linkExtension: relativeLinkExtension
-                        }
-                    }).then(output => {
-                        output = buildDocHeader(className) + output;
-
-                        output = transformGithubMarkdown(output, docMdOutputFormat);
-
-                        return fsThen.writeFile(path.join(docDestDirPath, `${className}.md`), output);
-                    })
-                );
-            }
-        });
-
-        return Promise.all(docPromises);
-    }).catch(reason => {
-        let errMsg = 'Documentation generation failed';
-        gutil.log(gutil.colors.red(errMsg), reason);
-        return Promise.reject(errMsg);
-    });
-};
-
-function transformRelativeLinks(buffer, ext) {
-    const RELATIVE_LINK_REPLACE_REGEXP = /\(\.\/([^)]+)\.[^)]+\)/gm;
-    return buffer.replace(RELATIVE_LINK_REPLACE_REGEXP, (match, name) => {
-        return `(./${name}${ext})`;
-    });
-}
-
-/**
- * Returns a copy of the github-flavored markdown srcBuffer transformed into the target format.
- *
- * @param {string} srcBuffer The base github-flavored markdown format
- * @param {string} targetFormat The desired markdwon format of the response
- */
-function transformGithubMarkdown(srcBuffer, targetFormat) {
-    let result = srcBuffer;
-
-    if (targetFormat === PC_DEV_CENTER_FORMAT) {
-        // Transform ``` javascript to ``` {"language": "javascript"}
-        let codeFenceRegExp = /^[ \t]*```[ \t]*(\S*)[ \t]*$/gm;
-        result = result.replace(codeFenceRegExp, (match, language) => {
-            return '```' + (language ? ` {"language": "${language}"}` : '');
-        });
-    }
-
-    if (targetFormat === KRAMDOWN_FORMAT) {
-        // Kramdown uses ~~~ for code blocks
-        result = result.replace(/```/g, '~~~');
-    }
-
-    return result;
-}
-
 var buildExamples = function (destPath = DEST_DIR, sdkUrl = null) {
     gulp.src('examples/**')
         .pipe(replace(/(\s*<script.*src=")([^"]+client-app-sdk[^"]+)(".*<\/script>\s*)/i, '$1' + (sdkUrl || '$2') + '$3\n'))
@@ -293,16 +149,16 @@ var buildExamples = function (destPath = DEST_DIR, sdkUrl = null) {
 
 // Tasks
 gulp.task('default', function (done) {
-    runSequence('clean', ['build', 'doc'], done);
+    runSequence('clean', ['build', 'docs'], done);
 });
 
 gulp.task('clean', function () {
     return del([DEST_DIR]);
 });
 
-gulp.task('build', build);
+gulp.task('docs', buildDocs);
 
-gulp.task('doc', buildDoc);
+gulp.task('build', build);
 
 gulp.task('watch', function () {
     gulp.watch('src/**/*.js', () => {
