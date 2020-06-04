@@ -2,8 +2,7 @@
 'use strict';
 
 const path = require('path');
-const fsThen = require('fs-then-native');
-const mkdirp = require('mkdirp');
+const fs = require('fs-extra');
 
 const DEST_DIR = 'dist';
 const GITHUB_FORMAT = 'github';
@@ -90,20 +89,20 @@ function buildDocs() {
     let docDestDirPath = path.resolve(DEST_DIR, 'docs');
 
     // Create docs dest dir, if not already present
-    mkdirp.sync(docDestDirPath);
+    fs.ensureDirSync(docDestDirPath);
 
     let docPromises = [];
 
     // Initiate index copy - Add to promise array for concurrency
     docPromises.push(
-        fsThen.readFile(path.join(docSrcDirPath, 'index.md'), {encoding: 'UTF-8'}).then(buffer => {
+        fs.readFile(path.join(docSrcDirPath, 'index.md'), {encoding: 'UTF-8'}).then(buffer => {
             buffer = buildDocHeader('Client App SDK') + buffer;
 
             buffer = transformGithubMarkdown(buffer, docMdOutputFormat);
 
             buffer = transformRelativeLinks(buffer, linkExtension);
 
-            return fsThen.writeFile(path.join(docDestDirPath, 'index.md'), buffer, {encoding: 'UTF-8'});
+            return fs.writeFile(path.join(docDestDirPath, 'index.md'), buffer, {encoding: 'UTF-8'});
         })
     );
 
@@ -142,7 +141,7 @@ function buildDocs() {
 
                         output = transformGithubMarkdown(output, docMdOutputFormat);
 
-                        return fsThen.writeFile(path.join(docDestDirPath, `${className}.md`), output);
+                        return fs.writeFile(path.join(docDestDirPath, `${className}.md`), output);
                     })
                 );
             }

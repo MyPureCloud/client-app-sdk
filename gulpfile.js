@@ -7,7 +7,6 @@ var fs = require('fs');
 
 var gulp = require('gulp');
 var del = require('del');
-var replace = require('gulp-replace');
 var runSequence = require('run-sequence');
 
 var rollup = require('rollup');
@@ -21,6 +20,7 @@ var rollupPluginUglify = require('rollup-plugin-uglify');
 var browserSync = require('browser-sync');
 
 const { buildDocs } = require('./scripts/build-docs');
+const { buildExamples } = require('./scripts/build-examples');
 
 const DEST_DIR = 'dist';
 const GLOBAL_LIBRARY_NAME = 'purecloud.apps.ClientApp';
@@ -141,12 +141,6 @@ function buildProdBrowserDist(destDirPath = path.resolve(DEST_DIR)) {
     });
 }
 
-var buildExamples = function (destPath = DEST_DIR, sdkUrl = null) {
-    gulp.src('examples/**')
-        .pipe(replace(/(\s*<script.*src=")([^"]+client-app-sdk[^"]+)(".*<\/script>\s*)/i, '$1' + (sdkUrl || '$2') + '$3\n'))
-        .pipe(gulp.dest(destPath));
-};
-
 // Tasks
 gulp.task('default', function (done) {
     runSequence('clean', ['build', 'docs'], done);
@@ -173,8 +167,8 @@ gulp.task('watch', function () {
 });
 
 gulp.task('serve', ['clean'], function () {
-    let buildSdkForDevServer = buildStdDists.bind(this, path.resolve(DEST_DIR, 'vendor'));
-    let buildExamplesForDevServer = buildExamples.bind(this, DEST_DIR, `vendor/${BROWSER_FILENAME}`);
+    let buildSdkForDevServer = () => buildStdDists(path.resolve(DEST_DIR, 'vendor'));
+    let buildExamplesForDevServer = () => buildExamples(DEST_DIR, `vendor/${BROWSER_FILENAME}`);
 
     return buildSdkForDevServer().then(() => {
         buildExamplesForDevServer();
