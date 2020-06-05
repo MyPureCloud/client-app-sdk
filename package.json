@@ -19,7 +19,7 @@
   "scripts": {
     "lint": "eslint gulpfile.js src/*.js src/**/*.js",
     "build": "gulp",
-    "docs": "gulp doc",
+    "docs": "node scripts/build-docs.js",
     "pretest": "npm run lint",
     "test": "karma start --single-run --browsers PhantomJS",
     "watch:test": "karma start",
@@ -74,7 +74,6 @@
     "gh-pages": "^0.11.0",
     "gulp": "^3.9.1",
     "gulp-replace": "^0.5.4",
-    "gulp-util": "^3.0.8",
     "hasha": "^3.0.0",
     "jasmine": "^2.4.1",
     "jsdoc-to-markdown": "^3.0.0",
