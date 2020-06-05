@@ -2,10 +2,10 @@
 'use strict';
 
 const pkg = require('./package.json');
-const commonjs = require('rollup-plugin-commonjs');
-const resolve = require('rollup-plugin-node-resolve');
-const json = require('rollup-plugin-json');
-const babel = require('rollup-plugin-babel');
+const commonjs = require('@rollup/plugin-commonjs');
+const json = require('@rollup/plugin-json');
+const { default: babel } = require('@rollup/plugin-babel');
+const { default: resolve } = require('@rollup/plugin-node-resolve');
 const { terser } = require('rollup-plugin-terser');
 
 const DEST_DIR = 'dist';
@@ -24,24 +24,35 @@ const LEGAL_TEXT = `/*
 * Attribution and license information can be found at https://github.com/MyPureCloud/client-app-sdk/blob/master/README.md
 */`;
 
+// Packages to exclude from esm/cjs bundles
+const EXTERNAL_DEPS = [
+    'query-string',
+    /@babel\/runtime/ // Need to use a regex here: https://github.com/rollup/plugins/issues/475#issuecomment-652416290
+];
+
+// Need to be able to configure whether or not
+// babel pulls in the esm versions of the runtime helpers
+const babelPlugin = (useESModules = false) => babel({
+    babelHelpers: 'runtime',
+    exclude: /node_modules/,
+    presets: ['@babel/env'],
+    plugins: [['@babel/transform-runtime', { useESModules }]]
+});
+
 const baseRollupConfig = {
     input: './src/index.js',
     cache: false,
     plugins: [
         commonjs(),
         resolve(),
-        json(),
-        babel({
-            exclude: 'node_modules/**'
-        })
+        json()
     ]
 };
 
-const buildRollupConfig = (config) => {
-    return Object.assign({}, baseRollupConfig, config);
-};
+const buildRollupConfig = (config) => Object.assign({}, baseRollupConfig, config);
 
 export const umdConfig = buildRollupConfig({
+    plugins: [...baseRollupConfig.plugins, babelPlugin()],
     output: {
         dir: DEST_DIR,
         intro: LEGAL_TEXT,
@@ -54,14 +65,8 @@ export const umdConfig = buildRollupConfig({
 export default [
     umdConfig,
     buildRollupConfig({
-        output: {
-            dir: DEST_DIR,
-            intro: LEGAL_TEXT,
-            entryFileNames: ES_FILENAME,
-            format: 'es'
-        }
-    }),
-    buildRollupConfig({
+        external: EXTERNAL_DEPS,
+        plugins: [...baseRollupConfig.plugins, babelPlugin()],
         output: {
             dir: DEST_DIR,
             intro: LEGAL_TEXT,
@@ -70,24 +75,37 @@ export default [
         }
     }),
     buildRollupConfig({
+        external: EXTERNAL_DEPS,
+        plugins: [...baseRollupConfig.plugins, babelPlugin(true)],
+        output: {
+            dir: DEST_DIR,
+            intro: LEGAL_TEXT,
+            entryFileNames: ES_FILENAME,
+            format: 'es'
+        }
+    }),
+    buildRollupConfig({
+        plugins: umdConfig.plugins,
         output: {
             banner: LEGAL_TEXT,
             name: GLOBAL_LIBRARY_NAME,
             dir: DEST_DIR,
             entryFileNames: `${pkg.name}-[hash]${PROD_BROWSER_EXT}`,
             format: 'umd',
-            sourcemap: true
-        },
-        plugins: [...baseRollupConfig.plugins, terser({
-            output: {
-                comments: function (node, comment) {
-                    if (comment.type === 'comment2') {
-                        // multiline comment
-                        let includedCommentsRegExp = /@copyright|@license|@cc_on/i;
-                        return includedCommentsRegExp.test(comment.value);
+            sourcemap: true,
+            plugins: [
+                terser({
+                    output: {
+                        comments: (node, comment) => {
+                            if (comment.type === 'comment2') {
+                                // multiline comment
+                                let includedCommentsRegExp = /@copyright|@license|@cc_on/i;
+                                return includedCommentsRegExp.test(comment.value);
+                            }
+                        }
                     }
-                }
-            }
-        })]
+                })
+            ]
+        }
     })
 ];
