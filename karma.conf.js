@@ -82,8 +82,9 @@ module.exports = function(config) {
               extensions: ['.js', '.ts'],
               presets: ['@babel/env', '@babel/typescript'],
               plugins: [
-                ['@babel/transform-runtime', { useESModules: false }],
-                '@babel/transform-object-assign'
+                  ['@babel/transform-runtime', { useESModules: false }],
+                  '@babel/proposal-class-properties',
+                  '@babel/transform-object-assign'
               ]
             })
         ],

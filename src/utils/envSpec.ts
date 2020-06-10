@@ -71,10 +71,12 @@ export default describe('env utils', () => {
         ];
 
         variations.forEach(currTld => {
+            // @ts-expect-error
             let resolvedEnv = envUtils.lookupPcEnv(currTld);
             expect(resolvedEnv).toBe(null);
 
             // Doesn't matter if it's lenient
+            // @ts-expect-error
             resolvedEnv = envUtils.lookupPcEnv(currTld, true);
             expect(resolvedEnv).toBe(null);
         });

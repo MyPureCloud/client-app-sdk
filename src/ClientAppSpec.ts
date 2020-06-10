@@ -28,7 +28,7 @@ export default describe('ClientApp', () => {
             let myClientApp = new ClientApp();
             expect(myClientApp.pcEnvironment).toBe(VALID_DEFAULT_PC_ENVIRONMENT);
 
-            myClientApp = new ClientApp({nonEmptyConfig: true});
+            myClientApp = new ClientApp({nonEmptyConfig: true} as any);
             expect(myClientApp.pcEnvironment).toBe(VALID_DEFAULT_PC_ENVIRONMENT);
         });
 
@@ -83,9 +83,8 @@ export default describe('ClientApp', () => {
 
                 invalidQueryParamNames.forEach(currInvalidParamName => {
                     expect(() => {
-                        new ClientApp({
-                            pcEnvironmentQueryParam: currInvalidParamName
-                        });
+                        // @ts-expect-error
+                        new ClientApp({ pcEnvironmentQueryParam: currInvalidParamName });
                     }).toThrow();
                 });
             });
@@ -113,9 +112,8 @@ export default describe('ClientApp', () => {
 
                 invalidEnvironments.forEach(currInvalidEnv => {
                     expect(() => {
-                        new ClientApp({
-                            pcEnvironment: currInvalidEnv
-                        });
+                        // @ts-expect-error
+                        new ClientApp({ pcEnvironment: currInvalidEnv });
                     }).toThrow();
                 });
             });
@@ -136,9 +134,8 @@ export default describe('ClientApp', () => {
 
                 invalidCustomOrigins.forEach(currCustomOrigin => {
                     expect(() => {
-                        new ClientApp({
-                            pcOrigin: currCustomOrigin
-                        });
+                        // @ts-expect-error
+                        new ClientApp({ pcOrigin: currCustomOrigin });
                     }).toThrow();
                 });
             });

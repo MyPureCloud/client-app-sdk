@@ -37,15 +37,19 @@ const babelPlugin = (useESModules = false) => babel({
     exclude: /node_modules/,
     extensions: ['.js', '.ts'],
     presets: ['@babel/env', '@babel/typescript'],
-    plugins: [['@babel/transform-runtime', { useESModules }]]
+    plugins: [
+        ['@babel/transform-runtime', { useESModules }],
+        '@babel/proposal-class-properties',
+        '@babel/transform-object-assign'
+    ]
 });
 
 const baseRollupConfig = {
-    input: './src/index.js',
+    input: './src/index.ts',
     cache: false,
     plugins: [
         commonjs(),
-        resolve(),
+        resolve({ extensions: ['.js', '.ts'] }),
         json()
     ]
 };
