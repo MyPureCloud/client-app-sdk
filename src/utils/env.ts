@@ -11,9 +11,14 @@ const PC_ENV_TLDS = [
     'apne2.pure.cloud'
 ];
 
-let DEFAULT_PC_ENV = null;
-const PC_ENVS = PC_ENV_TLDS.reduce((result, currEnvTld) => {
-    let currEnv = {
+export interface PcEnv {
+    pcEnvTld: string;
+    pcAppOrigin: string;
+}
+
+let DEFAULT_PC_ENV: PcEnv;
+const PC_ENVS = PC_ENV_TLDS.reduce<PcEnv[]>((result, currEnvTld) => {
+    let currEnv: PcEnv = {
         pcEnvTld: currEnvTld,
         pcAppOrigin: `https://apps.${currEnvTld}`
     };
@@ -32,13 +37,13 @@ export default {
     /**
      * Attempts to locate a PC environment corresponding to the provided search params
      *
-     * @param {string} pcEnvTld - A string representing the PureCloud environment top-level domain to search for
-     * @param {boolean} lenient - When true, trims leading/trailing whitespace, ignores leading '.', and ignores trailing '/'.
+     * @param pcEnvTld A string representing the PureCloud environment top-level domain to search for
+     * @param lenient When true, trims leading/trailing whitespace, ignores leading '.', and ignores trailing '/'.
      *
-     * @returns {object} - A PureCloud environment object if found; null otherwise.
+     * @returns A PureCloud environment object if found; null otherwise.
      */
-    lookupPcEnv(pcEnvTld, lenient = false) {
-        let result = null;
+    lookupPcEnv(pcEnvTld: string, lenient = false): PcEnv | null {
+        let result: PcEnv | null = null;
 
         if (pcEnvTld && typeof pcEnvTld === 'string') {
             let toSearch = pcEnvTld;

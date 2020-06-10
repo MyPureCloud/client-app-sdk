@@ -10,9 +10,9 @@
  * @since 1.0.0
  */
 
-import queryString from 'query-string';
+import * as queryString from 'query-string';
 import {name as pkgName, version as pkgVersion} from '../package.json';
-import envUtils from './utils/env';
+import envUtils, { PcEnv } from './utils/env';
 import AlertingApi from './modules/alerting';
 import LifecycleApi from './modules/lifecycle';
 import CoreUiApi from './modules/ui';
@@ -27,33 +27,41 @@ import ExternalContactsApi from './modules/externalContacts';
  */
 class ClientApp {
     /**
+     * The private reference to the known PC environment which is set, inferred, or defaulted by the config provided to the instance.
+     */
+    private _pcEnv: PcEnv;
+
+    /**
+     * The private reference to the custom origin, if provided.
+     */
+    _customPcOrigin: string;
+
+    alerting: AlertingApi;
+    lifecycle: LifecycleApi;
+    coreUi: CoreUiApi;
+    users: UsersApi;
+    conversations: ConversationsApi;
+    myConversations: MyConversationsApi;
+    externalContacts: ExternalContactsApi;
+
+    /**
      * Constructs an instance of a PureCloud Client Application to communicate with purecloud
      *
-     * @param {object} cfg - Runtime config of the client
-     * @param {string} cfg.pcEnvironmentQueryParam - Name of a query param to auto parse into the pcEnvironment; Must be valid and a single param.  Best Practice.
-     * @param {string} cfg.pcEnvironment - The PC top-level domain (e.g. mypurecloud.com, mypurecloud.au); Must be a valid PC Env tld; Prefered over pcOrigin.
-     * @param {string} cfg.pcOrigin - The full origin (protocol, host, port) of the PureCloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property.
+     * @param cfg - Runtime config of the client
+     * @param cfg.pcEnvironmentQueryParam - Name of a query param to auto parse into the pcEnvironment; Must be valid and a single param.  Best Practice.
+     * @param cfg.pcEnvironment - The PC top-level domain (e.g. mypurecloud.com, mypurecloud.au); Must be a valid PC Env tld; Prefered over pcOrigin.
+     * @param cfg.pcOrigin - The full origin (protocol, host, port) of the PureCloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property.
      *
      * @example
      * let clientApp = new ClientApp({
      *   pcEnvironmentQueryParam: 'pcEnvironment'
      * });
      */
-    constructor(cfg) {
-        /**
-         * The private reference to the known PC environment which is set, inferred, or defaulted by the config provided to the instance.
-         *
-         * @private
-         */
-        this._pcEnv = null;
-
-        /**
-         * The private reference to the custom origin, if provided.
-         *
-         * @private
-         */
-        this._customPcOrigin = null;
-
+    constructor(cfg: {
+        pcEnvironmentQueryParam?: string;
+        pcEnvironment?: string;
+        pcOrigin?: string;
+    } = {} as any) {
         if (cfg) {
             if (cfg.hasOwnProperty('pcEnvironmentQueryParam')) {
                 let paramName = cfg.pcEnvironmentQueryParam;
@@ -63,9 +71,8 @@ class ClientApp {
                 }
 
                 let parsedQueryString = queryString.parse(ClientApp._getQueryString());
-                if (parsedQueryString[paramName] && typeof parsedQueryString[paramName] === 'string') {
-                    let paramValue = parsedQueryString[paramName];
-
+                const paramValue = parsedQueryString[paramName];
+                if (paramValue && typeof paramValue === 'string') {
                     this._pcEnv = envUtils.lookupPcEnv(paramValue, true);
                     if (!this._pcEnv) {
                         throw new Error(`Could not parse '${paramValue}' into a known PureCloud environment`);
@@ -99,8 +106,6 @@ class ClientApp {
         /**
          * The AlertingApi instance.
          *
-         * @type {module:modules/alerting~AlertingApi}
-         *
          * @example
          * let clientApp = new ClientApp({
          *   pcEnvironmentQueryParam: 'pcEnvironment'
@@ -108,12 +113,11 @@ class ClientApp {
          *
          * clientApp.alerting.someMethod(...);
          */
+        // @ts-ignore
         this.alerting = new AlertingApi(apiCfg);
 
         /**
          * The LifecycleApi instance.
-         *
-         * @type {module:modules/lifecycle~LifecycleApi}
          *
          * @example
          * let clientApp = new ClientApp({
@@ -122,12 +126,11 @@ class ClientApp {
          *
          * clientApp.lifecycle.someMethod(...);
          */
+        // @ts-ignore
         this.lifecycle = new LifecycleApi(apiCfg);
 
         /**
          * The CoreUIApi instance.
-         *
-         * @type {module:modules/core-ui~CoreUiApi}
          *
          * @example
          * let clientApp = new ClientApp({
@@ -136,12 +139,11 @@ class ClientApp {
          *
          * clientApp.coreUi.someMethod(...);
          */
+        // @ts-ignore
         this.coreUi = new CoreUiApi(apiCfg);
 
         /**
          * The UsersApi instance.
-         *
-         * @type {module:modules/users~UsersApi}
          *
          * @example
          * let clientApp = new ClientApp({
@@ -150,12 +152,11 @@ class ClientApp {
          *
          * clientApp.users.someMethod(...);
          */
+        // @ts-ignore
         this.users = new UsersApi(apiCfg);
 
         /**
          * The ConversationsApi instance.
-         *
-         * @type {module:modules/conversations~ConversationsApi}
          *
          * @example
          * let clientApp = new ClientApp({
@@ -164,12 +165,11 @@ class ClientApp {
          *
          * clientApp.conversations.someMethod(...);
          */
+        // @ts-ignore
         this.conversations = new ConversationsApi(apiCfg);
 
         /**
          * The MyConversationsApi instance.
-         *
-         * @type {module:modules/myConversations~MyConversationsApi}
          *
          * @example
          * let clientApp = new ClientApp({
@@ -180,12 +180,11 @@ class ClientApp {
          *
          * @since 1.3.0
          */
+        // @ts-ignore
         this.myConversations = new MyConversationsApi(apiCfg);
 
         /**
          * The External Contacts instance.
-         *
-         * @type {module:modules/externalContacts~ExternalContactsApi}
          *
          * @example
          * let clientApp = new ClientApp({
@@ -196,6 +195,7 @@ class ClientApp {
          *
          * @since 1.4.0
          */
+        // @ts-ignore
         this.externalContacts = new ExternalContactsApi(apiCfg);
     }
 
@@ -204,7 +204,7 @@ class ClientApp {
      * This value will be available if a valid PureCloud Environment is provided, inferred, or
      * defaulted from the config passed to this instance.
      *
-     * @returns {string} the valid PureCloud environment; null if unknown.
+     * @returns the valid PureCloud environment; null if unknown.
      *
      * @since 1.0.0
      */
@@ -215,7 +215,7 @@ class ClientApp {
     /**
      * Displays the version of the PureClound Client App SDK.
      *
-     * @returns {string} The version of the PureCloud Client App SDK
+     * @returns The version of the PureCloud Client App SDK
      *
      * @example
      * ClientApp.version
@@ -229,7 +229,7 @@ class ClientApp {
     /**
      * Displays information about this version of the PureClound Client App SDK.
      *
-     * @returns {string} A string of information describing this library
+     * @returns A string of information describing this library
      *
      * @example
      * ClientApp.about(); // SDK details returned as a string

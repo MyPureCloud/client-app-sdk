@@ -59,6 +59,7 @@ export default describe('BaseApi', () => {
 
         let complexPayload = baseApi.buildSdkMsgPayload(action, actionPayload);
         expect(actionPayload).toEqual(origPayload);
+        // @ts-expect-error
         expect(complexPayload).not.toEqual(origPayload);
     });
 
@@ -82,7 +83,7 @@ export default describe('BaseApi', () => {
 
         baseApi.sendMsgToPc(action, actionPayload);
         expect(mockCommsUtils.postMsgToPc).toHaveBeenCalled();
-        let args = mockCommsUtils.postMsgToPc.calls.first().args;
+        let args = (mockCommsUtils.postMsgToPc as jasmine.Spy).calls.first().args;
         expect(args.length).toBe(2);
         expect(args[0]).toEqual(Object.assign({}, {action}, baseProtoDetails, actionPayload));
         expect(args[1]).toBe(targetPcOrigin);
@@ -301,8 +302,8 @@ export default describe('BaseApi', () => {
 
                 baseApi.addMsgListener('foo', () => {});
                 expect(mockWindow.addEventListener).toHaveBeenCalledTimes(1);
-                expect(mockWindow.addEventListener.calls.mostRecent().args[0]).toBe('message');
-                expect(typeof mockWindow.addEventListener.calls.mostRecent().args[1]).toBe('function');
+                expect((mockWindow.addEventListener as jasmine.Spy).calls.mostRecent().args[0]).toBe('message');
+                expect(typeof (mockWindow.addEventListener as jasmine.Spy).calls.mostRecent().args[1]).toBe('function');
 
                 // Should not reattach the listener
                 baseApi.addMsgListener('foo', () => {});
@@ -330,8 +331,8 @@ export default describe('BaseApi', () => {
                 baseApi._myWindow = mockWindow;
                 baseApi._myParent = mockParent;
 
-                fireEvent = function () {
-                    baseApi._onMsg(...arguments);
+                fireEvent = function (...args: any[]) {
+                    baseApi._onMsg(...args);
                 };
             });
 
@@ -479,7 +480,7 @@ export default describe('BaseApi', () => {
                 });
 
                 expect(myObj.myListener).toHaveBeenCalledTimes(1);
-                let eventPayload = myObj.myListener.calls.mostRecent().args[0];
+                let eventPayload = (myObj.myListener as jasmine.Spy).calls.mostRecent().args[0];
                 let eventKeys = Object.keys(eventPayload);
 
                 // it should clone the original event data
@@ -503,7 +504,7 @@ export default describe('BaseApi', () => {
                 });
 
                 expect(myObj.myListener).toHaveBeenCalledTimes(2);
-                eventPayload = myObj.myListener.calls.mostRecent().args[0];
+                eventPayload = (myObj.myListener as jasmine.Spy).calls.mostRecent().args[0];
                 eventKeys = Object.keys(eventPayload);
                 expect(eventKeys.length).toBe(3);
                 expect(eventPayload.purecloudEventType).toBe(eventType);
@@ -836,12 +837,12 @@ export default describe('BaseApi', () => {
                 expect(mockWindow.addEventListener).toHaveBeenCalledTimes(1);
                 baseApi.removeMsgListener('event1', listener1);
                 expect(mockWindow.removeEventListener).toHaveBeenCalledTimes(1);
-                expect(mockWindow.removeEventListener.calls.mostRecent().args[0]).toBe('message');
-                expect(typeof mockWindow.removeEventListener.calls.mostRecent().args[1]).toBe('function');
+                expect((mockWindow.removeEventListener as jasmine.Spy).calls.mostRecent().args[0]).toBe('message');
+                expect(typeof (mockWindow.removeEventListener as jasmine.Spy).calls.mostRecent().args[1]).toBe('function');
 
                 // Single event; multiple listeners
-                mockWindow.addEventListener.calls.reset();
-                mockWindow.removeEventListener.calls.reset();
+                (mockWindow.addEventListener as jasmine.Spy).calls.reset();
+                (mockWindow.removeEventListener as jasmine.Spy).calls.reset();
 
                 baseApi.addMsgListener('event1', listener1);
                 expect(mockWindow.addEventListener).toHaveBeenCalledTimes(1);
@@ -853,8 +854,8 @@ export default describe('BaseApi', () => {
                 expect(mockWindow.removeEventListener).toHaveBeenCalledTimes(1);
 
                 // multiple events; single listeners
-                mockWindow.addEventListener.calls.reset();
-                mockWindow.removeEventListener.calls.reset();
+                (mockWindow.addEventListener as jasmine.Spy).calls.reset();
+                (mockWindow.removeEventListener as jasmine.Spy).calls.reset();
 
                 baseApi.addMsgListener('event1', listener1);
                 expect(mockWindow.addEventListener).toHaveBeenCalledTimes(1);
