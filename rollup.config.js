@@ -1,12 +1,12 @@
 /* eslint-env node */
 'use strict';
 
-const pkg = require('./package.json');
-const commonjs = require('@rollup/plugin-commonjs');
-const json = require('@rollup/plugin-json');
-const { default: babel } = require('@rollup/plugin-babel');
-const { default: resolve } = require('@rollup/plugin-node-resolve');
-const { terser } = require('rollup-plugin-terser');
+import pkg from './package.json';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import babel from '@rollup/plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import { terser } from 'rollup-plugin-terser';
 
 const DEST_DIR = 'dist';
 const GLOBAL_LIBRARY_NAME = 'purecloud.apps.ClientApp';
@@ -35,7 +35,8 @@ const EXTERNAL_DEPS = [
 const babelPlugin = (useESModules = false) => babel({
     babelHelpers: 'runtime',
     exclude: /node_modules/,
-    presets: ['@babel/env'],
+    extensions: ['.js', '.ts'],
+    presets: ['@babel/env', '@babel/typescript'],
     plugins: [['@babel/transform-runtime', { useESModules }]]
 });
 

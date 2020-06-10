@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "allowJs": true,
+        "module": "es6",
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "resolveJsonModule": true,
+        "declaration": true,
+        "emitDeclarationOnly": true
+    },
+    "include": ["src/**/*.ts"]
+}
