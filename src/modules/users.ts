@@ -19,14 +19,14 @@ class UsersApi extends BaseApi {
     /**
      * Shows the profile of a specified user
      *
-     * @param {string} userId - The id of the user to show
+     * @param userId - The id of the user to show
      *
      * @example
      * myClientApp.users.showProfile("targetUserId");
      *
      * @since 1.0.0
      */
-    showProfile(userId) {
+    showProfile(userId: string) {
         super.sendMsgToPc('showProfile', {'profileId': userId});
     }
 }

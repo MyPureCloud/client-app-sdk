@@ -11,7 +11,7 @@ export default describe('ConversationsApi', () => {
         protocolAgentName: 'bar',
         protocolAgentVersion: 'baz'
     };
-    let conversationsApi = null;
+    let conversationsApi: ConversationsApi;
 
     beforeEach(() => {
         conversationsApi = new ConversationsApi(Object.assign({}, { targetPcOrigin }, baseProtoDetails));
@@ -23,8 +23,8 @@ export default describe('ConversationsApi', () => {
         let mockParent = {
             postMessage() {}
         };
-        conversationsApi._myWindow = mockWindow;
-        conversationsApi._myParent = mockParent;
+        conversationsApi._myWindow = mockWindow as any as Window;
+        conversationsApi._myParent = mockParent as any as Window;
 
         let sendMsgSpy = spyOn(ApiBase.prototype, 'sendMsgToPc');
 

@@ -113,7 +113,6 @@ class ClientApp {
          *
          * clientApp.alerting.someMethod(...);
          */
-        // @ts-ignore
         this.alerting = new AlertingApi(apiCfg);
 
         /**
@@ -126,7 +125,6 @@ class ClientApp {
          *
          * clientApp.lifecycle.someMethod(...);
          */
-        // @ts-ignore
         this.lifecycle = new LifecycleApi(apiCfg);
 
         /**
@@ -165,7 +163,6 @@ class ClientApp {
          *
          * clientApp.conversations.someMethod(...);
          */
-        // @ts-ignore
         this.conversations = new ConversationsApi(apiCfg);
 
         /**
@@ -180,7 +177,6 @@ class ClientApp {
          *
          * @since 1.3.0
          */
-        // @ts-ignore
         this.myConversations = new MyConversationsApi(apiCfg);
 
         /**
@@ -195,7 +191,6 @@ class ClientApp {
          *
          * @since 1.4.0
          */
-        // @ts-ignore
         this.externalContacts = new ExternalContactsApi(apiCfg);
     }
 

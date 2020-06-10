@@ -6,16 +6,18 @@
  * @since 1.0.0
  */
 
-import BaseApi from './base';
+import BaseApi, { MessageListener, SDKMessagePayload } from './base';
+
+type LifecycleHook = 'bootstrap' | 'focus' | 'blur' | 'stop';
 
 const LIFECYCLE_HOOK_EVENT_NAME = 'appLifecycleHook';
-const HOOK_NAME_FILTER = function (hookName, msgPayload) {
+const buildHookFilter = (hookName: LifecycleHook) => (msgPayload: SDKMessagePayload) => {
     return (typeof msgPayload === 'object' && msgPayload.hook === hookName);
 };
-const BOOTSTRAP_HOOK_FILTER = HOOK_NAME_FILTER.bind(undefined, 'bootstrap');
-const FOCUS_HOOK_FILTER = HOOK_NAME_FILTER.bind(undefined, 'focus');
-const BLUR_HOOK_FILTER = HOOK_NAME_FILTER.bind(undefined, 'blur');
-const STOP_HOOK_FILTER = HOOK_NAME_FILTER.bind(undefined, 'stop');
+const BOOTSTRAP_HOOK_FILTER = buildHookFilter('bootstrap');
+const FOCUS_HOOK_FILTER = buildHookFilter('focus');
+const BLUR_HOOK_FILTER = buildHookFilter('blur');
+const STOP_HOOK_FILTER = buildHookFilter('stop');
 
 /**
  * Utilities for monitoring and updating the lifecycle of a PureCloud Client App
@@ -60,10 +62,10 @@ class LifecycleApi extends BaseApi {
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
      * * `bootstrap`
      *
-     * @param {function} listener - The function to call when PureCloud is ready for the app to
+     * @param listener - The function to call when PureCloud is ready for the app to
      * perform post-load initialization work.  This function will be passed the lifecycle event and
      * does not augment the this context.
-     * @param {boolean} once - If the listener should only be invoked once or repeatedly; true by default.
+     * @param once - If the listener should only be invoked once or repeatedly; true by default.
      *
      * @example
      * myClientApp.lifecycle.addBootstrapListener(() => {
@@ -79,7 +81,7 @@ class LifecycleApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    addBootstrapListener(listener, once = true) {
+    addBootstrapListener(listener: MessageListener, once = true) {
         this.addMsgListener(LIFECYCLE_HOOK_EVENT_NAME, listener, {
             once,
             msgPayloadFilter: BOOTSTRAP_HOOK_FILTER
@@ -110,8 +112,8 @@ class LifecycleApi extends BaseApi {
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
      * * `bootstrap`
      *
-     * @param {function} listener - The previously registered bootstrap event listener.
-     * @param {boolean} once - false if once was explicitly set as false when adding the listener;
+     * @param listener - The previously registered bootstrap event listener.
+     * @param once - false if once was explicitly set as false when adding the listener;
      *  otherwise, you can explicitly provide true or rely on the default.
      *
      * @example
@@ -128,7 +130,7 @@ class LifecycleApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    removeBootstrapListener(listener, once = true) {
+    removeBootstrapListener(listener: MessageListener, once = true) {
         this.removeMsgListener(LIFECYCLE_HOOK_EVENT_NAME, listener, {
             once,
             msgPayloadFilter: BOOTSTRAP_HOOK_FILTER
@@ -142,9 +144,9 @@ class LifecycleApi extends BaseApi {
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
      * * `focus`
      *
-     * @param {function} listener - The function to call when the user has re-focused your
+     * @param listener - The function to call when the user has re-focused your
      * app in the UI.
-     * @param {boolean} once - If the listener should only be invoked once or repeatedly; false by default.
+     * @param once - If the listener should only be invoked once or repeatedly; false by default.
      *
      * @example
      * let onFocus = evt => {
@@ -161,7 +163,7 @@ class LifecycleApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    addFocusListener(listener, once = false) {
+    addFocusListener(listener: MessageListener, once = false) {
         this.addMsgListener(LIFECYCLE_HOOK_EVENT_NAME, listener, {
             once,
             msgPayloadFilter: FOCUS_HOOK_FILTER
@@ -174,8 +176,8 @@ class LifecycleApi extends BaseApi {
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
      * * `focus`
      *
-     * @param {function} listener - The previously registered focus event listener.
-     * @param {boolean} once - true if once was explicitly set as true when adding the listener;
+     * @param listener - The previously registered focus event listener.
+     * @param once - true if once was explicitly set as true when adding the listener;
      *  otherwise, you can explicitly provide false or rely on the default.
      *
      * @example
@@ -193,7 +195,7 @@ class LifecycleApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    removeFocusListener(listener, once = false) {
+    removeFocusListener(listener: MessageListener, once = false) {
         this.removeMsgListener(LIFECYCLE_HOOK_EVENT_NAME, listener, {
             once,
             msgPayloadFilter: FOCUS_HOOK_FILTER
@@ -206,9 +208,9 @@ class LifecycleApi extends BaseApi {
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
      * * `blur`
      *
-     * @param {function} listener - The function to call when the user has left your
+     * @param listener - The function to call when the user has left your
      * app in the UI.
-     * @param {boolean} once - If the listener should only be invoked once or repeatedly; false by default.
+     * @param once - If the listener should only be invoked once or repeatedly; false by default.
      *
      * @example
      * let onBlur = evt => {
@@ -225,7 +227,7 @@ class LifecycleApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    addBlurListener(listener, once = false) {
+    addBlurListener(listener: MessageListener, once = false) {
         this.addMsgListener(LIFECYCLE_HOOK_EVENT_NAME, listener, {
             once,
             msgPayloadFilter: BLUR_HOOK_FILTER
@@ -238,8 +240,8 @@ class LifecycleApi extends BaseApi {
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
      * * `blur`
      *
-     * @param {function} listener - The previously registered blur event listener.
-     * @param {boolean} once - true if once was explicitly set as true when adding the listener;
+     * @param listener - The previously registered blur event listener.
+     * @param once - true if once was explicitly set as true when adding the listener;
      *  otherwise, you can explicitly provide false or rely on the default.
      *
      * @example
@@ -257,7 +259,7 @@ class LifecycleApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    removeBlurListener(listener, once = false) {
+    removeBlurListener(listener: MessageListener, once = false) {
         this.removeMsgListener(LIFECYCLE_HOOK_EVENT_NAME, listener, {
             once,
             msgPayloadFilter: BLUR_HOOK_FILTER
@@ -276,9 +278,9 @@ class LifecycleApi extends BaseApi {
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
      * * `stop`
      *
-     * @param {function} listener - The function to call when PureCloud is about to stop this app.
+     * @param listener - The function to call when PureCloud is about to stop this app.
      * This function will be passed the lifecycle event and does not augment the this context.
-     * @param {boolean} once - If the listener should only be invoked once or repeatedly; true by default.
+     * @param once - If the listener should only be invoked once or repeatedly; true by default.
      *
      * @example
      * myClientApp.lifecycle.addStopListener(() => {
@@ -294,7 +296,7 @@ class LifecycleApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    addStopListener(listener, once = true) {
+    addStopListener(listener: MessageListener, once = true) {
         this.addMsgListener(LIFECYCLE_HOOK_EVENT_NAME, listener, {
             once,
             msgPayloadFilter: STOP_HOOK_FILTER
@@ -325,8 +327,8 @@ class LifecycleApi extends BaseApi {
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
      * * `stop`
      *
-     * @param {function} listener - The previously registered stop event listener.
-     * @param {boolean} once - false if once was explicitly set as false when adding the listener;
+     * @param listener - The previously registered stop event listener.
+     * @param once - false if once was explicitly set as false when adding the listener;
      *  otherwise, you can explicitly provide true or rely on the default.
      *
      * @example
@@ -347,7 +349,7 @@ class LifecycleApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    removeStopListener(listener, once = true) {
+    removeStopListener(listener: MessageListener, once = true) {
         this.removeMsgListener(LIFECYCLE_HOOK_EVENT_NAME, listener, {
             once,
             msgPayloadFilter: STOP_HOOK_FILTER

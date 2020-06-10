@@ -26,7 +26,7 @@ class MyConversationsApi extends BaseApi {
      *         * Implicit Conversation Access via participant on the Conversation
      *         * conversation:communication:view
      *
-     * @param {String} conversationId
+     * @param conversationId
      *
      * @example
      * myClientApp.myConversations.showInteractionDetails(
@@ -36,7 +36,7 @@ class MyConversationsApi extends BaseApi {
      * @since 1.3.0
      */
 
-    showInteractionDetails(conversationId) {
+    showInteractionDetails(conversationId: string) {
         super.sendMsgToPc('showMyInteractionDetails', {
             'conversationId': conversationId
         });
@@ -50,8 +50,8 @@ class MyConversationsApi extends BaseApi {
      *     * User must be the Agent evaluated on the specified conversation/evaluation
      *     * quality:evaluation:view
      *
-     * @param {String} conversationId
-     * @param {String} evaluationId
+     * @param conversationId
+     * @param evaluationId
      *
      * @example
      * myClientApp.myConversations.showEvaluationDetails(
@@ -61,7 +61,7 @@ class MyConversationsApi extends BaseApi {
      *
      * @since 1.3.0
      */
-    showEvaluationDetails(conversationId, evaluationId) {
+    showEvaluationDetails(conversationId: string, evaluationId: string) {
         super.sendMsgToPc('showMyEvaluationDetails', {
             'conversationId': conversationId,
             'evaluationId': evaluationId

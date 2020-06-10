@@ -34,7 +34,7 @@ class ConversationsApi extends BaseApi {
      *
      * @since 1.1.0
      */
-    showInteractionDetails(conversationId) {
+    showInteractionDetails(conversationId: string) {
         super.sendMsgToPc('showInteractionDetails', {conversationId: conversationId});
     }
 }
