@@ -11,7 +11,7 @@ export default describe('ContactsApi', () => {
         protocolAgentName: 'foo',
         protolAgentVersion: 'bar'
     };
-    let externalContactsApi = null;
+    let externalContactsApi: ExternalContactsApi;
 
     beforeEach(() => {
         externalContactsApi = new ExternalContactsApi(Object.assign({}, { targetPcOrigin }, baseProtoDetails));
@@ -23,8 +23,8 @@ export default describe('ContactsApi', () => {
         let mockParent = {
             postMessage() {}
         };
-        externalContactsApi._myWindow = mockWindow;
-        externalContactsApi._myParent = mockParent;
+        externalContactsApi._myWindow = mockWindow as any as Window;
+        externalContactsApi._myParent = mockParent as any as Window;
 
         let sendMsgSpy = spyOn(ApiBase.prototype, 'sendMsgToPc');
 

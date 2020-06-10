@@ -22,15 +22,15 @@ class AlertingApi extends BaseApi {
     /**
      * Displays a toast popup.
      *
-     * @param {string} title - Toast title.
-     * @param {string} message - Toast Message.  Supports emoticons, emoji (unicode, shortcodes) and markdown (with markdwownMessage boolean).
-     * @param {object=} options - Additonal toast options.
-     * @param {string=} options.id - The id of the message.  Duplicate IDs will replace each other in the toast display.  All IDs will be
+     * @param title - Toast title.
+     * @param message - Toast Message.  Supports emoticons, emoji (unicode, shortcodes) and markdown (with markdwownMessage boolean).
+     * @param options - Additonal toast options.
+     * @param options.id - The id of the message.  Duplicate IDs will replace each other in the toast display.  All IDs will be
      *  namespaced with your app ID to avoid collisions.  (Default will just be your app's namespace and will not support multiple messages)
-     * @param {string=} options.type - Toast type, valid options are 'error', 'info', 'success'.  (Default is 'info')
-     * @param {boolean=} options.markdownMessage - Boolean indicating if the message is in MD.  (Default is true)
-     * @param {number=} options.timeout - Time in seconds to show the toast.  Set to 0 to disable automatic dismissal. (Default is 5)
-     * @param {boolean=} options.showCloseButton - Boolean indicating if the close button should be shown. (Defalt is false)
+     * @param options.type - Toast type, valid options are 'error', 'info', 'success'.  (Default is 'info')
+     * @param options.markdownMessage - Boolean indicating if the message is in MD.  (Default is true)
+     * @param options.timeout - Time in seconds to show the toast.  Set to 0 to disable automatic dismissal. (Default is 5)
+     * @param options.showCloseButton - Boolean indicating if the close button should be shown. (Defalt is false)
      *
      * @example
      * myClientApp.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?");
@@ -61,7 +61,13 @@ class AlertingApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    showToastPopup(title, message, options) {
+    showToastPopup(title: string, message: string, options?: {
+        id?: string;
+        type?: string;
+        markdownMessage?: boolean;
+        timeout?: number;
+        showCloseButton?: boolean;
+    }) {
         const messageParams = {
             title,
             message,
@@ -90,7 +96,7 @@ class AlertingApi extends BaseApi {
     /**
      * Displays badging for unread messages and notifications
      *
-     * @param {number} count - The updated number of unread messages or notifications
+     * @param count - The updated number of unread messages or notifications
      *
      * @example
      * myClientApp.alerting.setAttentionCount(2);
@@ -100,7 +106,7 @@ class AlertingApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    setAttentionCount(count) {
+    setAttentionCount(count: number) {
         super.sendMsgToPc('setAttentionCount', {count});
     }
 }

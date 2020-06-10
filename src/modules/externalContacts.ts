@@ -28,7 +28,7 @@ class ExternalContactsApi extends BaseApi {
      *
      * @since 1.4.0
      */
-    showExternalContactProfile(externalContactId) {
+    showExternalContactProfile(externalContactId: string) {
         super.sendMsgToPc('showExternalContactProfile', {contactId: externalContactId});
     }
     /**
@@ -43,7 +43,7 @@ class ExternalContactsApi extends BaseApi {
      *
      * @since 1.4.0
      */
-    showExternalOrganizationProfile(externalOrganizationId) {
+    showExternalOrganizationProfile(externalOrganizationId: string) {
         super.sendMsgToPc('showExternalOrganizationProfile', {externalOrganizationId: externalOrganizationId});
     }
 }

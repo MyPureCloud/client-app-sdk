@@ -12,7 +12,7 @@ export default describe('MyConversationsApi', () => {
         protocolAgentVersion: 'bar'
     };
 
-    let myConversationsApi = null;
+    let myConversationsApi: MyConversationsApi;
 
     beforeEach(() => {
         myConversationsApi = new MyConversationsApi(Object.assign({}, { targetPcOrigin }, baseProtoDetails));
@@ -23,8 +23,8 @@ export default describe('MyConversationsApi', () => {
         let mockParent = {
             postMessage() {}
         };
-        myConversationsApi._myWindow = mockWindow;
-        myConversationsApi._myParent = mockParent;
+        myConversationsApi._myWindow = mockWindow as any as Window;
+        myConversationsApi._myParent = mockParent as any as Window;
 
         let sendMsgSpy = spyOn(ApiBase.prototype, 'sendMsgToPc');
 
@@ -43,8 +43,8 @@ export default describe('MyConversationsApi', () => {
         let mockParent = {
             postMessage() {}
         };
-        myConversationsApi._myWindow = mockWindow;
-        myConversationsApi._myParent = mockParent;
+        myConversationsApi._myWindow = mockWindow as any as Window;
+        myConversationsApi._myParent = mockParent as any as Window;
 
         let sendMsgSpy = spyOn(ApiBase.prototype, 'sendMsgToPc');
 

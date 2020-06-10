@@ -10,7 +10,7 @@ export default describe('LifecycleApi', () => {
         protocolAgentName: 'bar',
         protocolAgentVersion: 'baz'
     };
-    let lifecycleApi = null;
+    let lifecycleApi: LifecycleApi;
 
     beforeEach(() => {
         lifecycleApi = new LifecycleApi(Object.assign({}, {targetPcOrigin}, baseProtoDetails));
@@ -47,8 +47,8 @@ export default describe('LifecycleApi', () => {
             lifecycleApi._myWindow = mockWindow;
             lifecycleApi._myParent = mockParent;
 
-            fireEvent = function () {
-                lifecycleApi._onMsg(...arguments);
+            fireEvent = function (event: any) {
+                lifecycleApi._onMsg(event);
             };
         });
 
