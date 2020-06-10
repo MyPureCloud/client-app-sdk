@@ -1,5 +1,7 @@
 // Karma configuration
 
+const { getBabelInputPlugin, getBabelOutputPlugin } = require('@rollup/plugin-babel');
+
 module.exports = function(config) {
   config.set({
 
@@ -14,7 +16,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      {pattern: 'src/**/*Spec.js', watched: false}
+      {pattern: 'src/**/*Spec.js', watched: false},
+      {pattern: 'src/**/*Spec.ts', watched: false}
     ],
 
 
@@ -26,7 +29,8 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        'src/**/*Spec.js': ['rollup']
+        'src/**/*Spec.js': ['rollup'],
+        'src/**/*Spec.ts': ['rollup']
     },
 
 
@@ -68,12 +72,15 @@ module.exports = function(config) {
     rollupPreprocessor: {
         plugins: [
             require('@rollup/plugin-commonjs')(),
-            require('@rollup/plugin-node-resolve').default(),
+            require('@rollup/plugin-node-resolve').default({
+              extensions: ['.ts', '.js']
+            }),
             require('@rollup/plugin-json')(),
             require('@rollup/plugin-babel').default({
               babelHelpers: 'runtime',
               exclude: /node_modules/,
-              presets: ['@babel/env'],
+              extensions: ['.js', '.ts'],
+              presets: ['@babel/env', '@babel/typescript'],
               plugins: [
                 ['@babel/transform-runtime', { useESModules: false }],
                 '@babel/transform-object-assign'
