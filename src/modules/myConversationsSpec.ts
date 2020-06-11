@@ -23,10 +23,10 @@ export default describe('MyConversationsApi', () => {
         let mockParent = {
             postMessage() {}
         };
-        myConversationsApi._myWindow = mockWindow as any as Window;
-        myConversationsApi._myParent = mockParent as any as Window;
+        myConversationsApi['_myWindow'] = mockWindow as any as Window;
+        myConversationsApi['_myParent'] = mockParent as any as Window;
 
-        let sendMsgSpy = spyOn(ApiBase.prototype, 'sendMsgToPc');
+        let sendMsgSpy = spyOn(ApiBase.prototype as any, 'sendMsgToPc');
 
         let testConvoId = 'B1B0B92B-B944-4F5D-AF62-8E5BAFFC92984';
 
@@ -43,10 +43,10 @@ export default describe('MyConversationsApi', () => {
         let mockParent = {
             postMessage() {}
         };
-        myConversationsApi._myWindow = mockWindow as any as Window;
-        myConversationsApi._myParent = mockParent as any as Window;
+        myConversationsApi['_myWindow'] = mockWindow as any as Window;
+        myConversationsApi['_myParent'] = mockParent as any as Window;
 
-        let sendMsgSpy = spyOn(ApiBase.prototype, 'sendMsgToPc');
+        let sendMsgSpy = spyOn(ApiBase.prototype as any, 'sendMsgToPc');
 
         let testConvoId = 'B1B0B92B-B944-4F5D-AF62-8E5BAFFC9298';
         let testEvalId = '0E3759CE-2275-4480-BB15-3D4717446F93';

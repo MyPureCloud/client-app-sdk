@@ -48,8 +48,8 @@ interface ListenerConfig {
  * @since 1.0.0
  */
 class BaseApi {
-    _targetPcOrigin: string;
-    _protocolDetails: ProtocolDetails;
+    private _targetPcOrigin: string;
+    private _protocolDetails: ProtocolDetails;
 
     /**
      * Injection point for tests.  Should not be used by api users or extenders.
@@ -57,7 +57,7 @@ class BaseApi {
      * @private
      * @ignore
      */
-    _commsUtils = commsUtils;
+    private _commsUtils = commsUtils;
 
     // ----- Message Listening
     private _msgListenerCfgs: Record<string, ListenerConfig[]> = {};
@@ -70,7 +70,7 @@ class BaseApi {
      * @private
      * @ignore
      */
-    _myWindow = window as Window;
+    private _myWindow = window as Window;
 
     /**
      * Injection point for tests.  Should not be used by api users or extenders.
@@ -78,7 +78,7 @@ class BaseApi {
      * @private
      * @ignore
      */
-    _myParent = (window ? window.parent : undefined);
+    private _myParent = (window ? window.parent : undefined);
 
     /**
      * Instantiates the BaseApi
@@ -118,7 +118,7 @@ class BaseApi {
      *
      * @since 1.0.0
      */
-    sendMsgToPc(actionName: string, msgPayload?: object) {
+    protected sendMsgToPc(actionName: string, msgPayload?: object) {
         this._commsUtils.postMsgToPc(this.buildSdkMsgPayload(actionName, msgPayload), this._targetPcOrigin);
     }
 
@@ -136,7 +136,7 @@ class BaseApi {
      *
      * @since 1.0.0
      */
-    buildSdkMsgPayload(actionName: string, msgPayload?: object) {
+    protected buildSdkMsgPayload(actionName: string, msgPayload?: object) {
         let result = {} as SDKMessagePayload;
 
         // Clone the payload
@@ -170,7 +170,7 @@ class BaseApi {
      * @since 1.0.0
      * @ignore Extender-use only.  Not a public API
      */
-    addMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
+    protected addMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
         if (!eventType || typeof eventType !== 'string' || eventType.trim().length === 0) {
             throw new Error('Invalid eventType provided to addMsgListener');
         }
@@ -221,14 +221,12 @@ class BaseApi {
      * @param options.msgPayloadFilter - Provide the same function instance provided when adding the listener;
      *  otherwise, you can rely on the empty default by either not specifing a function or providing null/undefined.
      *
-     * @returns undefined
-     *
      * @throws Error if the eventType, listener, or options are invalid
      *
      * @since 1.0.0
      * @ignore Extender-use only.  Not a public API
      */
-    removeMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
+    protected removeMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
         if (!eventType || typeof eventType !== 'string' || eventType.trim().length === 0) {
             throw new Error('Invalid eventType provided to removeMsgListener');
         }
@@ -271,7 +269,7 @@ class BaseApi {
      * @private
      * @ignore
      */
-    _getListenerCount() {
+    private _getListenerCount() {
         let result = 0;
 
         Object.keys(this._msgListenerCfgs).forEach(currEventType => {
@@ -291,7 +289,7 @@ class BaseApi {
      * @private
      * @ignore
      */
-    _subscribeToMsgs() {
+    private _subscribeToMsgs() {
         this._myWindow.addEventListener('message', this._msgHandler);
     }
 
@@ -301,7 +299,7 @@ class BaseApi {
      * @private
      * @ignore
      */
-    _unsubscribeFromMsgs() {
+    private _unsubscribeFromMsgs() {
         this._myWindow.removeEventListener('message', this._msgHandler);
     }
 
@@ -312,7 +310,7 @@ class BaseApi {
      * @private
      * @ignore
      */
-    _onMsg(event: MessageEvent) {
+    private _onMsg(event: MessageEvent) {
         if (!event || !event.source || !event.origin || event.source !== this._myParent ||
             event.origin !== this._targetPcOrigin || !event.data || typeof event.data !== 'object' ||
             Array.isArray(event.data)) {

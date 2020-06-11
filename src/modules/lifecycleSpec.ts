@@ -55,7 +55,7 @@ export default describe('LifecycleApi', () => {
             lifecycleApi['_myParent'] = mockParent;
 
             fireEvent = function (event: MessageEvent) {
-                lifecycleApi._onMsg(event);
+                lifecycleApi['_onMsg'](event);
             };
         });
 

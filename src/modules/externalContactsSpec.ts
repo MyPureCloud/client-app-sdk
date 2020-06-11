@@ -23,10 +23,10 @@ export default describe('ContactsApi', () => {
         let mockParent = {
             postMessage() {}
         };
-        externalContactsApi._myWindow = mockWindow as any as Window;
-        externalContactsApi._myParent = mockParent as any as Window;
+        externalContactsApi['_myWindow'] = mockWindow as any as Window;
+        externalContactsApi['_myParent'] = mockParent as any as Window;
 
-        let sendMsgSpy = spyOn(ApiBase.prototype, 'sendMsgToPc');
+        let sendMsgSpy = spyOn(ApiBase.prototype as any, 'sendMsgToPc');
 
         // Test external contact sdk method
         let testContactId = 'testContact';
