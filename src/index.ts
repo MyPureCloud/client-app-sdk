@@ -29,12 +29,12 @@ class ClientApp {
     /**
      * The private reference to the known PC environment which is set, inferred, or defaulted by the config provided to the instance.
      */
-    private _pcEnv: PcEnv;
+    private _pcEnv: PcEnv | null = null;
 
     /**
      * The private reference to the custom origin, if provided.
      */
-    _customPcOrigin: string;
+    private _customPcOrigin: string | null = null;
 
     alerting: AlertingApi;
     lifecycle: LifecycleApi;
@@ -70,7 +70,7 @@ class ClientApp {
                     throw new Error('Invalid query param name provided.  Must be non-null, non-empty string');
                 }
 
-                let parsedQueryString = queryString.parse(ClientApp._getQueryString());
+                let parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
                 const paramValue = parsedQueryString[paramName];
                 if (paramValue && typeof paramValue === 'string') {
                     this._pcEnv = envUtils.lookupPcEnv(paramValue, true);
@@ -81,6 +81,9 @@ class ClientApp {
                     throw new Error(`Could not find unique value for ${paramName} parameter on Query String`);
                 }
             } else if (cfg.hasOwnProperty('pcEnvironment')) {
+                if (typeof cfg.pcEnvironment !== 'string' || cfg.pcEnvironment.trim().length === 0) {
+                    throw new Error('Invalid pcEnvironment provided.  Must be a non-null, non-empty string');
+                }
                 this._pcEnv = envUtils.lookupPcEnv(cfg.pcEnvironment, true);
                 if (!this._pcEnv) {
                     throw new Error(`Could not parse '${cfg.pcEnvironment}' into a known PureCloud environment`);

@@ -23,10 +23,10 @@ export default describe('ConversationsApi', () => {
         let mockParent = {
             postMessage() {}
         };
-        conversationsApi._myWindow = mockWindow as any as Window;
-        conversationsApi._myParent = mockParent as any as Window;
+        conversationsApi['_myWindow'] = mockWindow as any as Window;
+        conversationsApi['_myParent'] = mockParent as any as Window;
 
-        let sendMsgSpy = spyOn(ApiBase.prototype, 'sendMsgToPc');
+        let sendMsgSpy = spyOn(ApiBase.prototype as any, 'sendMsgToPc');
 
         let testConvoId = 'af2ef59d-9bc5-4436-8738-97c04869c81c';
         conversationsApi.showInteractionDetails(testConvoId);

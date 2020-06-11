@@ -13,7 +13,7 @@ export default {
      * @throws Error if the environment is invalid (e.g. not a browser, no postMessage api,
      *  not running within an iframe) and myConsole is not specified
      */
-    postMsgToPc(msg: any, tgtOrigin: string, transfer?: Transferable[], myWindow: Window = window, myParent = window.parent, myConsole = window.console) {
+    postMsgToPc(msg: any, tgtOrigin: string, transfer?: Transferable[], myWindow: Window = window, myParent = window.parent, myConsole: Console | null = window.console) {
         let validRuntime = !!(myWindow && typeof myWindow === 'object' && myParent && typeof myParent === 'object');
         let validEnv = (validRuntime && myParent !== myWindow);
         let validApi = !!(myParent && typeof myParent.postMessage === 'function');

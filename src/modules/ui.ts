@@ -45,7 +45,7 @@ class CoreUiApi extends BaseApi {
      *
      * @since 1.0.0
      */
-    showResourceCenterArtifact(artifactRelPath) {
+    showResourceCenterArtifact(artifactRelPath: string) {
         super.sendMsgToPc('showResourceCenterArtifact', {resourceCenterRelPath: artifactRelPath});
     }
 

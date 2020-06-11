@@ -23,8 +23,8 @@ export default describe('env utils', () => {
         VALID_PC_TLDS.forEach(currTld => {
             let resolvedEnv = envUtils.lookupPcEnv(currTld);
             expect(resolvedEnv).not.toBeNull();
-            expect(resolvedEnv.pcEnvTld).toBe(currTld);
-            expect(resolvedEnv.pcAppOrigin).toBe(`https://apps.${currTld}`);
+            expect(resolvedEnv!.pcEnvTld).toBe(currTld);
+            expect(resolvedEnv!.pcAppOrigin).toBe(`https://apps.${currTld}`);
         });
     });
 
@@ -46,8 +46,8 @@ export default describe('env utils', () => {
 
         variations.forEach(currTld => {
             let resolvedEnv = envUtils.lookupPcEnv(currTld, true);
-            expect(resolvedEnv.pcEnvTld).toBe(seedTld);
-            expect(resolvedEnv.pcAppOrigin).toBe(`https://apps.${seedTld}`);
+            expect(resolvedEnv!.pcEnvTld).toBe(seedTld);
+            expect(resolvedEnv!.pcAppOrigin).toBe(`https://apps.${seedTld}`);
         });
     });
 
