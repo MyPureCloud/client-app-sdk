@@ -4,6 +4,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "outDir": "dist",
+        "noUnusedLocals": true,
         "strict": true,
         "resolveJsonModule": true,
         "declaration": true,
