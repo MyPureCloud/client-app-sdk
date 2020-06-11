@@ -8,11 +8,6 @@ import {name as PROTOCOL_AGENT_NAME, version as PROTOCOL_AGENT_VERSION} from '..
 
 const PROTOCOL_NAME = 'purecloud-client-apps';
 
-const ACTION_NAME_KEY = 'action';
-const PROTOCOL_NAME_KEY = 'protocol';
-const PROTOCOL_AGENT_NAME_KEY = 'protocolAgentName';
-const PROTOCOL_AGENT_VERSION_KEY = 'protocolAgentVersion';
-
 interface ProtocolDetails {
     name: string;
     agentName: string;
@@ -296,8 +291,8 @@ class BaseApi {
                 eventTypeListenerCfgs.forEach(currListenerCfg => {
                     if (!currListenerCfg.options.msgPayloadFilter || currListenerCfg.options.msgPayloadFilter(event.data)) {
                         // Clone the event data and prune internal props before sending the event to user-space
-                        let userSpaceEventData = JSON.parse(JSON.stringify(event.data));
-                        delete userSpaceEventData[PROTOCOL_NAME_KEY];
+                        let userSpaceEventData: SDKMessagePayload = JSON.parse(JSON.stringify(event.data));
+                        delete userSpaceEventData.protocol;
 
                         currListenerCfg.listener(userSpaceEventData);
 

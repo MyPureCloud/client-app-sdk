@@ -27,7 +27,7 @@ const pick = <T extends object, K extends keyof T>(obj: T, keys: readonly K[]): 
         newObj[key] = obj[key];
     });
     return newObj;
-}
+};
 
 /**
  * Handles aspects of alerting and attention of this app with PureCloud

@@ -18,7 +18,7 @@
     "examples": "examples"
   },
   "scripts": {
-    "lint": "eslint src/*.js src/**/*.js",
+    "lint": "eslint src/**/*.ts",
     "tsc": "tsc",
     "start": "rollup --config dev.rollup.config.js --watch",
     "build": "./scripts/build.sh",
@@ -74,8 +74,10 @@
     "@types/fs-extra": "^9.0.1",
     "@types/jasmine": "^3.5.10",
     "@types/query-string": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "@typescript-eslint/parser": "^3.2.0",
     "child-process-promise": "^2.0.2",
-    "eslint": "^4.15.0",
+    "eslint": "^7.2.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1",
