@@ -1,8 +1,6 @@
 /**
  * Base module for all API modules
  *
- * @module modules/base
- *
  * @since 1.0.0
  */
 import commsUtils from '../utils/comms';
@@ -33,7 +31,15 @@ export type MessageListener = (event: SDKMessagePayload) => void;
 export type MessagePayloadFilter = (payload: SDKMessagePayload) => boolean;
 
 interface ListenerOptions {
+    /** 
+     * Set to true to only invoke this listener once; it will be removed after first invocation.
+     * false by default.  null/undefined will use default.
+     */
     once: boolean;
+    /**
+     * Provide a function to further filter the invocation of the listener;
+     * The listener will be called if this method returns a truthy value. null by default.  undefined will also use default.
+     */
     msgPayloadFilter?: MessagePayloadFilter | null;
 }
 
@@ -51,32 +57,22 @@ class BaseApi {
     private _targetPcOrigin: string;
     private _protocolDetails: ProtocolDetails;
 
-    /**
-     * Injection point for tests.  Should not be used by api users or extenders.
-     *
-     * @private
-     * @ignore
-     */
-    private _commsUtils = commsUtils;
-
     // ----- Message Listening
     private _msgListenerCfgs: Record<string, ListenerConfig[]> = {};
     private _msgHandler = this._onMsg.bind(this);
 
+    /**
+     * Injection point for tests.  Should not be used by api users or extenders.
+     */
+    private _commsUtils = commsUtils;
 
     /**
      * Injection point for tests.  Should not be used by api users or extenders.
-     *
-     * @private
-     * @ignore
      */
     private _myWindow = window as Window;
 
     /**
      * Injection point for tests.  Should not be used by api users or extenders.
-     *
-     * @private
-     * @ignore
      */
     private _myParent = (window ? window.parent : undefined);
 
@@ -84,17 +80,17 @@ class BaseApi {
      * Instantiates the BaseApi
      *
      * @param cfg Optional configuration
-     * @param cfg.targetPcOrigin The origin (protocol, hostname, and port) of the target PC environment (e.g. https://apps.mypurecloud.com). Default is '*'.
-     * @param cfg.protocol The name of the message protocol under which the message will be sent. Default is purecloud-client-apps.
-     * @param cfg.protocolAgentName The name of the agent from which the message will be sent. Default is purecloud-client-app-sdk (name of the package).
-     * @param cfg.protocolAgentVersion The version of the agent from which the message will be sent. Default is the version of the package.
      *
      * @since 1.0.0
      */
     constructor(cfg: {
+        /** The origin (protocol, hostname, and port) of the target PC environment (e.g. https://apps.mypurecloud.com). Default is '*'. */
         targetPcOrigin?: string | null,
+        /** The name of the message protocol under which the message will be sent. Default is purecloud-client-apps. */
         protocol?: string | null;
+        /** The name of the agent from which the message will be sent. Default is purecloud-client-app-sdk (name of the package). */
         protocolAgentName?: string | null;
+        /** The version of the agent from which the message will be sent. Default is the version of the package. */
         protocolAgentVersion?: string | null;
     } = {} as any) {
         this._targetPcOrigin = cfg.targetPcOrigin || '*';
@@ -113,9 +109,6 @@ class BaseApi {
      * @param actionName
      * @param msgPayload
      *
-     * @package
-     * @ignore Extender-use only.  Not a public API
-     *
      * @since 1.0.0
      */
     protected sendMsgToPc(actionName: string, msgPayload?: object) {
@@ -130,9 +123,6 @@ class BaseApi {
      * @param msgPayload - Action-specific payload data
      *
      * @returns A postMessage payload for the Client Apps SDK
-     *
-     * @package
-     * @ignore Extender-use only.  Not a public API
      *
      * @since 1.0.0
      */
@@ -162,13 +152,8 @@ class BaseApi {
      * @param listener - The listener function to invoke when a message of the specified eventType
      *   is received.  Message data will be passed
      * @param options - Options for the invocation of the listener; null/undefined will use defaults
-     * @param options.once - Set to true to only invoke this listener once; it will be removed after first invocation.
-     *  false by default.  null/undefined will use default.
-     * @param options.msgPayloadFilter - Provide a function to further filter the invocation of the listener;
-     *  The listener will be called if this method returns a truthy value. null by default.  undefined will also use default.
      *
      * @since 1.0.0
-     * @ignore Extender-use only.  Not a public API
      */
     protected addMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
         if (!eventType || typeof eventType !== 'string' || eventType.trim().length === 0) {
@@ -216,15 +201,10 @@ class BaseApi {
      * @param listener - The exact listener function instance that was previously registered.
      * @param options - Options registered with the listener;
      *  null and undefined trigger defaults and will be considered equal.
-     * @param options.once - Set as true if once was explicitly set as true when adding the listener;
-     *  otherwise, you can explicitly provide false or rely on the default.
-     * @param options.msgPayloadFilter - Provide the same function instance provided when adding the listener;
-     *  otherwise, you can rely on the empty default by either not specifing a function or providing null/undefined.
      *
      * @throws Error if the eventType, listener, or options are invalid
      *
      * @since 1.0.0
-     * @ignore Extender-use only.  Not a public API
      */
     protected removeMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
         if (!eventType || typeof eventType !== 'string' || eventType.trim().length === 0) {
@@ -265,9 +245,6 @@ class BaseApi {
 
     /**
      * Returns the total number of registered listeners.
-     *
-     * @private
-     * @ignore
      */
     private _getListenerCount() {
         let result = 0;
@@ -284,10 +261,7 @@ class BaseApi {
     }
 
     /**
-     * Intiate listening for messages from the host PureCloud application
-     *
-     * @private
-     * @ignore
+     * Initiate listening for messages from the host PureCloud application
      */
     private _subscribeToMsgs() {
         this._myWindow.addEventListener('message', this._msgHandler);
@@ -295,9 +269,6 @@ class BaseApi {
 
     /**
      * Stop listening for messages from the host PureCloud application
-     *
-     * @private
-     * @ignore
      */
     private _unsubscribeFromMsgs() {
         this._myWindow.removeEventListener('message', this._msgHandler);
@@ -306,9 +277,6 @@ class BaseApi {
     /**
      * Message handler function that will filter message events and invoke the correct, registered
      * listeners.
-     *
-     * @private
-     * @ignore
      */
     private _onMsg(event: MessageEvent) {
         if (!event || !event.source || !event.origin || event.source !== this._myParent ||
@@ -353,8 +321,6 @@ class BaseApi {
      * will be normalized to false if not specified or specified as an "empty" object (null/undefined).
      *
      * @param options The additional options config provided to [add|remove]MsgListener; null and undefined also allowed.
-     * @param options.msgPayloadFilter An additional filtering function; null and undefined also allowed.
-     * @param options.once A boolean indicating if the listener should be removed after first fire; null and undefined also allowed.
      *
      * @returns A normalized listener options object containing the msgPayloadFilter and once properties.
      * msgPayloadFilter will be null unless a valid function is explicitly provided.  once will be false unless true
@@ -363,9 +329,6 @@ class BaseApi {
      * @throws Error if options is not null, undefined, or an object
      * @throws Error if options.msgPayloadFilter is not null, undefined, or a function
      * @throws Error if options.once is not null, undefined, or a boolean
-     *
-     * @private
-     * @ignore
      */
     private _buildNormalizedListenerOptions(options?: Record<string, any> | null): ListenerOptions {
         let result: ListenerOptions = {
@@ -403,9 +366,6 @@ class BaseApi {
      * @param listenerCfg2 The second config
      *
      * @returns true if the listener, msgPayloadFilter, and once are equal; false otherwise
-     *
-     * @private
-     * @ignore
      */
     private _isDuplicateListenerCfg(listenerCfg1: ListenerConfig, listenerCfg2: ListenerConfig) {
         return (listenerCfg1.listener === listenerCfg2.listener &&

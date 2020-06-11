@@ -1,8 +1,6 @@
 /**
  * Utilities for interacting with PureCloud conversations
  *
- * @module modules/conversations
- *
  * @since 1.1.0
  */
 
@@ -11,8 +9,7 @@ import BaseApi from './base';
 /**
  * Utilities for interacting with PureCloud conversations
  *
- * @extends module:modules/base~BaseApi
- *
+ * @noInheritDoc
  * @since 1.1.0
  */
 class ConversationsApi extends BaseApi {
@@ -29,8 +26,9 @@ class ConversationsApi extends BaseApi {
      *         * quality:calibration:view
      *         * quality:evaluation:editScore
      *
-     * @example
+     * ```ts
      * myClientApp.conversations.showInteractionDetails('af2ef59d-9bc5-4436-8738-97c04869c81c');
+     * ```
      *
      * @since 1.1.0
      */

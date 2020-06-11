@@ -3,7 +3,6 @@
  *
  * {@link https://developer.mypurecloud.com/api/client-apps/index.html}
  *
- * @module pcClientAppSdk
  * @author Genesys Telecommunications Laboratories, Inc.
  * @copyright Copyright (C) 2018 Genesys Telecommunications Laboratories, Inc.
  * @license MIT
@@ -36,32 +35,120 @@ class ClientApp {
      */
     private _customPcOrigin: string | null = null;
 
+    /**
+     * The AlertingApi instance.
+     *
+     * ```ts
+     * let clientApp = new ClientApp({
+     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     * });
+     *
+     * clientApp.alerting.someMethod(...);
+     * ```
+     */
     alerting: AlertingApi;
+
+    /**
+     * The LifecycleApi instance.
+     *
+     * ```ts
+     * let clientApp = new ClientApp({
+     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     * });
+     *
+     * clientApp.lifecycle.someMethod(...);
+     * ```
+     */
     lifecycle: LifecycleApi;
+
+    /**
+     * The CoreUIApi instance.
+     *
+     * ```ts
+     * let clientApp = new ClientApp({
+     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     * });
+     *
+     * clientApp.coreUi.someMethod(...);
+     * ```
+     */
     coreUi: CoreUiApi;
+
+    /**
+     * The UsersApi instance.
+     *
+     * ```ts
+     * let clientApp = new ClientApp({
+     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     * });
+     *
+     * clientApp.users.someMethod(...);
+     * ```
+     */
     users: UsersApi;
+
+    /**
+     * The ConversationsApi instance.
+     *
+     * ```ts
+     * let clientApp = new ClientApp({
+     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     * });
+     *
+     * clientApp.conversations.someMethod(...);
+     * ```
+     */
     conversations: ConversationsApi;
+
+    /**
+     * The MyConversationsApi instance.
+     *
+     * ```ts
+     * let clientApp = new ClientApp({
+     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     * });
+     *
+     * clientApp.myConversations.someMethod(...);
+     * ```
+     *
+     * @since 1.3.0
+     */
     myConversations: MyConversationsApi;
+
+    /**
+     * The External Contacts instance.
+     *
+     * ```ts
+     * let clientApp = new ClientApp({
+     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     * });
+     * 
+     * clientApp.externalContacts.someMethod(...);
+     * ```
+     *
+     * @since 1.4.0
+     */
     externalContacts: ExternalContactsApi;
 
     /**
      * Constructs an instance of a PureCloud Client Application to communicate with purecloud
      *
-     * @param cfg - Runtime config of the client
-     * @param cfg.pcEnvironmentQueryParam - Name of a query param to auto parse into the pcEnvironment; Must be valid and a single param.  Best Practice.
-     * @param cfg.pcEnvironment - The PC top-level domain (e.g. mypurecloud.com, mypurecloud.au); Must be a valid PC Env tld; Prefered over pcOrigin.
-     * @param cfg.pcOrigin - The full origin (protocol, host, port) of the PureCloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property.
-     *
-     * @example
+     * ```ts
      * let clientApp = new ClientApp({
      *   pcEnvironmentQueryParam: 'pcEnvironment'
      * });
+     * ```
+     * 
+     * @param cfg - Runtime config of the client
      */
     constructor(cfg: {
+        /** Name of a query param to auto parse into the pcEnvironment; Must be valid and a single param.  Best Practice. */
         pcEnvironmentQueryParam?: string;
+        /** The PC top-level domain (e.g. mypurecloud.com, mypurecloud.au); Must be a valid PC Env tld; Prefered over pcOrigin. */
         pcEnvironment?: string;
+        /** The full origin (protocol, host, port) of the PureCloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property. */
         pcOrigin?: string;
-    } = {} as any) {
+    } = {}) {
         if (cfg) {
             if (cfg.hasOwnProperty('pcEnvironmentQueryParam')) {
                 let paramName = cfg.pcEnvironmentQueryParam;
@@ -106,94 +193,12 @@ class ClientApp {
             targetPcOrigin: (this._pcEnv ? this._pcEnv.pcAppOrigin : this._customPcOrigin)
         };
 
-        /**
-         * The AlertingApi instance.
-         *
-         * @example
-         * let clientApp = new ClientApp({
-         *   pcEnvironmentQueryParam: 'pcEnvironment'
-         * });
-         *
-         * clientApp.alerting.someMethod(...);
-         */
         this.alerting = new AlertingApi(apiCfg);
-
-        /**
-         * The LifecycleApi instance.
-         *
-         * @example
-         * let clientApp = new ClientApp({
-         *   pcEnvironmentQueryParam: 'pcEnvironment'
-         * });
-         *
-         * clientApp.lifecycle.someMethod(...);
-         */
         this.lifecycle = new LifecycleApi(apiCfg);
-
-        /**
-         * The CoreUIApi instance.
-         *
-         * @example
-         * let clientApp = new ClientApp({
-         *   pcEnvironmentQueryParam: 'pcEnvironment'
-         * });
-         *
-         * clientApp.coreUi.someMethod(...);
-         */
-        // @ts-ignore
         this.coreUi = new CoreUiApi(apiCfg);
-
-        /**
-         * The UsersApi instance.
-         *
-         * @example
-         * let clientApp = new ClientApp({
-         *   pcEnvironmentQueryParam: 'pcEnvironment'
-         * });
-         *
-         * clientApp.users.someMethod(...);
-         */
-        // @ts-ignore
         this.users = new UsersApi(apiCfg);
-
-        /**
-         * The ConversationsApi instance.
-         *
-         * @example
-         * let clientApp = new ClientApp({
-         *   pcEnvironmentQueryParam: 'pcEnvironment'
-         * });
-         *
-         * clientApp.conversations.someMethod(...);
-         */
         this.conversations = new ConversationsApi(apiCfg);
-
-        /**
-         * The MyConversationsApi instance.
-         *
-         * @example
-         * let clientApp = new ClientApp({
-         *   pcEnvironmentQueryParam: 'pcEnvironment'
-         * });
-         *
-         * clientApp.myConversations.someMethod(...);
-         *
-         * @since 1.3.0
-         */
         this.myConversations = new MyConversationsApi(apiCfg);
-
-        /**
-         * The External Contacts instance.
-         *
-         * @example
-         * let clientApp = new ClientApp({
-         *   pcEnvironmentQueryParam: 'pcEnvironment'
-         * });
-         *
-         * clientApp.externalContacts.someMethod(...);
-         *
-         * @since 1.4.0
-         */
         this.externalContacts = new ExternalContactsApi(apiCfg);
     }
 
@@ -213,10 +218,11 @@ class ClientApp {
     /**
      * Displays the version of the PureClound Client App SDK.
      *
-     * @returns The version of the PureCloud Client App SDK
-     *
-     * @example
+     * ```ts
      * ClientApp.version
+     * ```
+     * 
+     * @returns The version of the PureCloud Client App SDK
      *
      * @since 1.0.0
      */
@@ -227,10 +233,11 @@ class ClientApp {
     /**
      * Displays information about this version of the PureClound Client App SDK.
      *
-     * @returns A string of information describing this library
-     *
-     * @example
+     * ```ts
      * ClientApp.about(); // SDK details returned as a string
+     * ```
+     * 
+     * @returns A string of information describing this library
      *
      * @since 1.0.0
      */
@@ -239,9 +246,9 @@ class ClientApp {
     }
 
     /**
-     * A private utility method exported for mocking and testing
+     * A private utility method
      *
-     * @private
+     * @ignore
      */
     static _getQueryString() {
         return ((window && window.location) ? window.location.search : null);
