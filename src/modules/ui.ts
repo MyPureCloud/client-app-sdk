@@ -1,8 +1,6 @@
 /**
  * Utilities for interacting with general PureCloud App UI components
  *
- * @module modules/core-ui
- *
  * @since 1.0.0
  */
 
@@ -11,16 +9,16 @@ import BaseApi from './base';
 /**
  * Utilities for interacting with general PureCloud App UI components
  *
- * @extends module:modules/base~BaseApi
- *
+ * @noInheritDoc
  * @since 1.0.0
  */
 class CoreUiApi extends BaseApi {
     /**
      * Show the help UI.  Noop if already shown.
      *
-     * @example
+     * ```ts
      * myClientApp.coreUi.showHelp();
+     * ```
      *
      * @since 1.0.0
      */
@@ -31,17 +29,19 @@ class CoreUiApi extends BaseApi {
     /**
      * Open the help panel to the specified Resource Center artifact
      *
-     * @param {string} artifactRelPath - The path of the Resource Center artifact
-     * relative to the Resource Center root.  Supports paths and query string params,
-     * but not hash params.  The appropriate theme will be inserted automatically.
-     *
-     * @example
+     * ```ts
      * // Direct path
      * myClientApp.coreUi.showResourceCenterArtifact('articles/complete-profile');
+     * ```
      *
-     * @example
+     * ```ts
      * // Permalink
      * myClientApp.coreUi.showResourceCenterArtifact('?p=7711');
+     * ```
+     * 
+     * @param artifactRelPath - The path of the Resource Center artifact
+     * relative to the Resource Center root.  Supports paths and query string params,
+     * but not hash params.  The appropriate theme will be inserted automatically.
      *
      * @since 1.0.0
      */
@@ -52,8 +52,9 @@ class CoreUiApi extends BaseApi {
     /**
      * Hide the help UI.  Noop if already hidden.
      *
-     * @example
+     * ```ts
      * myClientApp.coreUi.hideHelp();
+     * ```
      *
      * @since 1.0.0
      */

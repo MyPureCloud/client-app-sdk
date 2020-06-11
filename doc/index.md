@@ -1,3 +1,7 @@
+---
+title: Client App SDK
+---
+
 A JavaScript library to deeply integrate a 3rd-party applications within PureCloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, plese use the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
 
 [Source Code](https://github.com/MyPureCloud/client-app-sdk)
