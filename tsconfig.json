@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "allowJs": true,
         "module": "es6",
         "moduleResolution": "node",
         "outDir": "dist",
+        "strict": true,
         "resolveJsonModule": true,
         "declaration": true,
         "emitDeclarationOnly": true

@@ -16,7 +16,7 @@ export interface PcEnv {
     pcAppOrigin: string;
 }
 
-let DEFAULT_PC_ENV: PcEnv;
+let DEFAULT_PC_ENV!: PcEnv;
 const PC_ENVS = PC_ENV_TLDS.reduce<PcEnv[]>((result, currEnvTld) => {
     let currEnv: PcEnv = {
         pcEnvTld: currEnvTld,

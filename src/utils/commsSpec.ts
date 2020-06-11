@@ -8,6 +8,7 @@ export default describe('comms util', () => {
 
     it('should not work with null window/parent params', () => {
         expect(() => {
+            // @ts-expect-error
             commsUtil.postMsgToPc('message', '*', undefined, null, null, null);
         }).toThrowError();
     });
@@ -47,7 +48,7 @@ export default describe('comms util', () => {
             error() {
                 return null;
             }
-        } as Console;
+        } as any as Console;
 
         spyOn(myConsole, 'error');
 

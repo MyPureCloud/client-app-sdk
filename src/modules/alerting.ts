@@ -8,8 +8,28 @@
 
 import BaseApi from './base';
 
-const VALID_MESSAGE_TYPES = ['error', 'info', 'success'];
-const VALID_SUPPLEMENTAL_OPTIONS = ['id', 'markdownMessage', 'timeout', 'showCloseButton'];
+const VALID_MESSAGE_TYPES = ['error', 'info', 'success'] as const;
+const VALID_SUPPLEMENTAL_OPTIONS = ['id', 'markdownMessage', 'timeout', 'showCloseButton'] as const;
+
+interface BaseToastMessageProps {
+    title: string;
+    message: string;
+    type: ValidMessageType;
+}
+
+type ValidMessageType = typeof VALID_MESSAGE_TYPES[number];
+
+const isValidMessageType = (type: string): type is ValidMessageType => {
+    return VALID_MESSAGE_TYPES.indexOf(type as ValidMessageType) > -1;
+};
+
+const pick = <T extends object, K extends keyof T>(obj: T, keys: readonly K[]): Pick<T, K> => {
+    const newObj = {} as Record<K, any>;
+    keys.forEach(key => {
+        newObj[key] = obj[key];
+    });
+    return newObj;
+}
 
 /**
  * Handles aspects of alerting and attention of this app with PureCloud
@@ -68,7 +88,7 @@ class AlertingApi extends BaseApi {
         timeout?: number;
         showCloseButton?: boolean;
     }) {
-        const messageParams = {
+        const messageParams: BaseToastMessageProps & typeof options = {
             title,
             message,
             type: 'info'
@@ -78,16 +98,13 @@ class AlertingApi extends BaseApi {
             if (options.type && typeof options.type === 'string') {
                 let requestedType = options.type.trim().toLowerCase();
 
-                if (VALID_MESSAGE_TYPES.indexOf(requestedType) > -1) {
+                if (isValidMessageType(requestedType)) {
                     messageParams.type = requestedType;
                 }
             }
 
-            VALID_SUPPLEMENTAL_OPTIONS.forEach(currOption => {
-                if (options.hasOwnProperty(currOption)) {
-                    messageParams[currOption] = options[currOption];
-                }
-            });
+            const validOptions = pick(options, VALID_SUPPLEMENTAL_OPTIONS);
+            Object.assign(messageParams, validOptions);
         }
 
         super.sendMsgToPc('showToast', messageParams);

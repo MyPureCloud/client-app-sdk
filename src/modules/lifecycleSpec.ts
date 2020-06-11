@@ -1,5 +1,5 @@
 /* eslint-env jasmine */
-import LifecycleApi from './lifecycle';
+import LifecycleApi, { LifecycleHook } from './lifecycle';
 
 const APPS_API_PROTOCOL = 'purecloud-client-apps';
 
@@ -17,14 +17,21 @@ export default describe('LifecycleApi', () => {
     });
 
     describe('lifecycleEvents', () => {
-        let mockParent = null;
-        let mockWindow = null;
-        let fireEvent = null;
+        let mockParent: Window;
+        let mockWindow: Window;
+        let fireEvent: (event: MessageEvent) => void;
         const basePayloadData = {
             protocol: APPS_API_PROTOCOL
         };
 
-        const hookCases = [{
+        const hookMap = {
+            bootstrap: { add: 'addBootstrapListener', remove: 'removeBootstrapListener' },
+            focus: { add: 'addFocusListener', remove: 'removeFocusListener' },
+            blur: { add: 'addBlurListener', remove: 'removeBlurListener' },
+            stop: { add: 'addStopListener', remove: 'removeStopListener' }
+        } as const;
+
+        const hookCases: Array<{ hook: LifecycleHook, onceDefault: boolean }> = [{
             hook: 'bootstrap',
             onceDefault: true
         }, {
@@ -39,15 +46,15 @@ export default describe('LifecycleApi', () => {
         }];
 
         beforeEach(() => {
-            mockParent = {};
+            mockParent = {} as Window;
             mockWindow = {
                 addEventListener() {},
                 removeEventListener() {}
-            };
-            lifecycleApi._myWindow = mockWindow;
-            lifecycleApi._myParent = mockParent;
+            } as any as Window;
+            lifecycleApi['_myWindow'] = mockWindow;
+            lifecycleApi['_myParent'] = mockParent;
 
-            fireEvent = function (event: any) {
+            fireEvent = function (event: MessageEvent) {
                 lifecycleApi._onMsg(event);
             };
         });
@@ -94,7 +101,7 @@ export default describe('LifecycleApi', () => {
             });
         });
 
-        function testLifecycleHookListener(hook) {
+        function testLifecycleHookListener(hook: LifecycleHook) {
             let myObj = {
                 myListener() {}
             };
@@ -107,11 +114,10 @@ export default describe('LifecycleApi', () => {
                     purecloudEventType: 'appLifecycleHook',
                     hook
                 })
-            };
+            } as MessageEvent;
 
             // Always pass false to test multiple calls
-            let hookFnName = hook.charAt(0).toUpperCase() + hook.substring(1);
-            lifecycleApi[`add${hookFnName}Listener`](myObj.myListener, false);
+            lifecycleApi[hookMap[hook].add](myObj.myListener, false);
 
             fireEvent(validEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(1);
@@ -127,11 +133,11 @@ export default describe('LifecycleApi', () => {
                     purecloudEventType: 'appLifecycleHook',
                     hook: `someOther-${hook}`
                 })
-            });
+            } as MessageEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(2);
         }
 
-        function testLifecycleHookListenerOnceEquality(hook) {
+        function testLifecycleHookListenerOnceEquality(hook: LifecycleHook) {
             let myObj = {
                 myListener() {}
             };
@@ -144,12 +150,10 @@ export default describe('LifecycleApi', () => {
                     purecloudEventType: 'appLifecycleHook',
                     hook
                 })
-            };
+            } as MessageEvent;
 
-            let hookFnName = hook.charAt(0).toUpperCase() + hook.substring(1);
-
-            lifecycleApi[`add${hookFnName}Listener`](myObj.myListener, true);
-            lifecycleApi[`add${hookFnName}Listener`](myObj.myListener, false);
+            lifecycleApi[hookMap[hook].add](myObj.myListener, true);
+            lifecycleApi[hookMap[hook].add](myObj.myListener, false);
 
             fireEvent(validEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(2);
@@ -159,21 +163,20 @@ export default describe('LifecycleApi', () => {
         }
 
         // Tests that each lifecycle hook can be add/removed in isolation of the others
-        function testLifecycleHookListenerIsolation(hook) {
+        function testLifecycleHookListenerIsolation(hook: LifecycleHook) {
             let myObj = {
                 myListener() {}
             };
             spyOn(myObj, 'myListener');
 
-            let hookEvents = [];
+            let hookEvents: MessageEvent[] = [];
 
             // Attach the same listener to every hook
             hookCases.forEach(currCase => {
                 let currHook = currCase.hook;
-                let hookFnName = currHook.charAt(0).toUpperCase() + currHook.substring(1);
 
                 // Always pass false to ensure consistent tests
-                lifecycleApi[`add${hookFnName}Listener`](myObj.myListener, false);
+                lifecycleApi[hookMap[currHook].add](myObj.myListener, false);
 
                 hookEvents.push({
                     source: mockParent,
@@ -182,7 +185,7 @@ export default describe('LifecycleApi', () => {
                         purecloudEventType: 'appLifecycleHook',
                         hook: currHook
                     })
-                });
+                } as MessageEvent);
             });
 
             // Fire an event for each hook
@@ -194,8 +197,7 @@ export default describe('LifecycleApi', () => {
             expect(myObj.myListener).toHaveBeenCalledTimes(hookCases.length);
 
             // Remove the listener for the hook under test
-            let hookFnName = hook.charAt(0).toUpperCase() + hook.substring(1);
-            lifecycleApi[`remove${hookFnName}Listener`](myObj.myListener, false);
+            lifecycleApi[hookMap[hook].remove](myObj.myListener, false);
 
             // Fire an event for each hook
             hookEvents.forEach(currEvent => {
@@ -206,7 +208,7 @@ export default describe('LifecycleApi', () => {
             expect(myObj.myListener).toHaveBeenCalledTimes((hookCases.length * 2) - 1);
         }
 
-        function testLifecycleHookListenerRemoval(hook) {
+        function testLifecycleHookListenerRemoval(hook: LifecycleHook) {
             let myObj = {
                 myListener() {}
             };
@@ -219,11 +221,10 @@ export default describe('LifecycleApi', () => {
                     purecloudEventType: 'appLifecycleHook',
                     hook
                 })
-            };
+            } as MessageEvent;
 
             // Always pass false to test removal
-            let hookFnName = hook.charAt(0).toUpperCase() + hook.substring(1);
-            lifecycleApi[`add${hookFnName}Listener`](myObj.myListener, false);
+            lifecycleApi[hookMap[hook].add](myObj.myListener, false);
 
             fireEvent(validEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(1);
@@ -233,22 +234,22 @@ export default describe('LifecycleApi', () => {
             expect(myObj.myListener).toHaveBeenCalledTimes(2);
 
             // Ensure the listener is used in the equality check for removal
-            lifecycleApi[`remove${hookFnName}Listener`](() => {}, false);
+            lifecycleApi[hookMap[hook].remove](() => {}, false);
             fireEvent(validEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(3);
 
             // Ensure once is used in the equality check for removal
-            lifecycleApi[`remove${hookFnName}Listener`](myObj.myListener, true);
+            lifecycleApi[hookMap[hook].remove](myObj.myListener, true);
             fireEvent(validEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(4);
 
             // Finally, pass the right listener and once to actually remove it
-            lifecycleApi[`remove${hookFnName}Listener`](myObj.myListener, false);
+            lifecycleApi[hookMap[hook].remove](myObj.myListener, false);
             fireEvent(validEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(4);
         }
 
-        function testLifecycleHookListenerOnce(hook) {
+        function testLifecycleHookListenerOnce(hook: LifecycleHook) {
             let myObj = {
                 myListener() {}
             };
@@ -261,11 +262,10 @@ export default describe('LifecycleApi', () => {
                     purecloudEventType: 'appLifecycleHook',
                     hook
                 })
-            };
+            } as MessageEvent;
 
-            let hookFnName = hook.charAt(0).toUpperCase() + hook.substring(1);
             // Always pass true to test once
-            lifecycleApi[`add${hookFnName}Listener`](myObj.myListener, true);
+            lifecycleApi[hookMap[hook].add](myObj.myListener, true);
 
             fireEvent(validEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(1);
@@ -274,7 +274,7 @@ export default describe('LifecycleApi', () => {
             expect(myObj.myListener).toHaveBeenCalledTimes(1);
         }
 
-        function testLifecycleHookListenerOnceDefault(hook, onceDefault) {
+        function testLifecycleHookListenerOnceDefault(hook: LifecycleHook, onceDefault: boolean) {
             let myObj = {
                 myListener() {}
             };
@@ -287,10 +287,9 @@ export default describe('LifecycleApi', () => {
                     purecloudEventType: 'appLifecycleHook',
                     hook
                 })
-            };
+            } as MessageEvent;
 
-            let hookFnName = hook.charAt(0).toUpperCase() + hook.substring(1);
-            lifecycleApi[`add${hookFnName}Listener`](myObj.myListener);
+            lifecycleApi[hookMap[hook].add](myObj.myListener);
 
             fireEvent(validEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(1);
@@ -299,7 +298,7 @@ export default describe('LifecycleApi', () => {
             expect(myObj.myListener).toHaveBeenCalledTimes(onceDefault ? 1 : 2);
         }
 
-        function testAddRemoveOnceDefaultConsistency(hook) {
+        function testAddRemoveOnceDefaultConsistency(hook: LifecycleHook) {
             let myObj = {
                 myListener() {}
             };
@@ -312,12 +311,11 @@ export default describe('LifecycleApi', () => {
                     purecloudEventType: 'appLifecycleHook',
                     hook
                 })
-            };
+            } as MessageEvent;
 
-            let hookFnName = hook.charAt(0).toUpperCase() + hook.substring(1);
-            lifecycleApi[`add${hookFnName}Listener`](myObj.myListener);
+            lifecycleApi[hookMap[hook].add](myObj.myListener);
             // Immediately call remove to test the default once param is the same for remove as add
-            lifecycleApi[`remove${hookFnName}Listener`](myObj.myListener);
+            lifecycleApi[hookMap[hook].remove](myObj.myListener);
 
             fireEvent(validEvent);
             expect(myObj.myListener).toHaveBeenCalledTimes(0);

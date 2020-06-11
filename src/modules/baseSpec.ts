@@ -1,5 +1,5 @@
 /* eslint-env jasmine */
-import BaseApi from './base';
+import BaseApi, { SDKMessagePayload, MessageListener, MessagePayloadFilter } from './base';
 import {name as pkgName, version as pkgVersion} from '../../package.json';
 
 const APPS_API_PROTOCOL = 'purecloud-client-apps';
@@ -28,7 +28,7 @@ export default describe('BaseApi', () => {
         let action = 'myAction';
         let actionOnlyPayload = baseApi.buildSdkMsgPayload(action);
         expect(actionOnlyPayload).toEqual(
-            Object.assign({}, {action}, baseProtoDetails)
+            Object.assign({}, {action}, baseProtoDetails) as any
         );
     });
 
@@ -43,7 +43,7 @@ export default describe('BaseApi', () => {
 
         let complexPayload = baseApi.buildSdkMsgPayload(action, actionPayload);
         expect(complexPayload).toEqual(
-            Object.assign({}, {action}, baseProtoDetails, actionPayload)
+            Object.assign({}, {action}, baseProtoDetails, actionPayload) as any
         );
     });
 
@@ -91,7 +91,7 @@ export default describe('BaseApi', () => {
 
     describe('MessageListeners', () => {
         let targetPcOrigin = 'https://subdomain.envdomain.com';
-        let baseApi = null;
+        let baseApi: BaseApi;
 
         beforeEach(function () {
             baseApi = new BaseApi(Object.assign({}, {targetPcOrigin}, baseProtoDetails));
@@ -102,6 +102,7 @@ export default describe('BaseApi', () => {
                 // Invalid Event Types
                 [null, undefined, 1, [], {}, '', ' ', true].forEach(currEventType => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.addMsgListener(currEventType, () => {});
                     }).toThrowError(/^Invalid eventType.*$/);
                 });
@@ -109,6 +110,7 @@ export default describe('BaseApi', () => {
                 // Invalid listeners
                 [null, undefined, 1, [], {}, '', ' ', true].forEach(currListener => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.addMsgListener('foo', currListener);
                     }).toThrowError(/^Invalid listener.*$/);
                 });
@@ -116,6 +118,7 @@ export default describe('BaseApi', () => {
                 // Invalid options
                 [1, [], '', ' ', true, () => {}].forEach(currOptions => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.addMsgListener('foo', () => {}, currOptions);
                     }).toThrowError(/^Invalid options.*$/);
                 });
@@ -130,6 +133,7 @@ export default describe('BaseApi', () => {
                 // Invalid msgPayloadFilter options
                 [1, [], {}, '', ' ', true].forEach(currFilter => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.addMsgListener('foo', () => {}, {msgPayloadFilter: currFilter});
                     }).toThrowError(/^.*msgPayloadFilter.*$/);
                 });
@@ -137,16 +141,19 @@ export default describe('BaseApi', () => {
                 // Valid msgPayloadFilter options
                 [null, undefined, () => {}].forEach(currFilter => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.addMsgListener('foo', () => {}, {msgPayloadFilter: currFilter});
                     }).not.toThrow();
                 });
                 expect(() => {
+                    // @ts-expect-error
                     baseApi.addMsgListener('foo', () => {}, {noFilterKey: 'provided'});
                 }).not.toThrow();
 
                 // Invalid once options
                 [1, [], {}, '', ' ', () => {}].forEach(currOnce => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.addMsgListener('foo', () => {}, {once: currOnce});
                     }).toThrowError(/^.*once.*$/);
                 });
@@ -154,10 +161,12 @@ export default describe('BaseApi', () => {
                 // Valid once options
                 [null, undefined, true, false].forEach(currOnce => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.addMsgListener('foo', () => {}, {once: currOnce});
                     }).not.toThrow();
                 });
                 expect(() => {
+                    // @ts-expect-error
                     baseApi.addMsgListener('foo', () => {}, {noOnceKey: 'provided'});
                 }).not.toThrow();
             });
@@ -229,7 +238,7 @@ export default describe('BaseApi', () => {
                 expect(baseApi._getListenerCount()).toBe(1);
 
                 // Null or undefined filters should use default and be considered the same
-                baseApi.addMsgListener(eventType, myListener, {noFilterKey: 'provided'});
+                baseApi.addMsgListener(eventType, myListener, {noFilterKey: 'provided'} as any);
                 expect(baseApi._getListenerCount()).toBe(1);
                 baseApi.addMsgListener(eventType, myListener, {msgPayloadFilter: null});
                 expect(baseApi._getListenerCount()).toBe(1);
@@ -238,11 +247,11 @@ export default describe('BaseApi', () => {
 
                 // A listener with a different payload should be considered unique
                 let myFilter = () => {};
-                baseApi.addMsgListener(eventType, myListener, {msgPayloadFilter: myFilter});
+                baseApi.addMsgListener(eventType, myListener, {msgPayloadFilter: myFilter as any});
                 expect(baseApi._getListenerCount()).toBe(2);
 
                 // The same filter should collide
-                baseApi.addMsgListener(eventType, myListener, {msgPayloadFilter: myFilter});
+                baseApi.addMsgListener(eventType, myListener, {msgPayloadFilter: myFilter as any});
                 expect(baseApi._getListenerCount()).toBe(2);
             });
 
@@ -255,9 +264,9 @@ export default describe('BaseApi', () => {
                 expect(baseApi._getListenerCount()).toBe(1);
 
                 // The default once is false; null and undefined should also use the default
-                baseApi.addMsgListener(eventType, myListener, {noOnceKey: 'provided'});
+                baseApi.addMsgListener(eventType, myListener, {noOnceKey: 'provided'} as any);
                 expect(baseApi._getListenerCount()).toBe(1);
-                baseApi.addMsgListener(eventType, myListener, {once: null});
+                baseApi.addMsgListener(eventType, myListener, {once: null as any});
                 expect(baseApi._getListenerCount()).toBe(1);
                 baseApi.addMsgListener(eventType, myListener, {once: undefined});
                 expect(baseApi._getListenerCount()).toBe(1);
@@ -279,16 +288,16 @@ export default describe('BaseApi', () => {
                 expect(baseApi._getListenerCount()).toBe(0);
                 let myListener = () => {};
                 let myFilter = () => {};
-                baseApi.addMsgListener(eventType, myListener, {once: true, msgPayloadFilter: myFilter});
+                baseApi.addMsgListener(eventType, myListener, {once: true, msgPayloadFilter: myFilter as any});
                 expect(baseApi._getListenerCount()).toBe(1);
 
-                baseApi.addMsgListener(eventType, myListener, {once: true, msgPayloadFilter: () => {}});
+                baseApi.addMsgListener(eventType, myListener, {once: true, msgPayloadFilter: (() => {}) as any});
                 expect(baseApi._getListenerCount()).toBe(2);
-                baseApi.addMsgListener(eventType, myListener, {once: false, msgPayloadFilter: myFilter});
+                baseApi.addMsgListener(eventType, myListener, {once: false, msgPayloadFilter: myFilter as any});
                 expect(baseApi._getListenerCount()).toBe(3);
 
                 // The same options should collide
-                baseApi.addMsgListener(eventType, myListener, {once: true, msgPayloadFilter: myFilter});
+                baseApi.addMsgListener(eventType, myListener, {once: true, msgPayloadFilter: myFilter as any});
                 expect(baseApi._getListenerCount()).toBe(3);
             });
 
@@ -296,7 +305,7 @@ export default describe('BaseApi', () => {
                 let mockWindow = {
                     addEventListener() {}
                 };
-                baseApi._myWindow = mockWindow;
+                baseApi['_myWindow'] = mockWindow as any as Window;
 
                 spyOn(mockWindow, 'addEventListener');
 
@@ -318,27 +327,27 @@ export default describe('BaseApi', () => {
                 protocol: APPS_API_PROTOCOL,
                 purecloudEventType: eventType
             };
-            let fireEvent = null;
-            let mockParent;
-            let mockWindow;
+            let fireEvent: (event: MessageEvent) => void;
+            let mockParent: Window;
+            let mockWindow: Window;
 
             beforeEach(() => {
-                mockParent = {};
+                mockParent = {} as Window;
                 mockWindow = {
                     addEventListener() {},
                     removeEventListener() {}
-                };
-                baseApi._myWindow = mockWindow;
-                baseApi._myParent = mockParent;
+                } as any as Window;
+                baseApi['_myWindow'] = mockWindow;
+                baseApi['_myParent'] = mockParent;
 
-                fireEvent = function (...args: any[]) {
-                    baseApi._onMsg(...args);
+                fireEvent = function (event: MessageEvent) {
+                    baseApi._onMsg(event);
                 };
             });
 
             it('should validate the incoming message as PC genuine', () => {
                 let myObj = {
-                    myListener(data) {}
+                    myListener(data: SDKMessagePayload) {}
                 };
                 spyOn(myObj, 'myListener').and.callThrough();
 
@@ -348,16 +357,18 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: basePayloadData
-                });
+                } as MessageEvent);
 
                 expect(myObj.myListener).toHaveBeenCalledTimes(1);
 
                 // Missing or invalid event
+                // @ts-expect-error
                 fireEvent();
                 let invalidEventCases = [
                     null, undefined, {}, [], '', ' ', 1
                 ];
                 invalidEventCases.forEach(currCase => {
+                    // @ts-expect-error
                     fireEvent(currCase);
                 });
 
@@ -365,12 +376,13 @@ export default describe('BaseApi', () => {
                 fireEvent({
                     origin: targetPcOrigin,
                     data: basePayloadData
-                });
+                } as MessageEvent);
                 let invalidSourceCases = [
                     null, undefined, {}
                 ];
                 invalidSourceCases.forEach(currCase => {
                     fireEvent({
+                        // @ts-expect-error
                         source: currCase,
                         origin: targetPcOrigin,
                         data: basePayloadData
@@ -378,6 +390,7 @@ export default describe('BaseApi', () => {
                 });
 
                 // Missing or invalid origins
+                // @ts-expect-error
                 fireEvent({
                     source: mockParent,
                     data: basePayloadData
@@ -393,12 +406,14 @@ export default describe('BaseApi', () => {
                 invalidOriginCases.forEach(currCase => {
                     fireEvent({
                         source: mockParent,
+                        // @ts-expect-error
                         origin: currCase,
                         data: basePayloadData
                     });
                 });
 
                 // Missing or invalid data cases
+                // @ts-expect-error
                 fireEvent({
                     source: mockParent,
                     origin: targetPcOrigin
@@ -419,6 +434,7 @@ export default describe('BaseApi', () => {
                     }
                 ];
                 invalidDataCases.forEach(currCase => {
+                    // @ts-expect-error
                     fireEvent({
                         source: mockParent,
                         origin: targetPcOrigin,
@@ -443,7 +459,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData, {purecloudEventType: eventType})
-                });
+                } as MessageEvent);
 
                 expect(myObj.myListener).toHaveBeenCalledTimes(1);
 
@@ -452,7 +468,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData, {purecloudEventType: ` ${eventType} `})
-                });
+                } as MessageEvent);
                 expect(myObj.myListener).toHaveBeenCalledTimes(1);
 
                 // events are case sensitive; should not be called
@@ -460,7 +476,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData, {purecloudEventType: eventType.toUpperCase()})
-                });
+                } as MessageEvent);
                 expect(myObj.myListener).toHaveBeenCalledTimes(1);
             });
 
@@ -477,7 +493,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: origEventData
-                });
+                } as MessageEvent);
 
                 expect(myObj.myListener).toHaveBeenCalledTimes(1);
                 let eventPayload = (myObj.myListener as jasmine.Spy).calls.mostRecent().args[0];
@@ -501,7 +517,7 @@ export default describe('BaseApi', () => {
                         additionalKey1: 'foo',
                         additionalKey2: 'bar'
                     })
-                });
+                } as MessageEvent);
 
                 expect(myObj.myListener).toHaveBeenCalledTimes(2);
                 eventPayload = (myObj.myListener as jasmine.Spy).calls.mostRecent().args[0];
@@ -528,7 +544,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData)
-                };
+                } as MessageEvent;
                 fireEvent(event);
                 expect(myObj.myListener).toHaveBeenCalledTimes(0);
                 fireEvent(event);
@@ -555,7 +571,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData)
-                };
+                } as MessageEvent;
                 fireEvent(event);
                 expect(myObj.myListener).toHaveBeenCalledTimes(1);
                 expect(myObj.myListenerWithFilter).toHaveBeenCalledTimes(1);
@@ -582,7 +598,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData)
-                };
+                } as MessageEvent;
                 fireEvent(event);
                 expect(myObj.myListener).toHaveBeenCalledTimes(1);
                 expect(myObj.myListenerWithFilter).toHaveBeenCalledTimes(1);
@@ -608,7 +624,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData)
-                };
+                } as MessageEvent;
                 fireEvent(event);
                 expect(myObj.myListener).toHaveBeenCalledTimes(1);
                 expect(myObj.myListener2).toHaveBeenCalledTimes(1);
@@ -624,6 +640,7 @@ export default describe('BaseApi', () => {
                 // Invalid Event Types
                 [null, undefined, 1, [], {}, '', ' ', true].forEach(currEventType => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.removeMsgListener(currEventType, () => {});
                     }).toThrowError(/^Invalid eventType.*$/);
                 });
@@ -631,6 +648,7 @@ export default describe('BaseApi', () => {
                 // Invalid listeners
                 [null, undefined, 1, [], {}, '', ' ', true].forEach(currListener => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.removeMsgListener('foo', currListener);
                     }).toThrowError(/^Invalid listener.*$/);
                 });
@@ -638,6 +656,7 @@ export default describe('BaseApi', () => {
                 // Invalid options
                 [1, [], '', ' ', true, () => {}].forEach(currOptions => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.removeMsgListener('foo', () => {}, currOptions);
                     }).toThrowError(/^Invalid options.*$/);
                 });
@@ -652,6 +671,7 @@ export default describe('BaseApi', () => {
                 // Invalid msgPayloadFilter options
                 [1, [], {}, '', ' ', true].forEach(currFilter => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.removeMsgListener('foo', () => {}, {msgPayloadFilter: currFilter});
                     }).toThrowError(/^.*msgPayloadFilter.*$/);
                 });
@@ -659,16 +679,17 @@ export default describe('BaseApi', () => {
                 // Valid msgPayloadFilter options
                 [null, undefined, () => {}].forEach(currFilter => {
                     expect(() => {
-                        baseApi.removeMsgListener('foo', () => {}, {msgPayloadFilter: currFilter});
+                        baseApi.removeMsgListener('foo', () => {}, {msgPayloadFilter: currFilter as any});
                     }).not.toThrow();
                 });
                 expect(() => {
-                    baseApi.removeMsgListener('foo', () => {}, {noFilterKey: 'provided'});
+                    baseApi.removeMsgListener('foo', () => {}, {noFilterKey: 'provided'} as any);
                 }).not.toThrow();
 
                 // Invalid once options
                 [1, [], {}, '', ' ', () => {}].forEach(currOnce => {
                     expect(() => {
+                        // @ts-expect-error
                         baseApi.removeMsgListener('foo', () => {}, {once: currOnce});
                     }).toThrowError(/^.*once.*$/);
                 });
@@ -676,11 +697,11 @@ export default describe('BaseApi', () => {
                 // Valid once options
                 [null, undefined, true, false].forEach(currOnce => {
                     expect(() => {
-                        baseApi.removeMsgListener('foo', () => {}, {once: currOnce});
+                        baseApi.removeMsgListener('foo', () => {}, {once: currOnce as any});
                     }).not.toThrow();
                 });
                 expect(() => {
-                    baseApi.removeMsgListener('foo', () => {}, {noOnceKey: 'provided'});
+                    baseApi.removeMsgListener('foo', () => {}, {noOnceKey: 'provided'} as any);
                 }).not.toThrow();
             });
 
@@ -744,22 +765,22 @@ export default describe('BaseApi', () => {
                     baseApi.addMsgListener('foo', myListener);
                     expect(baseApi._getListenerCount()).toBe(1);
 
-                    baseApi.removeMsgListener('foo', myListener, defaultOptionEquivalent);
+                    baseApi.removeMsgListener('foo', myListener, defaultOptionEquivalent as any);
                     expect(baseApi._getListenerCount()).toBe(0);
                 });
             });
 
             it('should check the options when evaluating a listener for removal', () => {
-                let myListener = () => {};
+                let myListener = (() => {}) as any as MessagePayloadFilter;
 
                 // Same eventType and listener; different options from default
                 baseApi.addMsgListener('foo', myListener);
                 expect(baseApi._getListenerCount()).toBe(1);
                 baseApi.removeMsgListener('foo', myListener, {once: true});
                 expect(baseApi._getListenerCount()).toBe(1);
-                baseApi.removeMsgListener('foo', myListener, {msgPayloadFilter: () => {}});
+                baseApi.removeMsgListener('foo', myListener, {msgPayloadFilter: (() => {}) as any});
                 expect(baseApi._getListenerCount()).toBe(1);
-                baseApi.removeMsgListener('foo', myListener, {once: false, msgPayloadFilter: () => {}});
+                baseApi.removeMsgListener('foo', myListener, {once: false, msgPayloadFilter: (() => {}) as any});
                 expect(baseApi._getListenerCount()).toBe(1);
                 baseApi.removeMsgListener('foo', myListener, {once: true, msgPayloadFilter: undefined});
                 expect(baseApi._getListenerCount()).toBe(1);
@@ -767,7 +788,7 @@ export default describe('BaseApi', () => {
                 expect(baseApi._getListenerCount()).toBe(0);
 
                 // Same eventType and listener; different options from registered
-                let myFilter = () => {};
+                let myFilter = (() => {}) as any as MessagePayloadFilter;
                 baseApi.addMsgListener('foo', myListener, {once: true, msgPayloadFilter: myFilter});
                 expect(baseApi._getListenerCount()).toBe(1);
 
@@ -777,12 +798,12 @@ export default describe('BaseApi', () => {
                 expect(baseApi._getListenerCount()).toBe(1);
                 baseApi.removeMsgListener('foo', myListener, {once: true, msgPayloadFilter: undefined});
                 expect(baseApi._getListenerCount()).toBe(1);
-                baseApi.removeMsgListener('foo', myListener, {once: true, msgPayloadFilter: () => {}});
+                baseApi.removeMsgListener('foo', myListener, {once: true, msgPayloadFilter: (() => {}) as any});
                 expect(baseApi._getListenerCount()).toBe(1);
 
                 baseApi.removeMsgListener('foo', myListener, {msgPayloadFilter: myFilter});
                 expect(baseApi._getListenerCount()).toBe(1);
-                baseApi.removeMsgListener('foo', myListener, {once: null, msgPayloadFilter: myFilter});
+                baseApi.removeMsgListener('foo', myListener, {once: null as any, msgPayloadFilter: myFilter});
                 expect(baseApi._getListenerCount()).toBe(1);
                 baseApi.removeMsgListener('foo', myListener, {once: undefined, msgPayloadFilter: myFilter});
                 expect(baseApi._getListenerCount()).toBe(1);
@@ -795,15 +816,15 @@ export default describe('BaseApi', () => {
             });
 
             it('should only remove the one listener matching the eventType, listener, and options.  Regardless of number of listeners or the registered order', () => {
-                let myListener = () => {};
-                let myFilter = () => {};
+                let myListener = (() => {}) as any as MessageListener;
+                let myFilter = (() => {}) as any as MessagePayloadFilter;
 
                 baseApi.addMsgListener('foo', myListener, {once: true});
                 baseApi.addMsgListener('foo', myListener, {once: true, msgPayloadFilter: myFilter});
-                baseApi.addMsgListener('foo', myListener, {once: true, msgPayloadFilter: () => {}});
+                baseApi.addMsgListener('foo', myListener, {once: true, msgPayloadFilter: (() => {}) as any});
                 baseApi.addMsgListener('foo', myListener);
                 baseApi.addMsgListener('foo', myListener, {once: false, msgPayloadFilter: myFilter});
-                baseApi.addMsgListener('foo', myListener, {once: false, msgPayloadFilter: () => {}});
+                baseApi.addMsgListener('foo', myListener, {once: false, msgPayloadFilter: (() => {}) as any});
                 expect(baseApi._getListenerCount()).toBe(6);
 
                 baseApi.removeMsgListener('foo', myListener);
@@ -824,7 +845,7 @@ export default describe('BaseApi', () => {
                     addEventListener() {},
                     removeEventListener() {}
                 };
-                baseApi._myWindow = mockWindow;
+                baseApi['_myWindow'] = mockWindow as any as Window;
 
                 spyOn(mockWindow, 'addEventListener');
                 spyOn(mockWindow, 'removeEventListener');

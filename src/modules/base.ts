@@ -23,28 +23,23 @@ interface ProtocolDetails {
 
 export interface SDKMessagePayload {
     action: string;
-    hook: string;
+    hook?: string;
     protocol: string;
     protocolAgentName: string;
     protocolAgentVersion: string;
 }
 
-export type MessageListener = (...args: any[]) => any;
+export type MessageListener = (event: SDKMessagePayload) => void;
+export type MessagePayloadFilter = (payload: SDKMessagePayload) => boolean;
 
 interface ListenerOptions {
     once: boolean;
-    msgPayloadFilter?: (payload: SDKMessagePayload) => boolean;
+    msgPayloadFilter?: MessagePayloadFilter | null;
 }
 
 interface ListenerConfig {
     listener: MessageListener;
     options: ListenerOptions;
-}
-
-interface MessageEvent {
-    source: Window;
-    origin: string;
-    data: any;
 }
 
 /**
@@ -97,10 +92,10 @@ class BaseApi {
      * @since 1.0.0
      */
     constructor(cfg: {
-        targetPcOrigin?: string,
-        protocol?: string;
-        protocolAgentName?: string;
-        protocolAgentVersion?: string;
+        targetPcOrigin?: string | null,
+        protocol?: string | null;
+        protocolAgentName?: string | null;
+        protocolAgentVersion?: string | null;
     } = {} as any) {
         this._targetPcOrigin = cfg.targetPcOrigin || '*';
 
@@ -175,7 +170,7 @@ class BaseApi {
      * @since 1.0.0
      * @ignore Extender-use only.  Not a public API
      */
-    addMsgListener(eventType: string, listener: MessageListener, options: ListenerOptions = {} as any) {
+    addMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
         if (!eventType || typeof eventType !== 'string' || eventType.trim().length === 0) {
             throw new Error('Invalid eventType provided to addMsgListener');
         }
@@ -233,7 +228,7 @@ class BaseApi {
      * @since 1.0.0
      * @ignore Extender-use only.  Not a public API
      */
-    removeMsgListener(eventType: string, listener: MessageListener, options: ListenerOptions = {} as any) {
+    removeMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
         if (!eventType || typeof eventType !== 'string' || eventType.trim().length === 0) {
             throw new Error('Invalid eventType provided to removeMsgListener');
         }
@@ -330,7 +325,7 @@ class BaseApi {
         if (eventType && typeof eventType === 'string' && eventType.trim()) {
             let eventTypeListenerCfgs = this._msgListenerCfgs[eventType];
             if (eventTypeListenerCfgs && eventTypeListenerCfgs.length > 0) {
-                let listenerCfgsToRemove = [];
+                let listenerCfgsToRemove: ListenerConfig[] = [];
 
                 eventTypeListenerCfgs.forEach(currListenerCfg => {
                     if (!currListenerCfg.options.msgPayloadFilter || currListenerCfg.options.msgPayloadFilter(event.data)) {
@@ -374,7 +369,7 @@ class BaseApi {
      * @private
      * @ignore
      */
-    private _buildNormalizedListenerOptions(options: ListenerOptions): ListenerOptions {
+    private _buildNormalizedListenerOptions(options?: Record<string, any> | null): ListenerOptions {
         let result: ListenerOptions = {
             msgPayloadFilter: null,
             once: false
@@ -392,7 +387,7 @@ class BaseApi {
         if (filter !== null && filter !== undefined && typeof filter !== 'function') {
             throw new Error('options.msgPayloadFilter must be a function if specified');
         }
-        result.msgPayloadFilter = (filter || null) as ListenerOptions['msgPayloadFilter'];
+        result.msgPayloadFilter = filter || null;
 
         if (options.once !== null && options.once !== undefined && typeof options.once !== 'boolean') {
             throw new Error('options.once must be a boolean if specified');

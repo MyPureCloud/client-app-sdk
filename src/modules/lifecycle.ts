@@ -8,7 +8,7 @@
 
 import BaseApi, { MessageListener, SDKMessagePayload } from './base';
 
-type LifecycleHook = 'bootstrap' | 'focus' | 'blur' | 'stop';
+export type LifecycleHook = 'bootstrap' | 'focus' | 'blur' | 'stop';
 
 const LIFECYCLE_HOOK_EVENT_NAME = 'appLifecycleHook';
 const buildHookFilter = (hookName: LifecycleHook) => (msgPayload: SDKMessagePayload) => {
