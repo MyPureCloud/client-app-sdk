@@ -2,12 +2,10 @@
 'use strict';
 
 const pkg = require('./package.json');
-const fs = require('fs-extra');
 const commonjs = require('rollup-plugin-commonjs');
 const resolve = require('rollup-plugin-node-resolve');
 const json = require('rollup-plugin-json');
 const babel = require('rollup-plugin-babel');
-const serve = require('rollup-plugin-serve');
 const { terser } = require('rollup-plugin-terser');
 
 const DEST_DIR = 'dist';
@@ -39,31 +37,22 @@ const baseRollupConfig = {
     ]
 };
 
-if (process.env.DEV_SERVER) {
-    baseRollupConfig.plugins.push(serve({
-        host: 'localhost',
-        port: 8443,
-        contentBase: DEST_DIR,
-        https: {
-            key: fs.readFileSync('sslcert-dev/key.pem'),
-            cert: fs.readFileSync('sslcert-dev/cert.pem')
-        }
-    }));
-}
-
 const buildRollupConfig = (config) => {
     return Object.assign({}, baseRollupConfig, config);
 };
 
+export const umdConfig = buildRollupConfig({
+    output: {
+        dir: DEST_DIR,
+        intro: LEGAL_TEXT,
+        name: GLOBAL_LIBRARY_NAME,
+        entryFileNames: BROWSER_FILENAME,
+        format: 'umd'
+    }
+});
+
 export default [
-    buildRollupConfig({
-        output: {
-            dir: DEST_DIR,
-            intro: LEGAL_TEXT,
-            entryFileNames: CJS_FILENAME,
-            format: 'cjs'
-        }
-    }),
+    umdConfig,
     buildRollupConfig({
         output: {
             dir: DEST_DIR,
@@ -76,9 +65,8 @@ export default [
         output: {
             dir: DEST_DIR,
             intro: LEGAL_TEXT,
-            name: GLOBAL_LIBRARY_NAME,
-            entryFileNames: BROWSER_FILENAME,
-            format: 'umd'
+            entryFileNames: CJS_FILENAME,
+            format: 'cjs'
         }
     }),
     buildRollupConfig({
