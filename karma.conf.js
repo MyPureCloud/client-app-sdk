@@ -69,6 +69,10 @@ module.exports = function(config) {
 
     rollupPreprocessor: {
         plugins: [
+            require('@rollup/plugin-replace')({
+              '__PACKAGE_NAME__': JSON.stringify(process.env.npm_package_name),
+              '__PACKAGE_VERSION__': JSON.stringify(process.env.npm_package_version)
+            }),
             require('@rollup/plugin-commonjs')(),
             require('@rollup/plugin-node-resolve').default({
               extensions: ['.ts', '.js']

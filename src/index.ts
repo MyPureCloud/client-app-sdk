@@ -10,7 +10,6 @@
  */
 
 import * as queryString from 'query-string';
-import {name as pkgName, version as pkgVersion} from '../package.json';
 import envUtils, { PcEnv } from './utils/env';
 import AlertingApi from './modules/alerting';
 import LifecycleApi from './modules/lifecycle';
@@ -227,7 +226,7 @@ class ClientApp {
      * @since 1.0.0
      */
     static get version() {
-        return pkgVersion;
+        return __PACKAGE_VERSION__;
     }
 
     /**
@@ -242,7 +241,7 @@ class ClientApp {
      * @since 1.0.0
      */
     static about() {
-        return `${pkgName}v${pkgVersion}`;
+        return `${__PACKAGE_NAME__}v${__PACKAGE_VERSION__}`;
     }
 
     /**

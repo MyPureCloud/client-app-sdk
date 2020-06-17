@@ -4,7 +4,6 @@
  * @since 1.0.0
  */
 import commsUtils from '../utils/comms';
-import {name as PROTOCOL_AGENT_NAME, version as PROTOCOL_AGENT_VERSION} from '../../package.json';
 
 const PROTOCOL_NAME = 'purecloud-client-apps';
 
@@ -92,8 +91,8 @@ class BaseApi {
 
         this._protocolDetails = {
             name: cfg.protocol || PROTOCOL_NAME,
-            agentName: cfg.protocolAgentName || PROTOCOL_AGENT_NAME,
-            agentVersion: cfg.protocolAgentVersion || PROTOCOL_AGENT_VERSION
+            agentName: cfg.protocolAgentName || __PACKAGE_NAME__,
+            agentVersion: cfg.protocolAgentVersion || __PACKAGE_VERSION__
         };
     }
 

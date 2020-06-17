@@ -58,11 +58,17 @@ const docsConfig: DocsConfig = {
 };
 
 const transformLinks = (buffer: string, ext: string) => {
+    // Regex to replace the following patterns (ext = "html"):
+    // [link1](api.md) -> [link1](api.html)
+    // [link2](api.md#someref) -> [link2](api.html#someref)
     return buffer.replace(/(\[[^\]]+\][^\)]+)(\.md)(\)|\#[^\)]*\))/gm, `$1${ext}$3`);
 };
 
 const prependDocHeaderAttribute = (buffer: string, attr: string) => {
-    return buffer = `---\n${attr}` + buffer.substring(3);
+    if (!buffer.startsWith('---')) {
+        throw new Error('Doc header symbol "---" not found');
+    }
+    return buffer = `---\n${attr}${buffer.substring('---'.length)}`;
 }
 
 (async () => {
