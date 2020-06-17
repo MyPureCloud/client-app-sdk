@@ -3,12 +3,9 @@
         "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
-        "outDir": "dist",
         "noUnusedLocals": true,
         "strict": true,
         "resolveJsonModule": true,
-        "declaration": true,
-        "emitDeclarationOnly": true
     },
     "include": ["src/**/*.ts"]
 }
