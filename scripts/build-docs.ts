@@ -1,8 +1,10 @@
+import * as pkg from '../package.json';
 import * as path from "path";
 import * as fs from "fs-extra";
 import { Application, TSConfigReader, TypeDocOptions } from "typedoc";
 
-const OUTPUT_DIR = "dist/docs";
+const DEST_DIR = 'dist';
+const OUTPUT_DIR = `${DEST_DIR}/docs`;
 const INDEX_FILE = "doc/index.md";
 
 const GITHUB_FORMAT = 'github';
@@ -21,6 +23,21 @@ if (process.env.FLAG_DOCS_AS_PREVIEW) {
             flagDocsAsPreview = false;
         }
     });
+}
+
+let bundleHash = '';
+const files = fs.readdirSync(DEST_DIR);
+const bundleHashRegex = new RegExp(`^${pkg.name}-([a-zA-Z0-9]+)`);
+for (const file of files) {
+    const match = file.match(bundleHashRegex);
+    if (!match) continue;
+    const [, hash] = match;
+    bundleHash = hash;
+    break;
+}
+if (!bundleHash) {
+    console.error('Unable to find latest bundle hash. Ensure you run `npm run build`');
+    process.exit(1);
 }
 
 // Options added by the Typedoc Markdown Plugin
@@ -112,6 +129,10 @@ const prependDocHeaderAttribute = (buffer: string, attr: string) => {
             if (flagDocsAsPreview) {
                 buffer = prependDocHeaderAttribute(buffer, 'ispreview: true');
             }
+            buffer = buffer.replace(/<taggedversion>/g, pkg.version);
+            buffer = buffer.replace(/<hash>/g, bundleHash);
+            buffer = prependDocHeaderAttribute(buffer, `version: ${pkg.version}`);
+            buffer = prependDocHeaderAttribute(buffer, `bundle_hash: ${bundleHash}`);
             return fs.outputFile(docPath, buffer);
         })
     );
