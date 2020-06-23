@@ -1,5 +1,18 @@
 // Karma configuration
-module.exports = function (config) {
+const json = require('@rollup/plugin-json');
+const commonjs = require('@rollup/plugin-commonjs');
+const replace = require('@rollup/plugin-replace');
+const { default: resolve } = require('@rollup/plugin-node-resolve');
+const { default: babel } = require('@rollup/plugin-babel');
+
+const {
+    npm_package_name,
+    npm_package_version,
+    HOST_APP_DEV_ORIGIN,
+    PC_DEV_ENVS
+} = process.env;
+
+module.exports = (config) => {
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
@@ -39,16 +52,18 @@ module.exports = function (config) {
         concurrency: Infinity,
         rollupPreprocessor: {
             plugins: [
-                require('@rollup/plugin-replace')({
-                    '__PACKAGE_NAME__': JSON.stringify(process.env.npm_package_name),
-                    '__PACKAGE_VERSION__': JSON.stringify(process.env.npm_package_version)
+                replace({
+                    '__PACKAGE_NAME__': JSON.stringify(npm_package_name),
+                    '__PACKAGE_VERSION__': JSON.stringify(npm_package_version),
+                    '__HOST_APP_DEV_ORIGIN__': JSON.stringify(HOST_APP_DEV_ORIGIN),
+                    '__PC_DEV_ENVS__': JSON.stringify(PC_DEV_ENVS ? PC_DEV_ENVS.split(',') : []),
                 }),
-                require('@rollup/plugin-commonjs')(),
-                require('@rollup/plugin-node-resolve').default({
+                commonjs(),
+                resolve({
                     extensions: ['.ts', '.js']
                 }),
-                require('@rollup/plugin-json')(),
-                require('@rollup/plugin-babel').default({
+                json(),
+                babel({
                     babelHelpers: 'runtime',
                     exclude: /node_modules/,
                     extensions: ['.js', '.ts'],

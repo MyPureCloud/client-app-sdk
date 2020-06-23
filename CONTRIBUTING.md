@@ -32,9 +32,9 @@ $ yarn run watch:test
 $ npm run watch:test 
 
 # Starts a test server with the examples using the local sdk build. Watches for changes.
-$ yarn run serve 
+$ yarn start 
 # -or-
-$ npm run serve
+$ npm start
 ```
 
 ## Contributing
@@ -42,11 +42,27 @@ $ npm run serve
 1. Add your code (Don't forget the unit tests!)
 1. Test your code
   * `npm test` -or- `npm run watch:test`
-  * `npm run build` and try the version in an app -or- `npm run serve` and try the example in PC
+  * `npm run build` and try the version in an app -or- `npm start` and try the example in PC
 1. Rebase onto upstream/master
 1. Push your branch up to your remote
   * Note: pre-push hooks will ensure your code lints, builds, and passes the test suite
 1. Open a PR to `https://github.com/MyPureCloud/client-app-sdk`
+
+### Environment Variables
+
+#### HOST_APP_DEV_ORIGIN
+Specify the full target origin for the `postMessage` request when the host app is running on `localhost`.
+
+#### PC_DEV_ENVS
+Whitelist additional comma-delimited top level domains (e.g. example.com).
+
+#### PC_OAUTH_CLIENT_IDS
+Specify a JSON string mapping environment to OAuth client id to be injected into example html files.
+```json
+{
+  "mypurecloud.com": "some-oauth-client-id"
+}
+```
 
 ## Publishing:
 
