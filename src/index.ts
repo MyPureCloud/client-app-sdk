@@ -149,32 +149,19 @@ class ClientApp {
         pcOrigin?: string;
     } = {}) {
         if (cfg) {
-            if (cfg.hasOwnProperty('pcEnvironmentQueryParam')) {
+            if ('pcEnvironmentQueryParam' in cfg) {
                 const paramName = cfg.pcEnvironmentQueryParam;
-
                 if (typeof paramName !== 'string' || paramName.trim().length === 0) {
                     throw new Error('Invalid query param name provided.  Must be non-null, non-empty string');
                 }
-
                 const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
-                const paramValue = parsedQueryString[paramName];
-                if (paramValue && typeof paramValue === 'string') {
-                    this._pcEnv = envUtils.lookupPcEnv(paramValue, true);
-                    if (!this._pcEnv) {
-                        throw new Error(`Could not parse '${paramValue}' into a known PureCloud environment`);
-                    }
-                } else {
-                    throw new Error(`Could not find unique value for ${paramName} parameter on Query String`);
-                }
-            } else if (cfg.hasOwnProperty('pcEnvironment')) {
+                this._pcEnv = this.lookupEnv(parsedQueryString[paramName]);
+            } else if ('pcEnvironment' in cfg) {
                 if (typeof cfg.pcEnvironment !== 'string' || cfg.pcEnvironment.trim().length === 0) {
                     throw new Error('Invalid pcEnvironment provided.  Must be a non-null, non-empty string');
                 }
-                this._pcEnv = envUtils.lookupPcEnv(cfg.pcEnvironment, true);
-                if (!this._pcEnv) {
-                    throw new Error(`Could not parse '${cfg.pcEnvironment}' into a known PureCloud environment`);
-                }
-            } else if (cfg.hasOwnProperty('pcOrigin')) {
+                this._pcEnv = this.lookupEnv(cfg.pcEnvironment);
+            } else if ('pcOrigin' in cfg) {
                 if (typeof cfg.pcOrigin !== 'string' || cfg.pcOrigin.trim().length === 0) {
                     throw new Error('Invalid pcOrigin provided.  Must be a non-null, non-empty string');
                 }
@@ -199,6 +186,16 @@ class ClientApp {
         this.conversations = new ConversationsApi(apiCfg);
         this.myConversations = new MyConversationsApi(apiCfg);
         this.externalContacts = new ExternalContactsApi(apiCfg);
+    }
+
+    private lookupEnv = (env: string) => {
+        if (env === 'localhost' && __HOST_APP_DEV_ORIGIN__) {
+            this._customPcOrigin = __HOST_APP_DEV_ORIGIN__;
+            return null;
+        }
+        const pcEnv = envUtils.lookupPcEnv(env, true);
+        if (!pcEnv) throw new Error(`Could not parse '${pcEnv}' into a known PureCloud environment`);
+        return pcEnv;
     }
 
     /**
