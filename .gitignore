@@ -6,6 +6,9 @@ sslcert-dev
 # compiled output
 /dist
 
+# tranformed examples output
+/dist-examples
+
 # dependencies
 /node_modules
 /.npm-cache
