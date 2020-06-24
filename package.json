@@ -21,6 +21,7 @@
     "lint": "eslint . --ext js,ts",
     "tsc": "tsc --project tsconfig.json --noEmit",
     "tsc:build": "tsc --project tsconfig.build.json",
+    "examples": "node scripts/build-examples.js",
     "start": "rollup --config dev.rollup.config.js --watch",
     "build": "./scripts/build.sh",
     "rollup": "rollup --config rollup.config.js",
