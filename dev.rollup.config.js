@@ -6,7 +6,7 @@ import path from 'path';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
 import { umdConfig } from './rollup.config';
-import { buildExamples, buildExample } from './scripts/build-examples';
+const { buildExample, buildExamples } = require('./scripts/build-examples');
 
 const tmpDestPath = fs.mkdtempSync(path.join(os.tmpdir(), `${pkg.name}-dev-server-`));
 
