@@ -3,10 +3,12 @@
         "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
+        "lib": ["DOM", "ES2020"],
         "noUnusedLocals": true,
         "strict": true,
         "resolveJsonModule": true,
-        "rootDir": "src"
+        "rootDir": "src",
+        "types": ["jasmine"]
     },
-    "include": ["src/**/*.ts"]
+    "include": ["src/**/*.ts"],
 }
