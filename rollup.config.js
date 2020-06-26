@@ -7,6 +7,7 @@ import json from '@rollup/plugin-json';
 import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
+import replace from '@rollup/plugin-replace';
 
 const DEST_DIR = 'dist';
 const GLOBAL_LIBRARY_NAME = 'purecloud.apps.ClientApp';
@@ -48,6 +49,10 @@ const baseRollupConfig = {
     input: './src/index.ts',
     cache: false,
     plugins: [
+        replace({
+            '__PACKAGE_NAME__': JSON.stringify(process.env.npm_package_name),
+            '__PACKAGE_VERSION__': JSON.stringify(process.env.npm_package_version)
+        }),
         commonjs(),
         resolve({ extensions: ['.js', '.ts'] }),
         json()
