@@ -24,7 +24,7 @@ export interface SDKMessagePayload {
 export type MessageListener = (event: SDKMessagePayload) => void;
 export type MessagePayloadFilter = (payload: SDKMessagePayload) => boolean;
 
-interface ListenerOptions {
+type ListenerOptions = Partial<{
     /** 
      * Set to true to only invoke this listener once; it will be removed after first invocation.
      * false by default.  null/undefined will use default.
@@ -34,8 +34,8 @@ interface ListenerOptions {
      * Provide a function to further filter the invocation of the listener;
      * The listener will be called if this method returns a truthy value. null by default.  undefined will also use default.
      */
-    msgPayloadFilter?: MessagePayloadFilter | null;
-}
+    msgPayloadFilter: MessagePayloadFilter | null;
+}>
 
 interface ListenerConfig {
     listener: MessageListener;
@@ -86,7 +86,7 @@ class BaseApi {
         protocolAgentName?: string | null;
         /** The version of the agent from which the message will be sent. Default is the version of the package. */
         protocolAgentVersion?: string | null;
-    } = {} as any) {
+    } = {}) {
         this._targetPcOrigin = cfg.targetPcOrigin || '*';
 
         this._protocolDetails = {
@@ -149,7 +149,7 @@ class BaseApi {
      *
      * @since 1.0.0
      */
-    protected addMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
+    protected addMsgListener(eventType: string, listener: MessageListener, options: ListenerOptions | null = {}) {
         if (!eventType || typeof eventType !== 'string' || eventType.trim().length === 0) {
             throw new Error('Invalid eventType provided to addMsgListener');
         }
@@ -200,7 +200,7 @@ class BaseApi {
      *
      * @since 1.0.0
      */
-    protected removeMsgListener(eventType: string, listener: MessageListener, options: Partial<ListenerOptions> | null = {}) {
+    protected removeMsgListener(eventType: string, listener: MessageListener, options: ListenerOptions | null = {}) {
         if (!eventType || typeof eventType !== 'string' || eventType.trim().length === 0) {
             throw new Error('Invalid eventType provided to removeMsgListener');
         }
