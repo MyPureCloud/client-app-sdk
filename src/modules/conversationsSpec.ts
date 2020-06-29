@@ -1,4 +1,3 @@
-/* eslint-env jasmine */
 import ApiBase from './base';
 import ConversationsApi from './conversations';
 
@@ -19,19 +18,19 @@ export default describe('ConversationsApi', () => {
 
     it('sends the message to the parent window', () => {
         // No-op the postMessage
-        let mockWindow = {};
-        let mockParent = {
+        const mockWindow = {};
+        const mockParent = {
             postMessage() {}
         };
         conversationsApi['_myWindow'] = mockWindow as any as Window;
         conversationsApi['_myParent'] = mockParent as any as Window;
 
-        let sendMsgSpy = spyOn(ApiBase.prototype as any, 'sendMsgToPc');
+        const sendMsgSpy = spyOn(ApiBase.prototype as any, 'sendMsgToPc');
 
-        let testConvoId = 'af2ef59d-9bc5-4436-8738-97c04869c81c';
+        const testConvoId = 'af2ef59d-9bc5-4436-8738-97c04869c81c';
         conversationsApi.showInteractionDetails(testConvoId);
         expect(sendMsgSpy).toHaveBeenCalled();
-        let sendMsgArgs = sendMsgSpy.calls.first().args;
+        const sendMsgArgs = sendMsgSpy.calls.first().args;
         expect(sendMsgArgs.length).toBe(2);
         expect(sendMsgArgs[0]).toBe('showInteractionDetails');
         expect(sendMsgArgs[1]).toEqual({conversationId: testConvoId});

@@ -21,7 +21,10 @@ const isValidMessageType = (type: string): type is ValidMessageType => {
     return VALID_MESSAGE_TYPES.indexOf(type as ValidMessageType) > -1;
 };
 
-const pick = <T extends object, K extends keyof T>(obj: T, keys: readonly K[]): Pick<T, K> => {
+const pick = <
+    T extends Record<string, unknown>,
+    K extends keyof T,
+>(obj: T, keys: readonly K[]): Pick<T, K> => {
     const newObj = {} as Record<K, any>;
     keys.forEach(key => {
         newObj[key] = obj[key];
@@ -99,7 +102,7 @@ class AlertingApi extends BaseApi {
 
         if (options && typeof options === 'object') {
             if (options.type && typeof options.type === 'string') {
-                let requestedType = options.type.trim().toLowerCase();
+                const requestedType = options.type.trim().toLowerCase();
 
                 if (isValidMessageType(requestedType)) {
                     messageParams.type = requestedType;

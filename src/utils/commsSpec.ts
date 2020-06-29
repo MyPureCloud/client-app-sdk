@@ -1,4 +1,3 @@
-/* eslint-env jasmine */
 import commsUtil from './comms';
 
 export default describe('comms util', () => {
@@ -26,7 +25,7 @@ export default describe('comms util', () => {
                 return null;
             }
         } as any as Window;
-        let myWindow = mockWindow, myParent = mockWindow;
+        const myWindow = mockWindow, myParent = mockWindow;
 
         expect(() => {
             commsUtil.postMsgToPc('message', '*', undefined, myWindow, myParent, null);
@@ -34,8 +33,8 @@ export default describe('comms util', () => {
     });
 
     it('should require the postMessage api', () => {
-        let myWindow = {} as Window;
-        let myParent = {} as Window;
+        const myWindow = {} as Window;
+        const myParent = {} as Window;
 
         expect(() => {
             commsUtil.postMsgToPc('message', '*', undefined, myWindow, myParent, null);
@@ -43,8 +42,8 @@ export default describe('comms util', () => {
     });
 
     it('should use the console for errors if avaialable', () => {
-        let myWindow = {} as Window, myParent = {} as Window;
-        let myConsole = {
+        const myWindow = {} as Window, myParent = {} as Window;
+        const myConsole = {
             error() {
                 return null;
             }
@@ -58,8 +57,8 @@ export default describe('comms util', () => {
     });
 
     it('should call postMessage when the env is right', () => {
-        let myWindow = {} as Window;
-        let myParent = {
+        const myWindow = {} as Window;
+        const myParent = {
             postMessage() {
                 return null;
             }

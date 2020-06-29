@@ -4,7 +4,5 @@ module.exports = {
     },
     rules: {
         'no-console': 'error',
-        'no-unused-vars': 'off',
-        'no-undef': 'off'
     }
 };

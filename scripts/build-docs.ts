@@ -8,7 +8,7 @@ const INDEX_FILE = "doc/index.md";
 const GITHUB_FORMAT = 'github';
 const PC_DEV_CENTER_FORMAT = 'purecloudDevCenter';
 const SUPPORTED_DOC_OUTPUT_FORMATS = [GITHUB_FORMAT, PC_DEV_CENTER_FORMAT];
-let docMdOutputFormat = process.env.DOC_MD_OUTPUT_FORMAT || PC_DEV_CENTER_FORMAT;
+const docMdOutputFormat = process.env.DOC_MD_OUTPUT_FORMAT || PC_DEV_CENTER_FORMAT;
 if (SUPPORTED_DOC_OUTPUT_FORMATS.indexOf(docMdOutputFormat) < 0) {
     console.error(`Unknown MD Output Format Specified: '${docMdOutputFormat}'`);
     process.exit(1);
@@ -61,7 +61,7 @@ const transformLinks = (buffer: string, ext: string) => {
     // Regex to replace the following patterns (ext = "html"):
     // [link1](api.md) -> [link1](api.html)
     // [link2](api.md#someref) -> [link2](api.html#someref)
-    return buffer.replace(/(\[[^\]]+\][^\)]+)(\.md)(\)|\#[^\)]*\))/gm, `$1${ext}$3`);
+    return buffer.replace(/(\[[^\]]+\][^)]+)(\.md)(\)|#[^)]*\))/gm, `$1${ext}$3`);
 };
 
 const prependDocHeaderAttribute = (buffer: string, attr: string) => {
@@ -69,7 +69,7 @@ const prependDocHeaderAttribute = (buffer: string, attr: string) => {
         throw new Error('Doc header symbol "---" not found');
     }
     return buffer = `---\n${attr}${buffer.substring('---'.length)}`;
-}
+};
 
 (async () => {
     const app = new Application();
@@ -118,4 +118,4 @@ const prependDocHeaderAttribute = (buffer: string, attr: string) => {
 })().catch(error => {
     console.error('Documentation generation failed', error);
     process.exit(1);
-})
+});

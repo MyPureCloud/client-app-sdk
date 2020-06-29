@@ -1,6 +1,3 @@
-/* eslint-env node */
-'use strict';
-
 import pkg from './package.json';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';

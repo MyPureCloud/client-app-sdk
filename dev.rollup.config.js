@@ -1,6 +1,3 @@
-/* eslint-env node */
-'use strict';
-
 import pkg from './package.json';
 import os from 'os';
 import { spawn } from 'child_process';
@@ -44,7 +41,7 @@ const tsc = () => {
         spawn(bin, ['--incremental', '--outDir', tmpDestPath], { stdio: 'inherit' })
             .on('exit', resolve);
     });
-}
+};
 
 // Build all examples initially
 glob.sync('examples/**/*', { nodir: true }).forEach(buildExample);
