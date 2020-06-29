@@ -38,7 +38,11 @@ const buildExample = (relativeFilePath) => {
 const tsc = () => {
     return new Promise((resolve) => {
         const bin = require.resolve('typescript/bin/tsc');
-        spawn(bin, ['--incremental', '--outDir', tmpDestPath], { stdio: 'inherit' })
+        spawn(bin, [
+            '--incremental',
+            '--outDir', tmpDestPath,
+            '--project', 'tsconfig.build.json'
+        ], { stdio: 'inherit' })
             .on('exit', resolve);
     });
 };
