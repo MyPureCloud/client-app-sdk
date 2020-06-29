@@ -3,8 +3,6 @@ module.exports = {
         sourceType: 'module'
     },
     rules: {
-        'no-console': 'error',
-        'no-unused-vars': 'off',
-        'no-undef': 'off'
+        'no-console': 'error'
     }
 };

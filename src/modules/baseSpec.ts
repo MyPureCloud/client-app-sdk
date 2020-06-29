@@ -1,5 +1,4 @@
-/* eslint-env jasmine */
-import BaseApi, { SDKMessagePayload, MessageListener, MessagePayloadFilter } from './base';
+import BaseApi, { MessageListener, MessagePayloadFilter } from './base';
 import {name as pkgName, version as pkgVersion} from '../../package.json';
 
 const APPS_API_PROTOCOL = 'purecloud-client-apps';
@@ -12,7 +11,7 @@ export default describe('BaseApi', () => {
     };
 
     it('should set reasonable defaults', () => {
-        let baseApi = new BaseApi();
+        const baseApi = new BaseApi();
 
         expect(baseApi['_targetPcOrigin']).toBe('*');
         expect(baseApi['_protocolDetails']).toEqual({
@@ -23,74 +22,74 @@ export default describe('BaseApi', () => {
     });
 
     it('should construct action-only SDK payloads correctly', () => {
-        let baseApi = new BaseApi(baseProtoDetails);
+        const baseApi = new BaseApi(baseProtoDetails);
 
-        let action = 'myAction';
-        let actionOnlyPayload = baseApi['buildSdkMsgPayload'](action);
+        const action = 'myAction';
+        const actionOnlyPayload = baseApi['buildSdkMsgPayload'](action);
         expect(actionOnlyPayload).toEqual(
             Object.assign({}, {action}, baseProtoDetails) as any
         );
     });
 
     it('should construct action with payload SDK payloads correctly', () => {
-        let baseApi = new BaseApi(baseProtoDetails);
+        const baseApi = new BaseApi(baseProtoDetails);
 
-        let action = 'myAction';
-        let actionPayload = {
+        const action = 'myAction';
+        const actionPayload = {
             actionProp1: 'one',
             actionProp2: 'two'
         };
 
-        let complexPayload = baseApi['buildSdkMsgPayload'](action, actionPayload);
+        const complexPayload = baseApi['buildSdkMsgPayload'](action, actionPayload);
         expect(complexPayload).toEqual(
             Object.assign({}, {action}, baseProtoDetails, actionPayload) as any
         );
     });
 
     it('should not leak decorated payload details back into user space', () => {
-        let baseApi = new BaseApi(baseProtoDetails);
+        const baseApi = new BaseApi(baseProtoDetails);
 
-        let action = 'myAction';
-        let origPayload = {
+        const action = 'myAction';
+        const origPayload = {
             actionProp1: 'one',
             actionProp2: 'two'
         };
-        let actionPayload = Object.assign({}, origPayload);
+        const actionPayload = Object.assign({}, origPayload);
 
-        let complexPayload = baseApi['buildSdkMsgPayload'](action, actionPayload);
+        const complexPayload = baseApi['buildSdkMsgPayload'](action, actionPayload);
         expect(actionPayload).toEqual(origPayload);
         // @ts-expect-error
         expect(complexPayload).not.toEqual(origPayload);
     });
 
     it('should target the specified origin', () => {
-        let mockCommsUtils = {
+        const mockCommsUtils = {
             postMsgToPc() {}
         };
 
         spyOn(mockCommsUtils, 'postMsgToPc');
 
-        let targetPcOrigin = 'https://subdomain.envdomain.com';
+        const targetPcOrigin = 'https://subdomain.envdomain.com';
 
-        let baseApi = new BaseApi(Object.assign({}, {targetPcOrigin}, baseProtoDetails));
+        const baseApi = new BaseApi(Object.assign({}, {targetPcOrigin}, baseProtoDetails));
         baseApi['_commsUtils'] = mockCommsUtils;
 
-        let action = 'myAction';
-        let actionPayload = {
+        const action = 'myAction';
+        const actionPayload = {
             actionProp1: 'one',
             actionProp2: 'two'
         };
 
         baseApi['sendMsgToPc'](action, actionPayload);
         expect(mockCommsUtils.postMsgToPc).toHaveBeenCalled();
-        let args = (mockCommsUtils.postMsgToPc as jasmine.Spy).calls.first().args;
+        const args = (mockCommsUtils.postMsgToPc as jasmine.Spy).calls.first().args;
         expect(args.length).toBe(2);
         expect(args[0]).toEqual(Object.assign({}, {action}, baseProtoDetails, actionPayload));
         expect(args[1]).toBe(targetPcOrigin);
     });
 
     describe('MessageListeners', () => {
-        let targetPcOrigin = 'https://subdomain.envdomain.com';
+        const targetPcOrigin = 'https://subdomain.envdomain.com';
         let baseApi: BaseApi;
 
         beforeEach(function () {
@@ -181,7 +180,7 @@ export default describe('BaseApi', () => {
 
             it('should not attach duplicate listeners', () => {
                 expect(baseApi['_getListenerCount']()).toBe(0);
-                let myListener = () => {};
+                const myListener = () => {};
                 baseApi['addMsgListener']('event1', myListener);
                 expect(baseApi['_getListenerCount']()).toBe(1);
                 baseApi['addMsgListener']('event1', myListener);
@@ -193,10 +192,10 @@ export default describe('BaseApi', () => {
             });
 
             it('should treat eventTypes as case and space sensitive', () => {
-                let eventType = 'CaSeSeNsItIvE';
+                const eventType = 'CaSeSeNsItIvE';
 
                 expect(baseApi['_getListenerCount']()).toBe(0);
-                let myListener = () => {};
+                const myListener = () => {};
                 baseApi['addMsgListener'](eventType, myListener);
                 expect(baseApi['_getListenerCount']()).toBe(1);
 
@@ -215,7 +214,7 @@ export default describe('BaseApi', () => {
 
             it('should treat empty options as defaults in the listener options uniqueness check', () => {
                 [null, undefined, {}].forEach(defaultOptionEquivalent => {
-                    let myListener = () => {};
+                    const myListener = () => {};
 
                     baseApi['addMsgListener']('foo', myListener);
                     expect(baseApi['_getListenerCount']()).toBe(1);
@@ -230,10 +229,10 @@ export default describe('BaseApi', () => {
             });
 
             it('should include the msgPayloadFilter in the listener uniqueness check', () => {
-                let eventType = 'sameEventDiffFilter';
+                const eventType = 'sameEventDiffFilter';
 
                 expect(baseApi['_getListenerCount']()).toBe(0);
-                let myListener = () => {};
+                const myListener = () => {};
                 baseApi['addMsgListener'](eventType, myListener);
                 expect(baseApi['_getListenerCount']()).toBe(1);
 
@@ -246,7 +245,7 @@ export default describe('BaseApi', () => {
                 expect(baseApi['_getListenerCount']()).toBe(1);
 
                 // A listener with a different payload should be considered unique
-                let myFilter = () => {};
+                const myFilter = () => {};
                 baseApi['addMsgListener'](eventType, myListener, {msgPayloadFilter: myFilter as any});
                 expect(baseApi['_getListenerCount']()).toBe(2);
 
@@ -256,10 +255,10 @@ export default describe('BaseApi', () => {
             });
 
             it('should include the once setting in the listener uniqueness check', () => {
-                let eventType = 'sameEventDiffOnce';
+                const eventType = 'sameEventDiffOnce';
 
                 expect(baseApi['_getListenerCount']()).toBe(0);
-                let myListener = () => {};
+                const myListener = () => {};
                 baseApi['addMsgListener'](eventType, myListener);
                 expect(baseApi['_getListenerCount']()).toBe(1);
 
@@ -283,11 +282,11 @@ export default describe('BaseApi', () => {
             });
 
             it('should include all options at once in the listener uniqueness check', () => {
-                let eventType = 'sameEvent';
+                const eventType = 'sameEvent';
 
                 expect(baseApi['_getListenerCount']()).toBe(0);
-                let myListener = () => {};
-                let myFilter = () => {};
+                const myListener = () => {};
+                const myFilter = () => {};
                 baseApi['addMsgListener'](eventType, myListener, {once: true, msgPayloadFilter: myFilter as any});
                 expect(baseApi['_getListenerCount']()).toBe(1);
 
@@ -302,7 +301,7 @@ export default describe('BaseApi', () => {
             });
 
             it('should start listening for events when the first listener is added', () => {
-                let mockWindow = {
+                const mockWindow = {
                     addEventListener() {}
                 };
                 baseApi['_myWindow'] = mockWindow as any as Window;
@@ -322,8 +321,8 @@ export default describe('BaseApi', () => {
         });
 
         describe('invokingListeners', () => {
-            let eventType = 'anEvent';
-            let basePayloadData = {
+            const eventType = 'anEvent';
+            const basePayloadData = {
                 protocol: APPS_API_PROTOCOL,
                 purecloudEventType: eventType
             };
@@ -346,8 +345,8 @@ export default describe('BaseApi', () => {
             });
 
             it('should validate the incoming message as PC genuine', () => {
-                let myObj = {
-                    myListener(data: SDKMessagePayload) {}
+                const myObj = {
+                    myListener() {}
                 };
                 spyOn(myObj, 'myListener').and.callThrough();
 
@@ -364,7 +363,7 @@ export default describe('BaseApi', () => {
                 // Missing or invalid event
                 // @ts-expect-error
                 fireEvent();
-                let invalidEventCases = [
+                const invalidEventCases = [
                     null, undefined, {}, [], '', ' ', 1
                 ];
                 invalidEventCases.forEach(currCase => {
@@ -377,7 +376,7 @@ export default describe('BaseApi', () => {
                     origin: targetPcOrigin,
                     data: basePayloadData
                 } as MessageEvent);
-                let invalidSourceCases = [
+                const invalidSourceCases = [
                     null, undefined, {}
                 ];
                 invalidSourceCases.forEach(currCase => {
@@ -395,7 +394,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     data: basePayloadData
                 });
-                let invalidOriginCases = [
+                const invalidOriginCases = [
                     null, undefined, 'null',
                     'http://subdomain.envdomain.com',
                     'https://envdomain.com',
@@ -418,7 +417,7 @@ export default describe('BaseApi', () => {
                     source: mockParent,
                     origin: targetPcOrigin
                 });
-                let invalidDataCases = [
+                const invalidDataCases = [
                     null, undefined, 1, '', ' ', true, [], {}, {
                         purecloudEventType: null
                     }, {
@@ -447,7 +446,7 @@ export default describe('BaseApi', () => {
             });
 
             it('should only invoke the listener when receiving the specified event type', () => {
-                let myObj = {
+                const myObj = {
                     myListener: () => {}
                 };
                 spyOn(myObj, 'myListener');
@@ -481,14 +480,14 @@ export default describe('BaseApi', () => {
             });
 
             it('should pass user-space event data to the listeners', () => {
-                let myObj = {
+                const myObj = {
                     myListener: () => {}
                 };
                 spyOn(myObj, 'myListener');
 
                 baseApi['addMsgListener'](eventType, myObj.myListener);
 
-                let origEventData = Object.assign({}, basePayloadData);
+                const origEventData = Object.assign({}, basePayloadData);
                 fireEvent({
                     source: mockParent,
                     origin: targetPcOrigin,
@@ -530,7 +529,7 @@ export default describe('BaseApi', () => {
 
             it('should only call the listener if a specified msgPayloadFilter passes', () => {
                 let listenerCallCount = 0;
-                let myObj = {
+                const myObj = {
                     myListener: () => {}
                 };
                 spyOn(myObj, 'myListener');
@@ -540,7 +539,7 @@ export default describe('BaseApi', () => {
                     return listenerCallCount > 1;
                 }});
 
-                let event = {
+                const event = {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData)
@@ -554,7 +553,7 @@ export default describe('BaseApi', () => {
             });
 
             it('should call the listener multiple times if once is false', () => {
-                let myObj = {
+                const myObj = {
                     myListener: () => {},
                     myListenerWithFilter: () => {},
                     myListenerWithDefaultOnce: () => {}
@@ -567,7 +566,7 @@ export default describe('BaseApi', () => {
                 baseApi['addMsgListener'](eventType, myObj.myListenerWithFilter, {once: false, msgPayloadFilter: () => true});
                 baseApi['addMsgListener'](eventType, myObj.myListenerWithDefaultOnce);
 
-                let event = {
+                const event = {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData)
@@ -584,7 +583,7 @@ export default describe('BaseApi', () => {
             });
 
             it('should only call the listener once if so configured', () => {
-                let myObj = {
+                const myObj = {
                     myListener: () => {},
                     myListenerWithFilter: () => {}
                 };
@@ -594,7 +593,7 @@ export default describe('BaseApi', () => {
                 baseApi['addMsgListener'](eventType, myObj.myListener, {once: true});
                 baseApi['addMsgListener'](eventType, myObj.myListenerWithFilter, {once: true, msgPayloadFilter: () => true});
 
-                let event = {
+                const event = {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData)
@@ -609,7 +608,7 @@ export default describe('BaseApi', () => {
             });
 
             it('should be able to remove multiple once listeners per event', () => {
-                let myObj = {
+                const myObj = {
                     myListener: () => {},
                     myListener2: () => {}
                 };
@@ -620,7 +619,7 @@ export default describe('BaseApi', () => {
                 baseApi['addMsgListener'](eventType, myObj.myListener2, {once: true});
                 expect(baseApi['_getListenerCount']()).toBe(2);
 
-                let event = {
+                const event = {
                     source: mockParent,
                     origin: targetPcOrigin,
                     data: Object.assign({}, basePayloadData)
@@ -706,7 +705,7 @@ export default describe('BaseApi', () => {
             });
 
             it('should remove the matching listener for the specified event type', () => {
-                let myListener = () => {};
+                const myListener = () => {};
                 baseApi['addMsgListener']('foo', myListener);
 
                 expect(baseApi['_getListenerCount']()).toBe(1);
@@ -718,7 +717,7 @@ export default describe('BaseApi', () => {
                 // No listeners previously attached
                 expect(baseApi['removeMsgListener']('foo', () => {})).toBe(undefined);
 
-                let myListener = () => {};
+                const myListener = () => {};
                 baseApi['addMsgListener']('foo', myListener);
 
                 expect(baseApi['_getListenerCount']()).toBe(1);
@@ -728,8 +727,8 @@ export default describe('BaseApi', () => {
             });
 
             it('should not remove a matching listener assigned to a different cased or leading/trailing spaced eventType', () => {
-                let eventType = 'foo';
-                let myListener = () => {};
+                const eventType = 'foo';
+                const myListener = () => {};
                 baseApi['addMsgListener'](eventType, myListener);
                 expect(baseApi['_getListenerCount']()).toBe(1);
 
@@ -747,7 +746,7 @@ export default describe('BaseApi', () => {
             });
 
             it('should not remove a matching listener for a different event type', () => {
-                let myListener = () => {};
+                const myListener = () => {};
                 baseApi['addMsgListener']('foo', myListener);
 
                 expect(baseApi['_getListenerCount']()).toBe(1);
@@ -760,7 +759,7 @@ export default describe('BaseApi', () => {
                     {once: null}, {once: undefined}, {once: false},
                     {msgPayloadFilter: null}, {msgPayloadFilter: undefined}
                 ].forEach(defaultOptionEquivalent => {
-                    let myListener = () => {};
+                    const myListener = () => {};
 
                     baseApi['addMsgListener']('foo', myListener);
                     expect(baseApi['_getListenerCount']()).toBe(1);
@@ -771,7 +770,7 @@ export default describe('BaseApi', () => {
             });
 
             it('should check the options when evaluating a listener for removal', () => {
-                let myListener = (() => {}) as any as MessagePayloadFilter;
+                const myListener = (() => {}) as any as MessagePayloadFilter;
 
                 // Same eventType and listener; different options from default
                 baseApi['addMsgListener']('foo', myListener);
@@ -788,7 +787,7 @@ export default describe('BaseApi', () => {
                 expect(baseApi['_getListenerCount']()).toBe(0);
 
                 // Same eventType and listener; different options from registered
-                let myFilter = (() => {}) as any as MessagePayloadFilter;
+                const myFilter = (() => {}) as any as MessagePayloadFilter;
                 baseApi['addMsgListener']('foo', myListener, {once: true, msgPayloadFilter: myFilter});
                 expect(baseApi['_getListenerCount']()).toBe(1);
 
@@ -816,8 +815,8 @@ export default describe('BaseApi', () => {
             });
 
             it('should only remove the one listener matching the eventType, listener, and options.  Regardless of number of listeners or the registered order', () => {
-                let myListener = (() => {}) as any as MessageListener;
-                let myFilter = (() => {}) as any as MessagePayloadFilter;
+                const myListener = (() => {}) as any as MessageListener;
+                const myFilter = (() => {}) as any as MessagePayloadFilter;
 
                 baseApi['addMsgListener']('foo', myListener, {once: true});
                 baseApi['addMsgListener']('foo', myListener, {once: true, msgPayloadFilter: myFilter});
@@ -841,7 +840,7 @@ export default describe('BaseApi', () => {
             });
 
             it('should stop listening for events when the last listener is removed', () => {
-                let mockWindow = {
+                const mockWindow = {
                     addEventListener() {},
                     removeEventListener() {}
                 };
@@ -850,8 +849,8 @@ export default describe('BaseApi', () => {
                 spyOn(mockWindow, 'addEventListener');
                 spyOn(mockWindow, 'removeEventListener');
 
-                let listener1 = () => {};
-                let listener2 = () => {};
+                const listener1 = () => {};
+                const listener2 = () => {};
 
                 // Single event; single listener
                 baseApi['addMsgListener']('event1', listener1);

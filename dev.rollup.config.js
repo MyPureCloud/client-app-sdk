@@ -1,6 +1,3 @@
-/* eslint-env node */
-'use strict';
-
 import pkg from './package.json';
 import os from 'os';
 import { spawn } from 'child_process';
@@ -41,10 +38,14 @@ const buildExample = (relativeFilePath) => {
 const tsc = () => {
     return new Promise((resolve) => {
         const bin = require.resolve('typescript/bin/tsc');
-        spawn(bin, ['--incremental', '--outDir', tmpDestPath], { stdio: 'inherit' })
+        spawn(bin, [
+            '--incremental',
+            '--outDir', `${tmpDestPath}/ts-build`,
+            '--project', 'tsconfig.build.json'
+        ], { stdio: 'inherit' })
             .on('exit', resolve);
     });
-}
+};
 
 // Build all examples initially
 glob.sync('examples/**/*', { nodir: true }).forEach(buildExample);

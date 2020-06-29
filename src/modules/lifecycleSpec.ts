@@ -1,4 +1,3 @@
-/* eslint-env jasmine */
 import LifecycleApi, { LifecycleHook } from './lifecycle';
 
 const APPS_API_PROTOCOL = 'purecloud-client-apps';
@@ -102,12 +101,12 @@ export default describe('LifecycleApi', () => {
         });
 
         function testLifecycleHookListener(hook: LifecycleHook) {
-            let myObj = {
+            const myObj = {
                 myListener() {}
             };
             spyOn(myObj, 'myListener');
 
-            let validEvent = {
+            const validEvent = {
                 source: mockParent,
                 origin: targetPcOrigin,
                 data: Object.assign({}, basePayloadData, {
@@ -138,12 +137,12 @@ export default describe('LifecycleApi', () => {
         }
 
         function testLifecycleHookListenerOnceEquality(hook: LifecycleHook) {
-            let myObj = {
+            const myObj = {
                 myListener() {}
             };
             spyOn(myObj, 'myListener');
 
-            let validEvent = {
+            const validEvent = {
                 source: mockParent,
                 origin: targetPcOrigin,
                 data: Object.assign({}, basePayloadData, {
@@ -164,16 +163,16 @@ export default describe('LifecycleApi', () => {
 
         // Tests that each lifecycle hook can be add/removed in isolation of the others
         function testLifecycleHookListenerIsolation(hook: LifecycleHook) {
-            let myObj = {
+            const myObj = {
                 myListener() {}
             };
             spyOn(myObj, 'myListener');
 
-            let hookEvents: MessageEvent[] = [];
+            const hookEvents: MessageEvent[] = [];
 
             // Attach the same listener to every hook
             hookCases.forEach(currCase => {
-                let currHook = currCase.hook;
+                const currHook = currCase.hook;
 
                 // Always pass false to ensure consistent tests
                 lifecycleApi[hookMap[currHook].add](myObj.myListener, false);
@@ -209,12 +208,12 @@ export default describe('LifecycleApi', () => {
         }
 
         function testLifecycleHookListenerRemoval(hook: LifecycleHook) {
-            let myObj = {
+            const myObj = {
                 myListener() {}
             };
             spyOn(myObj, 'myListener');
 
-            let validEvent = {
+            const validEvent = {
                 source: mockParent,
                 origin: targetPcOrigin,
                 data: Object.assign({}, basePayloadData, {
@@ -250,12 +249,12 @@ export default describe('LifecycleApi', () => {
         }
 
         function testLifecycleHookListenerOnce(hook: LifecycleHook) {
-            let myObj = {
+            const myObj = {
                 myListener() {}
             };
             spyOn(myObj, 'myListener');
 
-            let validEvent = {
+            const validEvent = {
                 source: mockParent,
                 origin: targetPcOrigin,
                 data: Object.assign({}, basePayloadData, {
@@ -275,12 +274,12 @@ export default describe('LifecycleApi', () => {
         }
 
         function testLifecycleHookListenerOnceDefault(hook: LifecycleHook, onceDefault: boolean) {
-            let myObj = {
+            const myObj = {
                 myListener() {}
             };
             spyOn(myObj, 'myListener');
 
-            let validEvent = {
+            const validEvent = {
                 source: mockParent,
                 origin: targetPcOrigin,
                 data: Object.assign({}, basePayloadData, {
@@ -299,12 +298,12 @@ export default describe('LifecycleApi', () => {
         }
 
         function testAddRemoveOnceDefaultConsistency(hook: LifecycleHook) {
-            let myObj = {
+            const myObj = {
                 myListener() {}
             };
             spyOn(myObj, 'myListener');
 
-            let validEvent = {
+            const validEvent = {
                 source: mockParent,
                 origin: targetPcOrigin,
                 data: Object.assign({}, basePayloadData, {

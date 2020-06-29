@@ -150,13 +150,13 @@ class ClientApp {
     } = {}) {
         if (cfg) {
             if (cfg.hasOwnProperty('pcEnvironmentQueryParam')) {
-                let paramName = cfg.pcEnvironmentQueryParam;
+                const paramName = cfg.pcEnvironmentQueryParam;
 
                 if (typeof paramName !== 'string' || paramName.trim().length === 0) {
                     throw new Error('Invalid query param name provided.  Must be non-null, non-empty string');
                 }
 
-                let parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
+                const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
                 const paramValue = parsedQueryString[paramName];
                 if (paramValue && typeof paramValue === 'string') {
                     this._pcEnv = envUtils.lookupPcEnv(paramValue, true);
@@ -188,7 +188,7 @@ class ClientApp {
             this._pcEnv = envUtils.DEFAULT_PC_ENV;
         }
 
-        let apiCfg = {
+        const apiCfg = {
             targetPcOrigin: (this._pcEnv ? this._pcEnv.pcAppOrigin : this._customPcOrigin)
         };
 

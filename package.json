@@ -18,22 +18,21 @@
     "examples": "examples"
   },
   "scripts": {
-    "lint": "eslint src/**/*.ts",
-    "tsc": "tsc",
+    "lint": "eslint . --ext js,ts",
+    "tsc": "tsc --project tsconfig.json --noEmit",
+    "tsc:build": "tsc --project tsconfig.build.json",
     "start": "rollup --config dev.rollup.config.js --watch",
-    "build": "./scripts/build.sh",
     "rollup": "rollup --config rollup.config.js",
     "docs": "ts-node scripts/build-docs.ts",
-    "pretest": "npm run lint",
+    "pre-push": "./scripts/pre-push.sh",
+    "pretest": "npm run tsc",
     "test": "karma start --single-run --browsers PhantomJS",
     "watch:test": "karma start",
-    "publish-examples": "node scripts/publish-examples.js",
+    "publish-examples": "ts-node scripts/publish-examples.ts",
     "about": "node scripts/about.js"
   },
   "pre-push": [
-    "lint",
-    "test",
-    "build"
+    "pre-push"
   ],
   "keywords": [
     "MyPureCloud",
@@ -67,12 +66,14 @@
     "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-typescript": "^7.10.1",
-    "@rollup/plugin-babel": "^5.0.3",
+    "@rollup/plugin-babel": "^5.0.4",
     "@rollup/plugin-commonjs": "^13.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^8.0.1",
     "@rollup/plugin-replace": "^2.3.3",
+    "@types/child-process-promise": "^2.2.1",
     "@types/fs-extra": "^9.0.1",
+    "@types/gh-pages": "^3.0.0",
     "@types/jasmine": "^3.5.10",
     "@types/query-string": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^3.2.0",

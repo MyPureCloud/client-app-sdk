@@ -1,4 +1,3 @@
-/* eslint-env jasmine */
 import ClientApp from './index';
 import BaseApi from './modules/base';
 import {name, version} from '../package.json';
@@ -16,7 +15,7 @@ export default describe('ClientApp', () => {
     });
 
     it('should have instances of all the modules', () => {
-        let myClientApp = new ClientApp();
+        const myClientApp = new ClientApp();
         (['alerting', 'lifecycle', 'coreUi', 'users', 'myConversations', 'externalContacts'] as const).forEach(currModuleName => {
             expect(myClientApp[currModuleName] instanceof BaseApi).toBe(true);
         });
@@ -34,11 +33,11 @@ export default describe('ClientApp', () => {
 
         describe('pcEnvironmentQueryParam config', () => {
             it('should allow a user to pass a valid query string param name into the constructor', () => {
-                let pcEnvironmentQueryParam = 'pcEnvironment';
+                const pcEnvironmentQueryParam = 'pcEnvironment';
                 spyOn(ClientApp, '_getQueryString')
                     .and.returnValue(`?${pcEnvironmentQueryParam}=${VALID_NON_DEFAULT_PC_ENVIRONMENT}`);
 
-                let myClientApp = new ClientApp({
+                const myClientApp = new ClientApp({
                     pcEnvironmentQueryParam
                 });
 
@@ -46,7 +45,7 @@ export default describe('ClientApp', () => {
             });
 
             it('should fail if the query param cannot be found', () => {
-                let invalidQueryStrings = [
+                const invalidQueryStrings = [
                     undefined,
                     null,
                     '',
@@ -57,9 +56,9 @@ export default describe('ClientApp', () => {
                 ];
 
                 let index = 0;
-                spyOn(ClientApp, '_getQueryString').and.callFake(() => invalidQueryStrings[++index] as any);
+                spyOn(ClientApp, '_getQueryString').and.callFake(() => invalidQueryStrings[index++] as any);
 
-                invalidQueryStrings.forEach(currInvalidQueryString => {
+                invalidQueryStrings.forEach(() => {
                     expect(() => {
                         new ClientApp({
                             pcEnvironmentQueryParam: 'foo'
@@ -79,7 +78,7 @@ export default describe('ClientApp', () => {
             });
 
             it('should fail if invalid data is passed as the query param name', () => {
-                let invalidQueryParamNames = [undefined, null, 3, [], {}, '', ' '];
+                const invalidQueryParamNames = [undefined, null, 3, [], {}, '', ' '];
 
                 invalidQueryParamNames.forEach(currInvalidParamName => {
                     expect(() => {
@@ -92,7 +91,7 @@ export default describe('ClientApp', () => {
 
         describe('pcEnvironment config', () => {
             it('should allow a user to pass a valid pcEnvironment into the constructor', () => {
-                let myClientApp = new ClientApp({
+                const myClientApp = new ClientApp({
                     pcEnvironment: VALID_NON_DEFAULT_PC_ENVIRONMENT
                 });
 
@@ -100,7 +99,7 @@ export default describe('ClientApp', () => {
             });
 
             it('should leniently parse the pcEnvironment and store the normalized version it in the property', () => {
-                let myClientApp = new ClientApp({
+                const myClientApp = new ClientApp({
                     pcEnvironment: ` ${VALID_NON_DEFAULT_PC_ENVIRONMENT} `
                 });
 
@@ -108,7 +107,7 @@ export default describe('ClientApp', () => {
             });
 
             it('should fail if invalid data is passed', () => {
-                let invalidEnvironments = [undefined, null, 3, [], {}, '', ' ', 'unknown.com'];
+                const invalidEnvironments = [undefined, null, 3, [], {}, '', ' ', 'unknown.com'];
 
                 invalidEnvironments.forEach(currInvalidEnv => {
                     expect(() => {
@@ -121,8 +120,8 @@ export default describe('ClientApp', () => {
 
         describe('pcOrigin config', () => {
             it('should allow a user to pass an arbitrary origin into the constructor', () => {
-                let customOrigin = 'some.pc-origin.com';
-                let myClientApp = new ClientApp({
+                const customOrigin = 'some.pc-origin.com';
+                const myClientApp = new ClientApp({
                     pcOrigin: customOrigin
                 });
                 expect(myClientApp['_customPcOrigin']).toBe(customOrigin);
@@ -130,7 +129,7 @@ export default describe('ClientApp', () => {
             });
 
             it('should fail if invalid data is passed', () => {
-                let invalidCustomOrigins = [undefined, null, 3, [], {}, '', ' '];
+                const invalidCustomOrigins = [undefined, null, 3, [], {}, '', ' '];
 
                 invalidCustomOrigins.forEach(currCustomOrigin => {
                     expect(() => {

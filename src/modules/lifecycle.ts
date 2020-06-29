@@ -4,12 +4,12 @@
  * @since 1.0.0
  */
 
-import BaseApi, { SDKMessagePayload } from './base';
+import BaseApi, { SDKMessagePayload, MessagePayloadFilter } from './base';
 
 export type LifecycleHook = 'bootstrap' | 'focus' | 'blur' | 'stop';
 
 const LIFECYCLE_HOOK_EVENT_NAME = 'appLifecycleHook';
-const buildHookFilter = (hookName: LifecycleHook) => (msgPayload: SDKMessagePayload) => {
+const buildHookFilter = (hookName: LifecycleHook): MessagePayloadFilter => (msgPayload) => {
     return (typeof msgPayload === 'object' && msgPayload.hook === hookName);
 };
 const BOOTSTRAP_HOOK_FILTER = buildHookFilter('bootstrap');

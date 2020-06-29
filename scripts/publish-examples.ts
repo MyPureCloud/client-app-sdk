@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-"use strict";
-
 /*
  * This script is necessitated by two issues in the gh-pages progject.
  *
@@ -12,9 +9,9 @@
  * [Note:] The -n option could then be used for testing
  */
 
-const ghpages = require('gh-pages');
-const path = require('path');
-const exec = require('child-process-promise').exec;
+import ghpages from 'gh-pages';
+import path from 'path';
+import { exec } from 'child-process-promise';
 
 const DEFAULT_COMMIT_MSG = 'Update Examples';
 
@@ -26,7 +23,7 @@ if (process.argv.length === 3) {
     process.exit(1);
 }
 
-let username, email;
+let username: string, email: string;
 exec('git config user.name').then(result => {
     if (!result.stderr) {
         username = result.stdout.trim();
@@ -50,22 +47,21 @@ exec('git config user.name').then(result => {
 }).then(() => {
     console.log(`Publishing examples as ${username}/${email}`);
     ghpages.publish(path.join(__dirname, '../examples'), {
-            add: true,
-            message: customCommitMsg || DEFAULT_COMMIT_MSG,
-            user: {
-                name: username,
-                email: email
-            }
-        }, function (err) {
-            if (err) {
-                console.error('Failed to publish examples to gh-pages', err);
-                process.exit(1);
-            } else {
-                console.log('Successfully published examples to gh-pages');
-                process.exit(0);
-            }
+        add: true,
+        message: customCommitMsg || DEFAULT_COMMIT_MSG,
+        user: {
+            name: username,
+            email: email
         }
-    );
+    }, function (err) {
+        if (err) {
+            console.error('Failed to publish examples to gh-pages', err);
+            process.exit(1);
+        } else {
+            console.log('Successfully published examples to gh-pages');
+            process.exit(0);
+        }
+    });
 }).catch(err => {
     console.error(err);
     process.exit(1);
