@@ -4,7 +4,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const glob = require('glob');
 
-const { PC_OAUTH_CLIENT_IDS, USE_BRANCH_SDK_IN_EXAMPLES, NODE_ENV } = process.env;
+const { PC_OAUTH_CLIENT_IDS, MINIFIED_BUNDLE_FILENAME } = process.env;
 const BROWSER_FILENAME = `${pkg.name}.js`;
 
 // Called from command line
@@ -15,7 +15,7 @@ if (!module.parent) {
 function transformExampleSdkUrl(buffer) {
     return buffer.replace(
         /(\s*<script.*src=")([^"]+client-app-sdk[^"]+)(".*<\/script>\s*)/i,
-        `$1${BROWSER_FILENAME}$3\n`
+        `$1${MINIFIED_BUNDLE_FILENAME || BROWSER_FILENAME}$3\n`
     );
 }
 
@@ -28,9 +28,7 @@ function transformSdkOAuthClientIds(buffer) {
 
 function buildExample(outDir, relativeFilePath) {
     let buffer = fs.readFileSync(relativeFilePath, 'utf8');
-    if (NODE_ENV === 'development' || USE_BRANCH_SDK_IN_EXAMPLES === 'true') {
-        buffer = transformExampleSdkUrl(buffer);
-    }
+    buffer = transformExampleSdkUrl(buffer);
     if (PC_OAUTH_CLIENT_IDS) {
         buffer = transformSdkOAuthClientIds(buffer);
     }
