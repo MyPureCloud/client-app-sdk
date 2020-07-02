@@ -67,11 +67,17 @@ module.exports = function(config) {
 
     rollupPreprocessor: {
         plugins: [
-            require('rollup-plugin-commonjs')(),
-            require('rollup-plugin-node-resolve')(),
-            require('rollup-plugin-json')(),
-            require('rollup-plugin-babel')({
-                exclude: 'node_modules/**'
+            require('@rollup/plugin-commonjs')(),
+            require('@rollup/plugin-node-resolve').default(),
+            require('@rollup/plugin-json')(),
+            require('@rollup/plugin-babel').default({
+              babelHelpers: 'runtime',
+              exclude: /node_modules/,
+              presets: ['@babel/env'],
+              plugins: [
+                ['@babel/transform-runtime', { useESModules: false }],
+                '@babel/transform-object-assign'
+              ]
             })
         ],
         output: {
