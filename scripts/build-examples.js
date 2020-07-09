@@ -9,7 +9,7 @@ const BROWSER_FILENAME = `${pkg.name}.js`;
 
 // Called from command line
 if (!module.parent) {
-    buildExamples('dist-examples');
+    buildExamples('dist');
 }
 
 function transformExampleSdkUrl(buffer) {
