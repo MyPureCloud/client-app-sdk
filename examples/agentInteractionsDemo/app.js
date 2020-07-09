@@ -206,7 +206,8 @@ new Vue({
 
         // Authentication and main flow
         client.loginImplicitGrant(clientId, redirectUrl, { state: ("pcEnvironment=" + pcEnvironment) })
-            .then(() => {
+            .then((data) => {
+                window.history.replaceState(null, null, window.location.pathname + "?" + data.state);
                 // Get userme info
                 authenticated = true;
                 return usersApi.getUsersMe({ "expand": ["presence"] });

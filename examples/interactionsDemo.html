@@ -215,7 +215,8 @@
                 let canViewWrapUpCodes = false;
 
                 client.loginImplicitGrant(clientId, redirectUrl, { state: ('pcEnvironment=' + pcEnvironment) })
-                    .then(function () {
+                    .then(function (data) {
+                        window.history.replaceState(null, null, window.location.pathname + "?" + data.state);
                         authenticated = true;
                         return new platformClient.UsersApi().getUsersMe({ 'expand': ['authorization'] });
                     })

@@ -85,7 +85,8 @@ document.addEventListener('DOMContentLoaded', function () {
         .loginImplicitGrant(clientId, redirectUrl, {
             state: 'pcEnvironment=' + pcEnvironment
         })
-        .then(function () {
+        .then(function (data) {
+            window.history.replaceState(null, null, window.location.pathname + "?" + data.state);
             updateProgressBar(100);
             authenticated = true;
             return new platformClient.UsersApi().getUsersMe({
