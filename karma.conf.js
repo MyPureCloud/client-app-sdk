@@ -8,8 +8,8 @@ const { default: babel } = require('@rollup/plugin-babel');
 const {
     npm_package_name,
     npm_package_version,
-    HOST_APP_DEV_ORIGIN,
-    PC_DEV_ENVS
+    CLIENT_APP_SDK_HOST_APP_DEV_ORIGIN: devOrigin,
+    CLIENT_APP_SDK_PC_DEV_ENVS: devEnvs
 } = process.env;
 
 module.exports = (config) => {
@@ -55,8 +55,8 @@ module.exports = (config) => {
                 replace({
                     '__PACKAGE_NAME__': JSON.stringify(npm_package_name),
                     '__PACKAGE_VERSION__': JSON.stringify(npm_package_version),
-                    '__HOST_APP_DEV_ORIGIN__': JSON.stringify(HOST_APP_DEV_ORIGIN),
-                    '__PC_DEV_ENVS__': JSON.stringify(PC_DEV_ENVS ? PC_DEV_ENVS.split(',') : []),
+                    '__HOST_APP_DEV_ORIGIN__': JSON.stringify(devOrigin),
+                    '__PC_DEV_ENVS__': JSON.stringify(devEnvs ? devEnvs.split(',') : []),
                 }),
                 commonjs(),
                 resolve({
