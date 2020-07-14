@@ -50,13 +50,13 @@ $ npm start
 
 ### Environment Variables
 
-#### HOST_APP_DEV_ORIGIN
+#### CLIENT_APP_SDK_HOST_APP_DEV_ORIGIN
 Specify the full target origin for the `postMessage` request when the host app is running on `localhost`.
 
-#### PC_DEV_ENVS
+#### CLIENT_APP_SDK_PC_DEV_ENVS
 Whitelist additional comma-delimited top level domains (e.g. example.com).
 
-#### PC_OAUTH_CLIENT_IDS
+#### CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS
 Specify a JSON string mapping environment to OAuth client id to be injected into example html files.
 ```json
 {
