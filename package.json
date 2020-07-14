@@ -22,7 +22,7 @@
     "tsc": "tsc --project tsconfig.json --noEmit",
     "tsc:build": "tsc --project tsconfig.build.json",
     "examples": "node scripts/build-examples.js",
-    "start": "NODE_ENV=development rollup --config dev.rollup.config.js --watch",
+    "start": "rollup --config dev.rollup.config.js --watch",
     "rollup": "rollup --config rollup.config.js",
     "docs": "ts-node scripts/build-docs.ts",
     "pre-push": "./scripts/pre-push.sh",

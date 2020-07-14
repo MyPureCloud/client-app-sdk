@@ -4,18 +4,22 @@ const fs = require('fs-extra');
 const path = require('path');
 const glob = require('glob');
 
-const { PC_OAUTH_CLIENT_IDS, MINIFIED_BUNDLE_FILENAME } = process.env;
+const { PC_OAUTH_CLIENT_IDS } = process.env;
 const BROWSER_FILENAME = `${pkg.name}.js`;
 
 // Called from command line
 if (!module.parent) {
-    buildExamples('dist');
+    const { bundle } = require('yargs')
+        .option('bundle', { describe: 'minified UMD bundle file name' })
+        .demandOption(['bundle'])
+        .argv;
+    buildExamples('dist', bundle);
 }
 
-function transformExampleSdkUrl(buffer) {
+function transformExampleSdkUrl(buffer, bundleFileName = BROWSER_FILENAME) {
     return buffer.replace(
         /(\s*<script.*src=")([^"]+client-app-sdk[^"]+)(".*<\/script>\s*)/i,
-        `$1${MINIFIED_BUNDLE_FILENAME || BROWSER_FILENAME}$3\n`
+        `$1${bundleFileName}$3\n`
     );
 }
 
@@ -26,9 +30,9 @@ function transformSdkOAuthClientIds(buffer) {
     );
 }
 
-function buildExample(outDir, relativeFilePath) {
+function buildExample(outDir, relativeFilePath, bundleFileName) {
     let buffer = fs.readFileSync(relativeFilePath, 'utf8');
-    buffer = transformExampleSdkUrl(buffer);
+    buffer = transformExampleSdkUrl(buffer, bundleFileName);
     if (PC_OAUTH_CLIENT_IDS) {
         buffer = transformSdkOAuthClientIds(buffer);
     }
@@ -38,8 +42,10 @@ function buildExample(outDir, relativeFilePath) {
     );
 }
 
-function buildExamples(outDir) {
-    glob.sync('examples/**/*', { nodir: true }).forEach(example => buildExample(outDir, example));
+function buildExamples(outDir, bundleFileName) {
+    glob
+        .sync('examples/**/*', { nodir: true })
+        .forEach(example => buildExample(outDir, example, bundleFileName));
 }
 
 module.exports = { buildExample, buildExamples };
