@@ -4,7 +4,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const glob = require('glob');
 
-const { PC_OAUTH_CLIENT_IDS } = process.env;
+const { CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS: oauthClientIds } = process.env;
 const BROWSER_FILENAME = `${pkg.name}.js`;
 
 // Called from command line
@@ -23,18 +23,18 @@ function transformExampleSdkUrl(buffer, bundleFileName = BROWSER_FILENAME) {
     );
 }
 
-function transformSdkOAuthClientIds(buffer) {
+function transformSdkOAuthClientIds(buffer, ids) {
     return buffer.replace(
         /(pcOAuthClientIds =)[^;]+;/,
-        `$1${PC_OAUTH_CLIENT_IDS}`
+        `$1${ids}`
     );
 }
 
 function buildExample(outDir, relativeFilePath, bundleFileName) {
     let buffer = fs.readFileSync(relativeFilePath, 'utf8');
     buffer = transformExampleSdkUrl(buffer, bundleFileName);
-    if (PC_OAUTH_CLIENT_IDS) {
-        buffer = transformSdkOAuthClientIds(buffer);
+    if (oauthClientIds) {
+        buffer = transformSdkOAuthClientIds(buffer, oauthClientIds);
     }
     fs.outputFileSync(
         path.join(outDir, relativeFilePath.replace('examples/', '')),
