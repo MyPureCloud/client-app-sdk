@@ -1,27 +1,22 @@
 import * as path from "path";
 import * as fs from "fs-extra";
 import { Application, TSConfigReader, TypeDocOptions } from "typedoc";
+import * as yargs from 'yargs';
 
 const OUTPUT_DIR = "dist/docs";
 const INDEX_FILE = "doc/index.md";
+const SUPPORTED_DOC_OUTPUT_FORMATS = ['github', 'purecloudDevCenter'] as const;
 
-const GITHUB_FORMAT = 'github';
-const PC_DEV_CENTER_FORMAT = 'purecloudDevCenter';
-const SUPPORTED_DOC_OUTPUT_FORMATS = [GITHUB_FORMAT, PC_DEV_CENTER_FORMAT];
-const docMdOutputFormat = process.env.DOC_MD_OUTPUT_FORMAT || PC_DEV_CENTER_FORMAT;
-if (SUPPORTED_DOC_OUTPUT_FORMATS.indexOf(docMdOutputFormat) < 0) {
-    console.error(`Unknown MD Output Format Specified: '${docMdOutputFormat}'`);
-    process.exit(1);
-}
-
-let flagDocsAsPreview = true;
-if (process.env.FLAG_DOCS_AS_PREVIEW) {
-    ['false', 'f', '0'].forEach(currFalseValue => {
-        if (process.env.FLAG_DOCS_AS_PREVIEW === currFalseValue) {
-            flagDocsAsPreview = false;
-        }
-    });
-}
+const { preview: flagDocsAsPreview, format: docMdOutputFormat } = yargs
+    .option('preview', {
+        type: 'boolean',
+        default: false
+    })
+    .option('format', {
+        choices: SUPPORTED_DOC_OUTPUT_FORMATS,
+        default: 'purecloudDevCenter'
+    })
+    .argv;
 
 // Options added by the Typedoc Markdown Plugin
 interface MarkdownPluginOptions {
@@ -111,7 +106,7 @@ const prependDocHeaderAttribute = (buffer: string, attr: string) => {
         docs.map(async (doc) => {
             const docPath = path.join(OUTPUT_DIR, doc);
             let buffer = (await fs.readFile(docPath)).toString();
-            if (docMdOutputFormat === PC_DEV_CENTER_FORMAT) {
+            if (docMdOutputFormat === 'purecloudDevCenter') {
                 buffer = transformLinks(buffer, '.html');
             }
             if (flagDocsAsPreview) {
