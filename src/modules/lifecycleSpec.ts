@@ -1,4 +1,4 @@
-import LifecycleApi, { LifecycleHook } from './lifecycle';
+import { LifecycleApi, LifecycleHook } from './lifecycle';
 
 const APPS_API_PROTOCOL = 'purecloud-client-apps';
 

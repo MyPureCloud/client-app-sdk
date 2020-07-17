@@ -4,7 +4,7 @@
  * @since 1.1.0
  */
 
-import BaseApi from './base';
+import { BaseApi } from './base';
 
 /**
  * Utilities for interacting with Genesys Cloud conversations
@@ -12,7 +12,7 @@ import BaseApi from './base';
  * @noInheritDoc
  * @since 1.1.0
  */
-class ConversationsApi extends BaseApi {
+export class ConversationsApi extends BaseApi {
     /**
      * Show an interaction by ID.
      *
@@ -36,5 +36,3 @@ class ConversationsApi extends BaseApi {
         super.sendMsgToPc('showInteractionDetails', {conversationId: conversationId});
     }
 }
-
-export default ConversationsApi;

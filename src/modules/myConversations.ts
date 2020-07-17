@@ -3,7 +3,7 @@
  *
  * @since 1.3.0
  */
-import BaseApi from './base';
+import { BaseApi } from './base';
 
 /**
  * Utilities for showing agent level interaction and evaluation details
@@ -11,7 +11,7 @@ import BaseApi from './base';
  * @noInheritDoc
  * @since 1.3.0
  */
-class MyConversationsApi extends BaseApi {
+export class MyConversationsApi extends BaseApi {
     /**
      * Show an agent his/her interaction by ID.
      *
@@ -66,5 +66,3 @@ class MyConversationsApi extends BaseApi {
         });
     }
 }
-
-export default MyConversationsApi;

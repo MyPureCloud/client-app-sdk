@@ -47,7 +47,7 @@ interface ListenerConfig {
  *
  * @since 1.0.0
  */
-class BaseApi {
+export class BaseApi {
     private _targetPcOrigin: string;
     private _protocolDetails: ProtocolDetails;
 
@@ -367,5 +367,3 @@ class BaseApi {
             listenerCfg1.options.msgPayloadFilter === listenerCfg2.options.msgPayloadFilter);
     }
 }
-
-export default BaseApi;

@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import BaseApi from './base';
+import { BaseApi } from './base';
 
 const VALID_MESSAGE_TYPES = ['error', 'info', 'success'] as const;
 const VALID_SUPPLEMENTAL_OPTIONS = ['id', 'markdownMessage', 'timeout', 'showCloseButton'] as const;
@@ -71,7 +71,7 @@ type ToastCloseButtonConfig<Timeout extends number> = Timeout extends 0
  * @noInheritDoc
  * @since 1.0.0
  */
-class AlertingApi extends BaseApi {
+export class AlertingApi extends BaseApi {
     /**
      * Displays a toast popup.
      *
@@ -174,5 +174,3 @@ class AlertingApi extends BaseApi {
         super.sendMsgToPc('setAttentionCount', {count});
     }
 }
-
-export default AlertingApi;

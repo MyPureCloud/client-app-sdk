@@ -1,5 +1,5 @@
-import ApiBase from './base';
-import ConversationsApi from './conversations';
+import { BaseApi } from './base';
+import { ConversationsApi } from './conversations';
 
 const APPS_API_PROTOCOL = 'purecloud-client-apps';
 
@@ -25,7 +25,7 @@ export default describe('ConversationsApi', () => {
         conversationsApi['_myWindow'] = mockWindow as any as Window;
         conversationsApi['_myParent'] = mockParent as any as Window;
 
-        const sendMsgSpy = spyOn(ApiBase.prototype as any, 'sendMsgToPc');
+        const sendMsgSpy = spyOn(BaseApi.prototype as any, 'sendMsgToPc');
 
         const testConvoId = 'af2ef59d-9bc5-4436-8738-97c04869c81c';
         conversationsApi.showInteractionDetails(testConvoId);

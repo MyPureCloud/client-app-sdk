@@ -1,5 +1,5 @@
-import ClientApp from './index';
-import BaseApi from './modules/base';
+import { ClientApp } from './ClientApp';
+import { BaseApi } from './modules/base';
 import {name, version} from '../package.json';
 
 export default describe('ClientApp', () => {

@@ -1,5 +1,5 @@
-import ApiBase from './base';
-import ExternalContactsApi from './externalContacts';
+import { BaseApi } from './base';
+import { ExternalContactsApi } from './externalContacts';
 
 const APPS_API_PROTOCOL = 'purecloud-client-apps';
 
@@ -25,7 +25,7 @@ export default describe('ContactsApi', () => {
         externalContactsApi['_myWindow'] = mockWindow as any as Window;
         externalContactsApi['_myParent'] = mockParent as any as Window;
 
-        const sendMsgSpy = spyOn(ApiBase.prototype as any, 'sendMsgToPc');
+        const sendMsgSpy = spyOn(BaseApi.prototype as any, 'sendMsgToPc');
 
         // Test external contact sdk method
         const testContactId = 'testContact';

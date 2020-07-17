@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import BaseApi from './base';
+import { BaseApi } from './base';
 
 /**
  * Utilities for interacting with general Genesys Cloud App UI components
@@ -12,7 +12,7 @@ import BaseApi from './base';
  * @noInheritDoc
  * @since 1.0.0
  */
-class CoreUiApi extends BaseApi {
+export class CoreUiApi extends BaseApi {
     /**
      * Show the help UI.  Noop if already shown.
      *
@@ -62,5 +62,3 @@ class CoreUiApi extends BaseApi {
         super.sendMsgToPc('hideHelp');
     }
 }
-
-export default CoreUiApi;

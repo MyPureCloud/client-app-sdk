@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import BaseApi from './base';
+import { BaseApi } from './base';
 
 /**
  * Utilities for interacting with users in the Genesys Cloud Client
@@ -12,7 +12,7 @@ import BaseApi from './base';
  * @noInheritDoc
  * @since 1.0.0
  */
-class UsersApi extends BaseApi {
+export class UsersApi extends BaseApi {
     /**
      * Shows the profile of a specified user
      *
@@ -28,5 +28,3 @@ class UsersApi extends BaseApi {
         super.sendMsgToPc('showProfile', {'profileId': userId});
     }
 }
-
-export default UsersApi;

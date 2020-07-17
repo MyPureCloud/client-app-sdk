@@ -1,4 +1,4 @@
-import BaseApi, { MessageListener, MessagePayloadFilter } from './base';
+import { BaseApi, MessageListener, MessagePayloadFilter } from './base';
 import {name as pkgName, version as pkgVersion} from '../../package.json';
 
 const APPS_API_PROTOCOL = 'purecloud-client-apps';

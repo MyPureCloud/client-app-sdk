@@ -4,7 +4,7 @@
  * @since 1.4.0
  */
 
-import BaseApi from './base';
+import { BaseApi } from './base';
 
 /**
  * Utilities for interacting with External Contacts
@@ -12,7 +12,7 @@ import BaseApi from './base';
  * @noInheritDoc
  * @since 1.4.0
  */
-class ExternalContactsApi extends BaseApi {
+export class ExternalContactsApi extends BaseApi {
     /**
      * Show an external contact by ID.
      *
@@ -46,5 +46,3 @@ class ExternalContactsApi extends BaseApi {
         super.sendMsgToPc('showExternalOrganizationProfile', {externalOrganizationId: externalOrganizationId});
     }
 }
-
-export default ExternalContactsApi;
