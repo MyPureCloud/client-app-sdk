@@ -160,14 +160,14 @@ new Vue({
 
         /*
             * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
-            * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
+            * in your Genesys Cloud org.  After creating the Implicit grant client, map the client id(s) to
             * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
             */
         let pcOAuthClientIds = {'mypurecloud.com': 'implicit-oauth-client-id-here'};
 
         let clientId = pcOAuthClientIds[pcEnvironment];
         if (!clientId) {
-            this.errorMessage = pcEnvironment + ': Unknown/Unsupported PureCloud Environment';
+            this.errorMessage = pcEnvironment + ': Unknown/Unsupported Genesys Cloud Environment';
             return;
         }
 
@@ -183,7 +183,7 @@ new Vue({
             Vue.prototype.$clientApp = clientApp;
         } catch (e) {
             console.log(e);
-            this.errorMessage = pcEnvironment + ": Unknown/Unsupported PureCloud Embed Context";
+            this.errorMessage = pcEnvironment + ": Unknown/Unsupported Genesys Cloud Embed Context";
             return;
         }
 
@@ -267,7 +267,7 @@ new Vue({
             })
             .catch((err) => {
                 console.log(err);
-                this.errorMessage = !authenticated ? "Failed to Authenticate with PureCloud" :
+                this.errorMessage = !authenticated ? "Failed to Authenticate with Genesys Cloud" :
                                     "Failed to fetch/display profile";
             });
     },

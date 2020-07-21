@@ -1,7 +1,7 @@
 {
   "name": "purecloud-client-app-sdk",
   "version": "1.4.0",
-  "description": "Javascript API for integrating 3rd-party apps with PureCloud",
+  "description": "Javascript API for integrating 3rd-party apps with Genesys Cloud",
   "main": "dist/main.js",
   "jsnext:main": "dist/main.mjs",
   "browser": "dist/purecloud-client-app-sdk.js",
@@ -34,9 +34,9 @@
     "build"
   ],
   "keywords": [
-    "MyPureCloud",
-    "PureCloud",
-    "PureCloud Apps"
+    "My Genesys Cloud",
+    "Genesys Cloud",
+    "Genesys Cloud Apps"
   ],
   "author": {
     "name": "Genesys Telecommunications Laboratories, Inc.",

@@ -1,5 +1,5 @@
 /**
- * Utilities for interacting with users in the PureCloud Client
+ * Utilities for interacting with users in the Genesys Cloud Client
  *
  * @module modules/users
  *
@@ -9,7 +9,7 @@
 import BaseApi from './base';
 
 /**
- * Utilities for interacting with users in the PureCloud Client
+ * Utilities for interacting with users in the Genesys Cloud Client
  *
  * @extends module:modules/base~BaseApi
  *

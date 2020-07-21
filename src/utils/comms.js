@@ -1,7 +1,7 @@
 export default {
     /**
      * Posts the provided msg to the specified origin and parent window when invoked within the
-     * expected environment (e.g. a frame hosted within PureCloud).
+     * expected environment (e.g. a frame hosted within Genesys Cloud).
      *
      * @param {*} msg - The payload to send as a postMessage
      * @param {*} tgtOrigin - The destination origin (see postMessage)
@@ -21,7 +21,7 @@ export default {
         if (validRuntime && validEnv && validApi) {
             myParent.postMessage(msg, tgtOrigin, transfer);
         } else {
-            let errMsg = 'PureCloud Communication Failed.  ';
+            let errMsg = 'Genesys Cloud Communication Failed.  ';
             if (!validRuntime) {
                 errMsg += 'Not running within a browser.';
             } else if (!validEnv) {

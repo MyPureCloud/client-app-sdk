@@ -1,5 +1,5 @@
 /**
- * SDK to work with PureCloud Client Apps
+ * SDK to work with Genesys Cloud Client Apps
  *
  * {@link https://developer.mypurecloud.com/api/client-apps/index.html}
  *
@@ -22,17 +22,17 @@ import MyConversationsApi from './modules/myConversations';
 import ExternalContactsApi from './modules/externalContacts';
 
 /**
- * Provides bi-directional communication and integration between this instance of a PureCloud Client Application
- * and the PureCloud host application
+ * Provides bi-directional communication and integration between this instance of a Genesys Cloud Client Application
+ * and the Genesys Cloud host application
  */
 class ClientApp {
     /**
-     * Constructs an instance of a PureCloud Client Application to communicate with purecloud
+     * Constructs an instance of a Genesys Cloud Client Application to communicate with Genesys Cloud
      *
      * @param {object} cfg - Runtime config of the client
      * @param {string} cfg.pcEnvironmentQueryParam - Name of a query param to auto parse into the pcEnvironment; Must be valid and a single param.  Best Practice.
      * @param {string} cfg.pcEnvironment - The PC top-level domain (e.g. mypurecloud.com, mypurecloud.au); Must be a valid PC Env tld; Prefered over pcOrigin.
-     * @param {string} cfg.pcOrigin - The full origin (protocol, host, port) of the PureCloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property.
+     * @param {string} cfg.pcOrigin - The full origin (protocol, host, port) of the Genesys Cloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property.
      *
      * @example
      * let clientApp = new ClientApp({
@@ -68,7 +68,7 @@ class ClientApp {
 
                     this._pcEnv = envUtils.lookupPcEnv(paramValue, true);
                     if (!this._pcEnv) {
-                        throw new Error(`Could not parse '${paramValue}' into a known PureCloud environment`);
+                        throw new Error(`Could not parse '${paramValue}' into a known Genesys Cloud environment`);
                     }
                 } else {
                     throw new Error(`Could not find unique value for ${paramName} parameter on Query String`);
@@ -76,7 +76,7 @@ class ClientApp {
             } else if (cfg.hasOwnProperty('pcEnvironment')) {
                 this._pcEnv = envUtils.lookupPcEnv(cfg.pcEnvironment, true);
                 if (!this._pcEnv) {
-                    throw new Error(`Could not parse '${cfg.pcEnvironment}' into a known PureCloud environment`);
+                    throw new Error(`Could not parse '${cfg.pcEnvironment}' into a known Genesys Cloud environment`);
                 }
             } else if (cfg.hasOwnProperty('pcOrigin')) {
                 if (typeof cfg.pcOrigin !== 'string' || cfg.pcOrigin.trim().length === 0) {
@@ -201,10 +201,10 @@ class ClientApp {
 
     /**
      * Returns the pcEnvironment (e.g. mypurecloud.com, mypurecloud.jp) if known; null otherwise.
-     * This value will be available if a valid PureCloud Environment is provided, inferred, or
+     * This value will be available if a valid Genesys Cloud Environment is provided, inferred, or
      * defaulted from the config passed to this instance.
      *
-     * @returns {string} the valid PureCloud environment; null if unknown.
+     * @returns {string} the valid Genesys Cloud environment; null if unknown.
      *
      * @since 1.0.0
      */
@@ -215,7 +215,7 @@ class ClientApp {
     /**
      * Displays the version of the PureClound Client App SDK.
      *
-     * @returns {string} The version of the PureCloud Client App SDK
+     * @returns {string} The version of the Genesys Cloud Client App SDK
      *
      * @example
      * ClientApp.version

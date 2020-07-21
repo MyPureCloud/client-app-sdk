@@ -1,5 +1,5 @@
 /**
- * Utilities for interacting with PureCloud conversations
+ * Utilities for interacting with Genesys Cloud conversations
  *
  * @module modules/conversations
  *
@@ -9,7 +9,7 @@
 import BaseApi from './base';
 
 /**
- * Utilities for interacting with PureCloud conversations
+ * Utilities for interacting with Genesys Cloud conversations
  *
  * @extends module:modules/base~BaseApi
  *

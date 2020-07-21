@@ -1,4 +1,4 @@
-A JavaScript library to deeply integrate a 3rd-party applications within PureCloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, plese use the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
+A JavaScript library to deeply integrate a 3rd-party applications within Genesys Cloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, plese use the [Genesys Cloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
 
 [Source Code](https://github.com/MyPureCloud/client-app-sdk)
 
@@ -12,7 +12,7 @@ $ npm install purecloud-client-app-sdk
 $ yarn add purecloud-client-app-sdk
 ```
 
-### PureCloud CDN
+### Genesys Cloud CDN
 
 ```
 https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk.js
@@ -49,7 +49,7 @@ let myClientApp = new ClientApp({
     pcEnvironmentQueryParam: 'pcEnvironment'
 });
 
-myClientApp.alerting.showToastPopup('Hello', 'PureCloud');
+myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
 ```
 
 <a name="formats-cjs"></a>
@@ -64,7 +64,7 @@ let myClientApp = new ClientApp({
     pcEnvironmentQueryParam: 'pcEnvironment'
 });
 
-myClientApp.alerting.showToastPopup('Hello', 'PureCloud');
+myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
 ```
 
 <a name="formats-umd"></a>
@@ -89,14 +89,14 @@ myClientApp.alerting.showToastPopup('Hello', 'PureCloud');
             pcEnvironmentQueryParam: 'pcEnvironment'
         });
 
-        myClientApp.alerting.showToastPopup('Hello', 'PureCloud');
+        myClientApp.alerting.showToastPopup('Hello', 'Genesys Cloud');
     });
 </script>
 ```
 
 ## Environments
 
-The ClientApp instance must be configured to match the PureCloud environment in which it is being run. The environment defaults to `mypurecloud.com`; however, you will likely need to support other environments.
+The ClientApp instance must be configured to match the Genesys Cloud environment in which it is being run. The environment defaults to `mypurecloud.com`; however, you will likely need to support other environments.
 
 ### Best Practice
 
@@ -104,11 +104,11 @@ We recommend configuring your app so the PC environment can be seeded into the u
 
 1. When registering your app, configure the URL in the format: https://myapp.mydomain.com?pcEnvironment=\{\{pcEnvironment\}\}
 1. Include `pcEnvironmentQueryParam: 'pcEnvironment'` in your ClientApp config to dynamically determine the environment
-1. Use `myClientApp.pcEnvironment` to access the environment later when needed (e.g. to pass to the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html)).
+1. Use `myClientApp.pcEnvironment` to access the environment later when needed (e.g. to pass to the [Genesys Cloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html)).
 
 ### Manual Configuration
 
-You can also manually specify the PureCloud environment or origin.  For details on supported options, see [ClientApp](./ClientApp.md)
+You can also manually specify the Genesys Cloud environment or origin.  For details on supported options, see [ClientApp](./ClientApp.md)
 
 ## Modules
 
@@ -116,7 +116,7 @@ Features of the SDK are bundled into modules and can be accessed from the root [
 
 ## Versioning
 
-The Client Apps SDK uses [SemVer](http://semver.org/) to manage releases.  SemVer enables you to safely upgrade in most cases without concern for breaking existing code.  Note that this library's version does not relate to the version of the PureCloud hosting app or the js platform SDK.
+The Client Apps SDK uses [SemVer](http://semver.org/) to manage releases.  SemVer enables you to safely upgrade in most cases without concern for breaking existing code.  Note that this library's version does not relate to the version of the Genesys Cloud hosting app or the js platform SDK.
 
 ## More Resources
 

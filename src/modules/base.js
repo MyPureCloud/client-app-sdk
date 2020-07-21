@@ -16,7 +16,7 @@ const PROTOCOL_AGENT_NAME_KEY = 'protocolAgentName';
 const PROTOCOL_AGENT_VERSION_KEY = 'protocolAgentVersion';
 
 /**
- * Base Class for PureCloud Client App APIs
+ * Base Class for Genesys Cloud Client App APIs
  *
  * @since 1.0.0
  */
@@ -72,7 +72,7 @@ class BaseApi {
     }
 
     /**
-     * Sends the message to purecloud augmenting with environmental details such as
+     * Sends the message to Genesys Cloud augmenting with environmental details such as
      * target env origin and version info.  Accessible by extenders.
      *
      * @param {string} actionName
@@ -88,7 +88,7 @@ class BaseApi {
     }
 
     /**
-     * Constructs a payload tailored for the PureCloud Client Apps SDK.  Can be
+     * Constructs a payload tailored for the Genesys Cloud Client Apps SDK.  Can be
      * overridden by extenders, but should not be invoked externally.
      *
      * @param string actionName - The name of the client-app action to invoke
@@ -121,7 +121,7 @@ class BaseApi {
     // ----- Message Listening
 
     /**
-     * Adds the specified listener to messages sent from the host PureCloud appliation
+     * Adds the specified listener to messages sent from the host Genesys Cloud appliation
      * on the specified eventType
      *
      * @param {string} eventType - The name of the purecloudEventType in the message; case and leading/trailing space sensitive
@@ -175,7 +175,7 @@ class BaseApi {
     }
 
     /**
-     * Removes the specified listener from messages sent from the host PureCloud appliation
+     * Removes the specified listener from messages sent from the host Genesys Cloud appliation
      * on the specified eventType. eventType, listener (strict equality), and options must match.
      *
      * @param {string} eventType - The name of the purecloudEventType previously registered; case and leading/trailing space sensitive
@@ -252,7 +252,7 @@ class BaseApi {
     }
 
     /**
-     * Intiate listening for messages from the host PureCloud application
+     * Intiate listening for messages from the host Genesys Cloud application
      *
      * @private
      * @ignore
@@ -262,7 +262,7 @@ class BaseApi {
     }
 
     /**
-     * Stop listening for messages from the host PureCloud application
+     * Stop listening for messages from the host Genesys Cloud application
      *
      * @private
      * @ignore

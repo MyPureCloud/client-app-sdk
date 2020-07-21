@@ -1,6 +1,6 @@
 # Client Apps SDK
 
-A JavaScript library to deeply integrate a 3rd-party applications within PureCloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, plese use the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
+A JavaScript library to deeply integrate a 3rd-party applications within Genesys Cloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, plese use the [Genesys Cloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
 
 * [API](https://developer.mypurecloud.com/api/client-apps/client-app-sdk.html)
 * [Developer Guides](https://developer.mypurecloud.com/api/client-apps/index.html)
@@ -16,44 +16,44 @@ $ npm install purecloud-client-app-sdk
 $ yarn add purecloud-client-app-sdk
 ```
 
-### PureCloud CDN
+### Genesys Cloud CDN
 
 ```
 https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk.js
 https://sdk-cdn.mypurecloud.com/client-apps/<taggedversion>/purecloud-client-app-sdk-<hash>.min.js
 ```
 
-## Building a PureCloud App
+## Building a Genesys Cloud App
 
-In the simpliest form, a PureCloud App is simply a web page that enhances or extends PureCloud functionality.  If you have a deployed web site, you could have a PureCloud app!
+In the simpliest form, a Genesys Cloud App is simply a web page that enhances or extends Genesys Cloud functionality.  If you have a deployed web site, you could have a Genesys Cloud app!
 
 ### Minimum Requirements
 
 * Served over HTTPS
 * Allowed to be embedded as an iframe
-* Conforms to the [PureCloud Style Guide for Apps](https://developer.mypurecloud.com/partners/)
+* Conforms to the [Genesys Cloud Style Guide for Apps](https://developer.mypurecloud.com/partners/)
 
-### Integrating with PureCloud UI
+### Integrating with Genesys Cloud UI
 
-Use this API to improve the integration of your app with PureCloud.  Navigate, notify, and request attention all through a simple JS API.
+Use this API to improve the integration of your app with Genesys Cloud.  Navigate, notify, and request attention all through a simple JS API.
 
 [Live API Docs](https://developer.mypurecloud.com/api/client-apps/client-app-sdk.html)
 
-### Accessing PureCloud Data
+### Accessing Genesys Cloud Data
 
-Use the [PureCloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html) to access PureCloud data within your app.
+Use the [Genesys Cloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html) to access Genesys Cloud data within your app.
 
-## Registering a PureCloud App
+## Registering a Genesys Cloud App
 
 After you've built your app, you will need to configure it to appear in your org.
 
 ### UI
 
-PureCloud Apps can be added via the PureCloud UI under Admin > Integrations > Web
+Genesys Cloud Apps can be added via the Genesys Cloud UI under Admin > Integrations > Web
 
 ### Programmatically
 
-Alternatively, you can use the REST API or PureCloud SDKs to programmatically create a PureCloud App.
+Alternatively, you can use the REST API or Genesys Cloud SDKs to programmatically create a Genesys Cloud App.
 
 1. Create the app (i.e. integration instance)
 
@@ -91,7 +91,7 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
         /*
          * PC Group IDs identifying users who will be able to see this embedded-client-app.
          *
-         * Note: This only affects display within the PureCloud UI.  App developers should not rely on
+         * Note: This only affects display within the Genesys Cloud UI.  App developers should not rely on
          * this mechanism alone for user authorization.  Check server-side before granting access to a
          * user.
          */
@@ -100,10 +100,10 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
     "advanced": {
         "i10n": {
             "es": {
-                "name": "PureCloud ejemplo de la Ayuda"
+                "name": "Genesys Cloud ejemplo de la Ayuda"
             },
             "fr": {
-                "name": "PureCloud Aide Exemple"
+                "name": "Genesys Cloud Aide Exemple"
             }
         },
         "lifecycle": {
@@ -137,11 +137,11 @@ PATCH /api/v2/integrations/{integrationInstanceId}
 
 ## License
 
-The PureCloud Client Apps SDK is [MIT Licensed](./LICENSE)
+The Genesys Cloud Client Apps SDK is [MIT Licensed](./LICENSE)
 
 ## Attribution/Credit
 
-The PureCloud Client Apps SDK comprises other software and packages
+The Genesys Cloud Client Apps SDK comprises other software and packages
 
 ### Open Source Projects
 

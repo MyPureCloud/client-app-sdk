@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
     <!--
-        Demo to illustrate fetching PureCloud data and the showInteractionDetails(...) SDK method
+        Demo to illustrate fetching Genesys Cloud data and the showInteractionDetails(...) SDK method
 
         Note:  Although this example is hosted with the others here on github; it won't work without
           configuring an OAuth Client and hosting it elsewhere. See js code below for details.
 
         Reminder: This example is using CDNs and simple javascript to illustrate the SDK. Both the
-          PureCloud SDK and Apps SDK can be obtained via npm and support many build tools
+          Genesys Cloud SDK and Apps SDK can be obtained via npm and support many build tools
           and javascript libraries to fit within your development environment.
     -->
     <head>
         <meta charset="utf-8">
-        <title>PureCloud client-app-sdk Interactions Demo</title>
+        <title>Genesys Cloud client-app-sdk Interactions Demo</title>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
@@ -100,7 +100,7 @@
         <h1 class="sr-only">Test UIs for Interaction SDK</h1>
 
         <section class="authenticating hidden">
-            Authenticating to PureCloud <span class="fas fa-spinner fa-spin"></span>
+            Authenticating to Genesys Cloud <span class="fas fa-spinner fa-spin"></span>
         </section>
         <section class="failure hidden">
             Sorry, an error has occurred.
@@ -163,13 +163,13 @@
 
                 /*
                 * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
-                * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
+                * in your Genesys Cloud org.  After creating the Implicit grant client, map the client id(s) to
                 * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
                 */
                 let pcOAuthClientIds = { 'mypurecloud.com': 'implicit-oauth-client-id-here' };
                 let clientId = pcOAuthClientIds[pcEnvironment];
                 if (!clientId) {
-                    setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Environment');
+                    setErrorState(pcEnvironment + ': Unknown/Unsupported Genesys Cloud Environment');
                     return;
                 }
 
@@ -182,7 +182,7 @@
                         pcEnvironment: pcEnvironment
                     });
                 } catch (e) {
-                    setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Embed Context');
+                    setErrorState(pcEnvironment + ': Unknown/Unsupported Genesys Cloud Embed Context');
                     return;
                 }
 
@@ -205,7 +205,7 @@
                 }
                 redirectUrl += window.location.pathname;
 
-                // Authenticate with PureCloud
+                // Authenticate with Genesys Cloud
                 let authenticatingEl = document.querySelector('.authenticating');
                 setHidden(authenticatingEl, false);
 
@@ -311,9 +311,9 @@
                         setHidden(authenticatingEl, true);
 
                         if (!authenticated) {
-                            setErrorState('Failed to Authenticate with PureCloud');
+                            setErrorState('Failed to Authenticate with Genesys Cloud');
                         } else if (!userDataAcquired) {
-                            setErrorState('Failed to locate user in PureCloud');
+                            setErrorState('Failed to locate user in Genesys Cloud');
                         }
                     });
 
@@ -357,7 +357,7 @@
                 }
 
                 /**
-                 * Determine the embedding PureCloud environment seeded on the query string or
+                 * Determine the embedding Genesys Cloud environment seeded on the query string or
                  * being returned through the OAuth2 Implicit grant state hash param.
                  *
                  * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>PureCloud App Lifecycle Demo</title>
+        <title>Genesys Cloud App Lifecycle Demo</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -53,9 +53,9 @@
             For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
         </noscript>
 
-        <h1>PureCloud App Lifecycle Demo</h1>
+        <h1>Genesys Cloud App Lifecycle Demo</h1>
         <p>
-            PureCloud Apps have a full lifecycle that developers can utilize to
+            Genesys Cloud Apps have a full lifecycle that developers can utilize to
             provide a seamless experience for end users.
         </p>
         <hr>
@@ -66,23 +66,23 @@
                 <li>Loading - The app's iframe is loading</li>
                 <li>Bootstrapping (Opt-in)
                     <ul>
-                        <li>'bootstrap' message fired from PureCloud after load</li>
-                        <li>PureCloud awaits app 'bootstrapped' response (Will timeout)</li>
+                        <li>'bootstrap' message fired from Genesys Cloud after load</li>
+                        <li>Genesys Cloud awaits app 'bootstrapped' response (Will timeout)</li>
                     </ul>
                 </li>
                 <li>Running
                     <ul>
-                        <li>'blur' message fired from PureCloud on app blur (Opt-in)</li>
-                        <li>'focus' message fired from PureCloud on subsequent app focus (Opt-in)</li>
+                        <li>'blur' message fired from Genesys Cloud on app blur (Opt-in)</li>
+                        <li>'focus' message fired from Genesys Cloud on subsequent app focus (Opt-in)</li>
                     </ul>
                 </li>
                 <li>Stopping (Opt-in)
                     <ul>
-                        <li>'stop' message fired from PureCloud after load</li>
-                        <li>PureCloud awaits app 'stopped' response (Will timeout)</li>
+                        <li>'stop' message fired from Genesys Cloud after load</li>
+                        <li>Genesys Cloud awaits app 'stopped' response (Will timeout)</li>
                     </ul>
                 </li>
-                <li>Stopped - The app has shut down and the iframe will be removed from PureCloud</li>
+                <li>Stopped - The app has shut down and the iframe will be removed from Genesys Cloud</li>
             </ol>
         </section>
 
@@ -163,13 +163,13 @@
                 var count = 0;
                 // Note: This manual check for query string is for backwards compatibility of this
                 // deployed example.  In your own apps, you can assume the query param will be
-                // provided by PureCloud if you have configured it in your app's config.
+                // provided by Genesys Cloud if you have configured it in your app's config.
                 let envQueryParamName = 'pcEnvironment';
                 if (window && window.location && typeof window.location.search === 'string' &&
                     window.location.search.indexOf(envQueryParamName) >= 0) {
                     myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
                 } else {
-                    // Use default PureCloud region
+                    // Use default Genesys Cloud region
                     myClientApp = new window.purecloud.apps.ClientApp();
                 }
 

@@ -12,7 +12,7 @@ const VALID_MESSAGE_TYPES = ['error', 'info', 'success'];
 const VALID_SUPPLEMENTAL_OPTIONS = ['id', 'markdownMessage', 'timeout', 'showCloseButton'];
 
 /**
- * Handles aspects of alerting and attention of this app with PureCloud
+ * Handles aspects of alerting and attention of this app with Genesys Cloud
  *
  * @extends module:modules/base~BaseApi
  *

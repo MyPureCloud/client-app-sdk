@@ -29,7 +29,7 @@
         <div>
             <section class="authenticating"
                     v-bind:class="{'hidden':this.authenticated || this.errorMessage}">
-                Authenticating to PureCloud ...
+                Authenticating to Genesys Cloud ...
             </section>
             <section class="failure"
                     v-bind:class="{'hidden':!this.errorMessage}">
@@ -42,7 +42,7 @@
     <script type="text/x-template" id="profile-template">
         <section class="user-profile">
             <div @click="profileLinkListener" class="profile-link">
-                <a href="#" aria-label="Click to view user's profile in PureCloud">
+                <a href="#" aria-label="Click to view user's profile in Genesys Cloud">
                     <div v-bind:class="{'placeholder-pic':true, hidden:imageUri}" aria-label="User profile picture missing">?</div>
                     <img v-bind:class="{'profile-pic':true, hidden:!imageUri}" v-bind:src="imageUri" aria-label="Profile picture for User">
                 </a>

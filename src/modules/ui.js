@@ -1,5 +1,5 @@
 /**
- * Utilities for interacting with general PureCloud App UI components
+ * Utilities for interacting with general Genesys Cloud App UI components
  *
  * @module modules/core-ui
  *
@@ -9,7 +9,7 @@
 import BaseApi from './base';
 
 /**
- * Utilities for interacting with general PureCloud App UI components
+ * Utilities for interacting with general Genesys Cloud App UI components
  *
  * @extends module:modules/base~BaseApi
  *

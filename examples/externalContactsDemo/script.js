@@ -19,14 +19,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
-    * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
+    * in your Genesys Cloud org.  After creating the Implicit grant client, map the client id(s) to
     * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
     */
     let pcOAuthClientIds = { 'mypurecloud.com': 'implicit-oauth-client-id-here' };
     let clientId = pcOAuthClientIds[pcEnvironment];
     if (!clientId) {
         setErrorState(
-            pcEnvironment + ': Unknown/Unsupported PureCloud Environment'
+            pcEnvironment + ': Unknown/Unsupported Genesys Cloud Environment'
         );
         return;
     }
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     } catch (e) {
         setErrorState(
-            pcEnvironment + ': Unknown/Unsupported PureCloud Embed Context'
+            pcEnvironment + ': Unknown/Unsupported Genesys Cloud Embed Context'
         );
         return;
     }
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     redirectUrl += window.location.pathname;
 
-    // Authenticate with PureCloud
+    // Authenticate with Genesys Cloud
     let authenticated = false;
     let userDataAcquired = false;
 
@@ -139,9 +139,9 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(function () {
             if (!authenticated) {
-                setErrorState('Failed to Authenticate with PureCloud');
+                setErrorState('Failed to Authenticate with Genesys Cloud');
             } else if (!userDataAcquired) {
-                setErrorState('Failed to locate user in PureCloud');
+                setErrorState('Failed to locate user in Genesys Cloud');
             }
         });
 
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /**
-     * Determine the embedding PureCloud environment seeded on the query string or
+     * Determine the embedding Genesys Cloud environment seeded on the query string or
      * being returned through the OAuth2 Implicit grant state hash param.
      *
      * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.
