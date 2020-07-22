@@ -5,7 +5,7 @@ const path = require('path');
 const glob = require('glob');
 
 const { CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS: oauthClientIds } = process.env;
-const BROWSER_FILENAME = `${pkg.name}.js`;
+const BROWSER_FILENAME = `/${pkg.name}.js`;
 
 // Called from command line
 if (!module.parent) {
