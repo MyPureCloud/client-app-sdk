@@ -40,7 +40,7 @@ const tsc = () => {
         const bin = require.resolve('typescript/bin/tsc');
         spawn(bin, [
             '--incremental',
-            '--outDir', tmpDestPath,
+            '--outDir', `${tmpDestPath}/ts-build`,
             '--project', 'tsconfig.build.json'
         ], { stdio: 'inherit' })
             .on('exit', resolve);
