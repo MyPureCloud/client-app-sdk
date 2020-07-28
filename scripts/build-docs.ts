@@ -98,7 +98,12 @@ const prependDocHeaderAttribute = (buffer: string, attr: string) => {
     await fs.remove(classesDir);
 
     // Use custom index file in place of typedoc's index
-    await fs.copy(INDEX_FILE, path.join(OUTPUT_DIR, "index.md"));
+    const indexFilePath = path.join(OUTPUT_DIR, "index.md");
+    await fs.copy(INDEX_FILE, indexFilePath);
+
+    // Add header to index file
+    const indexFileContents = (await fs.readFile(indexFilePath)).toString();
+    await fs.outputFile(indexFilePath, "---\ntitle: Client App SDK\n---\n\n" + indexFileContents);
 
     // Apply transformations to docs
     const docs = await fs.readdir(OUTPUT_DIR);
