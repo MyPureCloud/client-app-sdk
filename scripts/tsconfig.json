@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": ["ES2020"],
+        "noUnusedLocals": true,
+        "strict": true,
+        "resolveJsonModule": true,
+        "types": []
+    },
+}
