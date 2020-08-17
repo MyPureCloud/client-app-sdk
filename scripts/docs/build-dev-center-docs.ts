@@ -1,20 +1,7 @@
+import * as _ from "lodash";
 import * as path from "path";
 import * as fs from "fs-extra";
 import { Application, TSConfigReader, TypeDocOptions } from "typedoc";
-
-const transformLinks = (buffer: string, ext: string) => {
-    // Regex to replace the following patterns (ext = "html"):
-    // [link1](api.md) -> [link1](api.html)
-    // [link2](api.md#someref) -> [link2](api.html#someref)
-    return buffer.replace(/(\[[^\]]+\][^)]+)(\.md)(\)|#[^)]*\))/gm, `$1${ext}$3`);
-};
-
-const prependDocHeaderAttribute = (buffer: string, attr: string) => {
-    if (!buffer.startsWith('---')) {
-        throw new Error('Doc header symbol "---" not found');
-    }
-    return buffer = `---\n${attr}${buffer.substring('---'.length)}`;
-};
 
 // Options added by the Typedoc Markdown Plugin
 interface MarkdownPluginOptions {
@@ -23,12 +10,20 @@ interface MarkdownPluginOptions {
 }
 
 interface DevCenterDocsOptions {
+    version: string;
+    bundleHash?: string;
     options?: Partial<TypeDocOptions>;
     flagDocsAsPreview: boolean;
     outputDir: string;
 }
 
-export const buildDevCenterDocs = async ({ flagDocsAsPreview, outputDir, options }: DevCenterDocsOptions) => {
+export const buildDevCenterDocs = async ({
+    version,
+    bundleHash,
+    flagDocsAsPreview,
+    outputDir,
+    options
+}: DevCenterDocsOptions) => {
     const app = new Application();
 
     // So TypeDoc can load tsconfig.json
@@ -67,24 +62,50 @@ export const buildDevCenterDocs = async ({ flagDocsAsPreview, outputDir, options
     await fs.remove(classesDir);
 
     // Use custom index file in place of typedoc's index
-    const indexFilePath = path.join(outputDir, "index.md");
-    await fs.copy("doc/index.md", indexFilePath);
+    const buffer = await fs.readFile("doc/index.md");
+    const indexWithHeader = "---\ntitle: Client App SDK\n---\n\n" + buffer.toString();
+    await fs.writeFile(path.join(outputDir, "index.md"), indexWithHeader);
 
-    // Add header to index file
-    const indexFileContents = (await fs.readFile(indexFilePath)).toString();
-    await fs.outputFile(indexFilePath, "---\ntitle: Client App SDK\n---\n\n" + indexFileContents);
+    // Apply rest of docs transformations
+    await transformFiles(outputDir, _.flow(
+        bundleHash ? injectBundleHash(bundleHash) : _.identity,
+        transformLinks('.html'),
+        injectPackageVersion(version),
+        prependDocHeaderAttribute('ispreview', flagDocsAsPreview),
+    ));
+};
 
-    // Apply transformations to docs
+async function transformFiles(outputDir: string, transformer: (src: string) => string) {
     const docs = await fs.readdir(outputDir);
     await Promise.all(
         docs.map(async (doc) => {
             const docPath = path.join(outputDir, doc);
-            let buffer = (await fs.readFile(docPath)).toString();
-            buffer = transformLinks(buffer, '.html');
-            if (flagDocsAsPreview) {
-                buffer = prependDocHeaderAttribute(buffer, 'ispreview: true');
-            }
-            return fs.outputFile(docPath, buffer);
+            const buffer = await fs.readFile(docPath);
+            return fs.outputFile(docPath, transformer(buffer.toString()));
         })
     );
+}
+
+const transformLinks = (ext: string) => (buffer: string) => {
+    // Regex to replace the following patterns (ext = "html"):
+    // [link1](api.md) -> [link1](api.html)
+    // [link2](api.md#someref) -> [link2](api.html#someref)
+    return buffer.replace(/(\[[^\]]+\][^)]+)(\.md)(\)|#[^)]*\))/gm, `$1${ext}$3`);
+};
+
+const prependDocHeaderAttribute = (attr: string, value: any) => (buffer: string) => {
+    if (!buffer.startsWith('---')) {
+        throw new Error('Doc header symbol "---" not found');
+    }
+    return buffer = `---\n${attr}: ${value}${buffer.substring('---'.length)}`;
+};
+
+const injectPackageVersion = (version: string) => (buffer: string) => {
+    const result = buffer.replace(/<taggedversion>/g, version);
+    return prependDocHeaderAttribute('version', version)(result);
+};
+
+const injectBundleHash = (bundleHash: string) => (buffer: string) => {
+    const result = buffer.replace(/<hash>/g, bundleHash);
+    return prependDocHeaderAttribute('bundle_hash', bundleHash)(result);
 };
