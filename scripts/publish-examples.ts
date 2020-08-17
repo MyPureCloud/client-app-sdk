@@ -9,13 +9,13 @@
  * [Note:] The -n option could then be used for testing
  */
 
-import ghpages from 'gh-pages';
-import path from 'path';
+import * as ghpages from 'gh-pages';
+import * as path from 'path';
 import { exec } from 'child-process-promise';
 
 const DEFAULT_COMMIT_MSG = 'Update Examples';
 
-let customCommitMsg = null;
+let customCommitMsg: string;
 if (process.argv.length === 3) {
     customCommitMsg = process.argv[2];
 } else if (process.argv.length > 3) {
