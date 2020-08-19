@@ -144,13 +144,13 @@
 
                 // Note: This manual check for query string is for backwards compatibility of this
                 // deployed example.  In your own apps, you can assume the query param will be
-                // provided by PureCloud if you have configured it in your app's config.
+                // provided by Genesys Cloud if you have configured it in your app's config.
                 let envQueryParamName = 'pcEnvironment';
                 if (window && window.location && typeof window.location.search === 'string' &&
                     window.location.search.indexOf(envQueryParamName) >= 0) {
                     myClientApp = new window.purecloud.apps.ClientApp({pcEnvironmentQueryParam: envQueryParamName});
                 } else {
-                    // Use default PureCloud region
+                    // Use default Genesys Cloud region
                     myClientApp = new window.purecloud.apps.ClientApp();
                 }
 

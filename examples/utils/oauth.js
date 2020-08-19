@@ -1,14 +1,14 @@
-// Authenticate with PureCloud
+// Authenticate with Genesys Cloud
 function authenticate(client, pcEnvironment) {
     /*
     * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
-    * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
+    * in your Genesys Cloud org.  After creating the Implicit grant client, map the client id(s) to
     * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
     */
     const pcOAuthClientIds = {'mypurecloud.com': 'implicit-oauth-client-id-here'};
     const clientId = pcOAuthClientIds[pcEnvironment];
     if (!clientId) {
-        return Promise.reject(new Error(pcEnvironment + ': Unknown/Unsupported PureCloud Environment'));
+        return Promise.reject(new Error(pcEnvironment + ': Unknown/Unsupported Genesys Cloud Environment'));
     }
 
     const { origin, protocol, host, pathname } = window.location;

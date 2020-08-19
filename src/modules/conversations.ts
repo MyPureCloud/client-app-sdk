@@ -1,5 +1,5 @@
 /**
- * Utilities for interacting with PureCloud conversations
+ * Utilities for interacting with Genesys Cloud conversations
  *
  * @since 1.1.0
  */
@@ -7,7 +7,7 @@
 import BaseApi from './base';
 
 /**
- * Utilities for interacting with PureCloud conversations
+ * Utilities for interacting with Genesys Cloud conversations
  *
  * @noInheritDoc
  * @since 1.1.0

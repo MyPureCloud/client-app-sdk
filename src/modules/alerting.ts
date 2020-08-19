@@ -33,7 +33,7 @@ const pick = <
 };
 
 /**
- * Handles aspects of alerting and attention of this app with PureCloud
+ * Handles aspects of alerting and attention of this app with Genesys Cloud
  *
  * @noInheritDoc
  * @since 1.0.0

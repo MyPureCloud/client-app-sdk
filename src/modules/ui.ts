@@ -1,5 +1,5 @@
 /**
- * Utilities for interacting with general PureCloud App UI components
+ * Utilities for interacting with general Genesys Cloud App UI components
  *
  * @since 1.0.0
  */
@@ -7,7 +7,7 @@
 import BaseApi from './base';
 
 /**
- * Utilities for interacting with general PureCloud App UI components
+ * Utilities for interacting with general Genesys Cloud App UI components
  *
  * @noInheritDoc
  * @since 1.0.0

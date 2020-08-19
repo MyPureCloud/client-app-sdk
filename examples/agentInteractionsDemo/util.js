@@ -29,7 +29,7 @@ function extractParams(paramStr) {
 }
 
 /**
- * Determine the embedding PureCloud environment seeded on the query string or
+ * Determine the embedding Genesys Cloud environment seeded on the query string or
  * being returned through the OAuth2 Implicit grant state hash param.
  *
  * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.

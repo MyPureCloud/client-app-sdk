@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let pcEnvironment = getEmbeddingPCEnv();
     if (!pcEnvironment) {
         setErrorState(
-            "Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app's query string?"
+            "Cannot identify App Embedding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app's query string?"
         );
         return;
     }
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     } catch (e) {
         setErrorState(
-            pcEnvironment + ': Unknown/Unsupported PureCloud Embed Context'
+            pcEnvironment + ': Unknown/Unsupported Genesys Cloud Embed Context'
         );
         return;
     }
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-    // Authenticate with PureCloud
+    // Authenticate with Genesys Cloud
     let authenticated = false;
     let userDataAcquired = false;
 
@@ -115,9 +115,9 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(err => {
             if (!authenticated) {
-                setErrorState('Failed to Authenticate with PureCloud - ' + err.message);
+                setErrorState('Failed to Authenticate with Genesys Cloud - ' + err.message);
             } else if (!userDataAcquired) {
-                setErrorState('Failed to locate user in PureCloud');
+                setErrorState('Failed to locate user in Genesys Cloud');
             }
         });
 
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /**
-     * Determine the embedding PureCloud environment seeded on the query string or
+     * Determine the embedding Genesys Cloud environment seeded on the query string or
      * being returned through the OAuth2 Implicit grant state hash param.
      *
      * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.

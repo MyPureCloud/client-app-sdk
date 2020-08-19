@@ -170,7 +170,7 @@ new Vue({
             Vue.prototype.$clientApp = clientApp;
         } catch (e) {
             console.log(e);
-            this.errorMessage = pcEnvironment + ": Unknown/Unsupported PureCloud Embed Context";
+            this.errorMessage = pcEnvironment + ": Unknown/Unsupported Genesys Cloud Embed Context";
             return;
         }
 
@@ -249,7 +249,7 @@ new Vue({
                 console.log(err);
                 this.errorMessage =
                     !authenticated
-                        ? "Failed to Authenticate with PureCloud - " + err.message
+                        ? "Failed to Authenticate with Genesys Cloud - " + err.message
                         : "Failed to fetch/display profile";
             });
     },
