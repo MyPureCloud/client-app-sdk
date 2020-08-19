@@ -1,8 +1,6 @@
-/* eslint-env node */
-'use strict';
-
 import pkg from './package.json';
 import os from 'os';
+import { spawn } from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
 import glob from 'glob';
@@ -37,6 +35,18 @@ const buildExample = (relativeFilePath) => {
     );
 };
 
+const tsc = () => {
+    return new Promise((resolve) => {
+        const bin = require.resolve('typescript/bin/tsc');
+        spawn(bin, [
+            '--incremental',
+            '--outDir', `${tmpDestPath}/ts-build`,
+            '--project', 'tsconfig.build.json'
+        ], { stdio: 'inherit' })
+            .on('exit', resolve);
+    });
+};
+
 // Build all examples initially
 glob.sync('examples/**/*', { nodir: true }).forEach(buildExample);
 
@@ -51,8 +61,9 @@ export default Object.assign({}, umdConfig, {
         ...umdConfig.plugins,
         {
             name: 'process-examples',
-            buildStart() {
+            async buildStart() {
                 this.addWatchFile(path.resolve('examples'));
+                await tsc(); // Check typescript types
             },
             watchChange(id) {
                 // Rebuild individual example file when changed

@@ -1,4 +1,3 @@
-/* eslint-env jasmine */
 import envUtils from './env';
 
 export default describe('env utils', () => {
@@ -21,7 +20,7 @@ export default describe('env utils', () => {
 
     it('should parse valid TLDs and return the environment object', () => {
         VALID_PC_TLDS.forEach(currTld => {
-            let resolvedEnv = envUtils.lookupPcEnv(currTld);
+            const resolvedEnv = envUtils.lookupPcEnv(currTld)!;
             expect(resolvedEnv).not.toBeNull();
             expect(resolvedEnv.pcEnvTld).toBe(currTld);
             expect(resolvedEnv.pcAppOrigin).toBe(`https://apps.${currTld}`);
@@ -29,9 +28,9 @@ export default describe('env utils', () => {
     });
 
     it('should allow lenient parsing of TLDs and return the environment object', () => {
-        let seedTld = VALID_PC_TLDS[0];
+        const seedTld = VALID_PC_TLDS[0];
 
-        let variations = [
+        const variations = [
             ` ${seedTld}`, // Leading whitespace
             `  ${seedTld}`, // Leading multi-whitespace
             `${seedTld} `, // Trailing whitespace
@@ -45,16 +44,16 @@ export default describe('env utils', () => {
         ];
 
         variations.forEach(currTld => {
-            let resolvedEnv = envUtils.lookupPcEnv(currTld, true);
+            const resolvedEnv = envUtils.lookupPcEnv(currTld, true)!;
             expect(resolvedEnv.pcEnvTld).toBe(seedTld);
             expect(resolvedEnv.pcAppOrigin).toBe(`https://apps.${seedTld}`);
         });
     });
 
     it('should return null if the pcEnvTld cannot be parsed or is unknown', () => {
-        let seedTld = VALID_PC_TLDS[0];
+        const seedTld = VALID_PC_TLDS[0];
 
-        let variations = [
+        const variations = [
             undefined,
             null,
             3,
@@ -71,10 +70,12 @@ export default describe('env utils', () => {
         ];
 
         variations.forEach(currTld => {
+            // @ts-expect-error
             let resolvedEnv = envUtils.lookupPcEnv(currTld);
             expect(resolvedEnv).toBe(null);
 
             // Doesn't matter if it's lenient
+            // @ts-expect-error
             resolvedEnv = envUtils.lookupPcEnv(currTld, true);
             expect(resolvedEnv).toBe(null);
         });

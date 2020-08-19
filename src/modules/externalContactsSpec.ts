@@ -1,4 +1,3 @@
-/* eslint-env jasmine */
 import ApiBase from './base';
 import ExternalContactsApi from './externalContacts';
 
@@ -11,7 +10,7 @@ export default describe('ContactsApi', () => {
         protocolAgentName: 'foo',
         protolAgentVersion: 'bar'
     };
-    let externalContactsApi = null;
+    let externalContactsApi: ExternalContactsApi;
 
     beforeEach(() => {
         externalContactsApi = new ExternalContactsApi(Object.assign({}, { targetPcOrigin }, baseProtoDetails));
@@ -19,17 +18,17 @@ export default describe('ContactsApi', () => {
 
     it('sends the message to the parent window', () => {
         // No-op the postMessage call
-        let mockWindow = {};
-        let mockParent = {
+        const mockWindow = {};
+        const mockParent = {
             postMessage() {}
         };
-        externalContactsApi._myWindow = mockWindow;
-        externalContactsApi._myParent = mockParent;
+        externalContactsApi['_myWindow'] = mockWindow as any as Window;
+        externalContactsApi['_myParent'] = mockParent as any as Window;
 
-        let sendMsgSpy = spyOn(ApiBase.prototype, 'sendMsgToPc');
+        const sendMsgSpy = spyOn(ApiBase.prototype as any, 'sendMsgToPc');
 
         // Test external contact sdk method
-        let testContactId = 'testContact';
+        const testContactId = 'testContact';
         externalContactsApi.showExternalContactProfile(testContactId);
         expect(sendMsgSpy).toHaveBeenCalled();
         let sendMsgArgs = sendMsgSpy.calls.first().args;
@@ -38,7 +37,7 @@ export default describe('ContactsApi', () => {
         expect(sendMsgArgs[1]).toEqual({contactId: testContactId});
 
         // Test external organization sdk method
-        let testContactOrganization = 'testOrg';
+        const testContactOrganization = 'testOrg';
         externalContactsApi.showExternalOrganizationProfile(testContactOrganization);
         expect(sendMsgSpy).toHaveBeenCalledTimes(2);
         sendMsgArgs = sendMsgSpy.calls.mostRecent().args;

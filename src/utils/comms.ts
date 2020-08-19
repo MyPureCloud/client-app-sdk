@@ -3,20 +3,20 @@ export default {
      * Posts the provided msg to the specified origin and parent window when invoked within the
      * expected environment (e.g. a frame hosted within PureCloud).
      *
-     * @param {*} msg - The payload to send as a postMessage
-     * @param {*} tgtOrigin - The destination origin (see postMessage)
-     * @param {*} transfer - Transferable objects (see postMessage)
-     * @param {*} myWindow - The current execution window. Default window
-     * @param {*} myParent - The parent window to which the message should be posted. Default parent
-     * @param {object} myConsole - logs errors here rather than throwing errors. Default console
+     * @param msg - The payload to send as a postMessage
+     * @param tgtOrigin - The destination origin (see postMessage)
+     * @param transfer - Transferable objects (see postMessage)
+     * @param myWindow - The current execution window. Default window
+     * @param myParent - The parent window to which the message should be posted. Default parent
+     * @param myConsole - logs errors here rather than throwing errors. Default console
      *
      * @throws Error if the environment is invalid (e.g. not a browser, no postMessage api,
      *  not running within an iframe) and myConsole is not specified
      */
-    postMsgToPc(msg, tgtOrigin, transfer, myWindow = window, myParent = window.parent, myConsole = window.console) {
-        let validRuntime = !!(myWindow && typeof myWindow === 'object' && myParent && typeof myParent === 'object');
-        let validEnv = (validRuntime && myParent !== myWindow);
-        let validApi = !!(myParent && typeof myParent.postMessage === 'function');
+    postMsgToPc(msg: any, tgtOrigin: string, transfer?: Transferable[], myWindow: Window = window, myParent = window.parent, myConsole: Console | null = window.console) {
+        const validRuntime = !!(myWindow && typeof myWindow === 'object' && myParent && typeof myParent === 'object');
+        const validEnv = (validRuntime && myParent !== myWindow);
+        const validApi = !!(myParent && typeof myParent.postMessage === 'function');
 
         if (validRuntime && validEnv && validApi) {
             myParent.postMessage(msg, tgtOrigin, transfer);

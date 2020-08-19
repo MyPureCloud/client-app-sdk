@@ -1,8 +1,4 @@
-#!/usr/bin/env node
+const ClientApp = require('../dist/main.js');
 
-var ClientApp = require('../dist/main.js');
-
-(function(){
-    console.log('Version:', ClientApp.version);
-    console.log(ClientApp.about());
-})();
+console.log('Version:', ClientApp.version);
+console.log(ClientApp.about());
