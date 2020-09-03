@@ -24,7 +24,7 @@ try {
 const transformExampleSdkUrl = (buffer) => {
     return buffer.replace(
         /(\s*<script.*src=")([^"]+client-app-sdk[^"]+)(".*<\/script>\s*)/i,
-        '$1' + (BROWSER_FILENAME || '$2') + '$3\n'
+        '$1' + (`/${BROWSER_FILENAME}` || '$2') + '$3\n'
     );
 };
 

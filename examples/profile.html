@@ -15,6 +15,7 @@
 
         <script src="https://sdk-cdn.mypurecloud.com/javascript/72.0.0/purecloud-platform-client-v2.min.js"></script>
         <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-49c1570bfd8967d8861435e0e7178035.min.js"></script>
+        <script src="utils/oauth.js"></script>
 
         <style>
             body {
@@ -89,74 +90,56 @@
         </section>
 
         <script>document.addEventListener('DOMContentLoaded', function () {
-          /*
-           * The Client Apps SDK can interpolate the current PC Environment into your app's URL
-           * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
-           *
-           * Reading the PC Environment from the query string or state param returned from OAuth2 response
-           */
-          let pcEnvironment = getEmbeddingPCEnv();
-          if (!pcEnvironment) {
-              setErrorState('Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?');
-              return;
-          }
+            /*
+            * The Client Apps SDK can interpolate the current PC Environment into your app's URL
+            * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
+            *
+            * Reading the PC Environment from the query string or state param returned from OAuth2 response
+            */
+            let pcEnvironment = getEmbeddingPCEnv();
+            if (!pcEnvironment) {
+                setErrorState('Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?');
+                return;
+            }
 
-          /*
-           * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
-           * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
-           * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
-           */
-          let pcOAuthClientIds = {'mypurecloud.com': 'implicit-oauth-client-id-here'};
+            let platformClient = window.require('platformClient');
+            let client = platformClient.ApiClient.instance;
+            client.setEnvironment(pcEnvironment);
 
-          let clientId = pcOAuthClientIds[pcEnvironment];
-          if (!clientId) {
-              setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Environment');
-              return;
-          }
+            let clientApp = null;
+            try {
+                clientApp = new window.purecloud.apps.ClientApp({
+                    pcEnvironment: pcEnvironment
+                });
+            } catch (e) {
+                setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Embed Context');
+                return;
+            }
 
-          let platformClient = window.require('platformClient');
-          let client = platformClient.ApiClient.instance;
-          client.setEnvironment(pcEnvironment);
+            // Authenticate with PureCloud
+            let authenticated = false;
+            let authenticatingEl = document.querySelector('.authenticating');
+            setHidden(authenticatingEl, false);
+            authenticate(client, pcEnvironment)
+                .then(() => {
+                    authenticated = true;
+                    return new platformClient.UsersApi().getUsersMe();
+                })
+                .then(profileData => {
+                    setHidden(authenticatingEl, true);
 
-          let clientApp = null;
-          try {
-            clientApp = new window.purecloud.apps.ClientApp({
-                pcEnvironment: pcEnvironment
-            });
-          } catch (e) {
-              setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Embed Context');
-              return;
-          }
-
-          let redirectUrl = window.location.origin;
-          if (!redirectUrl) {
-              redirectUrl = window.location.protocol + '//' + window.location.host;
-          }
-          redirectUrl += window.location.pathname;
-
-          // Authenticate with PureCloud
-          let authenticated = false;
-          let authenticatingEl = document.querySelector('.authenticating');
-          setHidden(authenticatingEl, false);
-          client.loginImplicitGrant(clientId, redirectUrl, {state: ('pcEnvironment=' + pcEnvironment)})
-            .then(function() {
-                authenticated = true;
-
-                return new platformClient.UsersApi().getUsersMe();
-            })
-            .then(function(profileData) {
-                setHidden(authenticatingEl, true);
-
-                let profileEl = document.querySelector('.user-profile');
-                renderUserProfile(profileEl, profileData);
-                setHidden(profileEl, false);
-            })
-            .catch(function(err) {
-                setHidden(authenticatingEl, true);
-
-                setErrorState(!authenticated ? 'Failed to Authenticate with PureCloud' :
-                    'Failed to fetch/display your profile');
-            });
+                    let profileEl = document.querySelector('.user-profile');
+                    renderUserProfile(profileEl, profileData);
+                    setHidden(profileEl, false);
+                })
+                .catch(err => {
+                    setHidden(authenticatingEl, true);
+                    setErrorState(
+                        !authenticated
+                            ? 'Failed to Authenticate with PureCloud - ' + err.message
+                            : 'Failed to fetch/display your profile'
+                    );
+                });
 
             // ----- Helper Functions
 

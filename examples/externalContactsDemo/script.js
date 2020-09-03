@@ -15,21 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
         );
         return;
     }
-    updateProgressBar(40);
-
-    /*
-    * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
-    * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
-    * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
-    */
-    let pcOAuthClientIds = { 'mypurecloud.com': 'implicit-oauth-client-id-here' };
-    let clientId = pcOAuthClientIds[pcEnvironment];
-    if (!clientId) {
-        setErrorState(
-            pcEnvironment + ': Unknown/Unsupported PureCloud Environment'
-        );
-        return;
-    }
     updateProgressBar(60);
 
     let client = platformClient.ApiClient.instance;
@@ -71,28 +56,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-    let redirectUrl = window.location.origin;
-    if (!redirectUrl) {
-        redirectUrl = window.location.protocol + '//' + window.location.host;
-    }
-    redirectUrl += window.location.pathname;
-
     // Authenticate with PureCloud
     let authenticated = false;
     let userDataAcquired = false;
 
-    client
-        .loginImplicitGrant(clientId, redirectUrl, {
-            state: 'pcEnvironment=' + pcEnvironment
-        })
-        .then(function () {
+    authenticate(client, pcEnvironment)
+        .then(() => {
             updateProgressBar(100);
             authenticated = true;
             return new platformClient.UsersApi().getUsersMe({
                 expand: ['authorization']
             });
         })
-        .then(function (profileData) {
+        .then(profileData => {
             userDataAcquired = true;
             // Check if the current user will be able to view external contacts
             let permissions = profileData.authorization.permissions;
@@ -137,9 +113,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 setErrorState('You do not have the proper permissions to view external contacts.');
             }
         })
-        .catch(function () {
+        .catch(err => {
             if (!authenticated) {
-                setErrorState('Failed to Authenticate with PureCloud');
+                setErrorState('Failed to Authenticate with PureCloud - ' + err.message);
             } else if (!userDataAcquired) {
                 setErrorState('Failed to locate user in PureCloud');
             }
