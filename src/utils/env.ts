@@ -35,8 +35,14 @@ export default {
      *
      * @returns A PureCloud environment object if found; null otherwise.
      */
-    lookupPcEnv(pcEnvTld: string, lenient = false) {
+    lookupPcEnv(pcEnvTld: string, lenient = false): PcEnv | null {
         if (pcEnvTld && typeof pcEnvTld === 'string') {
+            if (pcEnvTld === 'localhost' && __HOST_APP_DEV_ORIGIN__) {
+                return {
+                    pcEnvTld: 'localhost',
+                    pcAppOrigin: __HOST_APP_DEV_ORIGIN__
+                };
+            }
             let toSearch = pcEnvTld;
 
             if (lenient) {

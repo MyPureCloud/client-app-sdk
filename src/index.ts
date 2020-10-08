@@ -151,21 +151,16 @@ class ClientApp {
         if (cfg) {
             if ('pcEnvironmentQueryParam' in cfg) {
                 const paramName = cfg.pcEnvironmentQueryParam;
-                if (typeof paramName !== 'string' || paramName.trim().length === 0) {
-                    throw new Error('Invalid query param name provided.  Must be non-null, non-empty string');
-                }
+                this.assertNonEmptyString(paramName, 'query param name');
                 const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
-                this._pcEnv = this.lookupEnv(parsedQueryString[paramName]);
+                const paramValue = parsedQueryString[paramName];
+                this.assertNonEmptyString(paramValue, 'query param value');
+                this._pcEnv = this.lookupEnv(paramValue);
             } else if ('pcEnvironment' in cfg) {
-                if (typeof cfg.pcEnvironment !== 'string' || cfg.pcEnvironment.trim().length === 0) {
-                    throw new Error('Invalid pcEnvironment provided.  Must be a non-null, non-empty string');
-                }
+                this.assertNonEmptyString(cfg.pcEnvironment, 'pcEnvironment');
                 this._pcEnv = this.lookupEnv(cfg.pcEnvironment);
             } else if ('pcOrigin' in cfg) {
-                if (typeof cfg.pcOrigin !== 'string' || cfg.pcOrigin.trim().length === 0) {
-                    throw new Error('Invalid pcOrigin provided.  Must be a non-null, non-empty string');
-                }
-
+                this.assertNonEmptyString(cfg.pcOrigin, 'pcOrigin');
                 this._customPcOrigin = cfg.pcOrigin;
             }
         }
@@ -188,13 +183,15 @@ class ClientApp {
         this.externalContacts = new ExternalContactsApi(apiCfg);
     }
 
-    private lookupEnv = (env: string) => {
-        if (env === 'localhost' && __HOST_APP_DEV_ORIGIN__) {
-            this._customPcOrigin = __HOST_APP_DEV_ORIGIN__;
-            return null;
+    private assertNonEmptyString(value: unknown, name: string): asserts value is string {
+        if (typeof value !== 'string' || value.trim().length === 0) {
+            throw new Error(`Invalid ${name} provided.  Must be a non-null, non-empty string`);
         }
+    }
+
+    private lookupEnv = (env: string) => {
         const pcEnv = envUtils.lookupPcEnv(env, true);
-        if (!pcEnv) throw new Error(`Could not parse '${pcEnv}' into a known PureCloud environment`);
+        if (!pcEnv) throw new Error(`Could not parse '${env}' into a known PureCloud environment`);
         return pcEnv;
     }
 
