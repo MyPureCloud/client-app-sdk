@@ -154,7 +154,7 @@ class ClientApp {
                 this.assertNonEmptyString(paramName, 'query param name');
                 const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
                 const paramValue = parsedQueryString[paramName];
-                this.assertNonEmptyString(paramValue, 'query param value');
+                this.assertNonEmptyString(paramValue, `value for query param '${paramName}'`);
                 this._pcEnv = this.lookupEnv(paramValue);
             } else if ('pcEnvironment' in cfg) {
                 this.assertNonEmptyString(cfg.pcEnvironment, 'pcEnvironment');

@@ -66,7 +66,7 @@ $ yarn run examples --bundle={BUNDLE_PATH}
 1. Add your code (Don't forget the unit tests!)
 1. Test your code
   * `npm test` -or- `npm run watch:test`
-  * `npm run build` and try the version in an app -or- `npm start` and try the example in PC
+  * `npm run build` and try the version in an app -or- `npm start` and try the example in GC
 1. Rebase onto upstream/master
 1. Push your branch up to your remote
   * Note: pre-push hooks will ensure your code lints, builds, and passes the test suite
