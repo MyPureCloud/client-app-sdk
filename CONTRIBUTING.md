@@ -37,6 +37,30 @@ $ yarn start
 $ npm start
 ```
 
+## Examples
+
+The examples in this repository serve a few different purposes:
+
+1. Showcase functionality that can be achieved with the SDK
+1. Run the SDK locally and test new feature development against the examples
+1. Test SDK functionality against deployed examples in ad-hoc client apps in Genesys Cloud  
+
+### Running Locally
+
+To run the examples locally, you should start the dev server - `npm start`. The dev server will live reload and
+rebuild on any changes to the example files or SDK source files.
+
+### Deploy Examples
+
+The `build-examples` script should primarily serve as a deploy function. The `build-examples` accepts a `bundle` option
+to specify which file to reference as the SDK bundle.
+
+```bash
+$ npm run examples -- --bundle={BUNDLE_PATH}
+# -or-
+$ yarn run examples --bundle={BUNDLE_PATH}
+```
+
 ## Contributing
 1. Fork the repo
 1. Add your code (Don't forget the unit tests!)
