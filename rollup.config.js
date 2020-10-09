@@ -22,6 +22,13 @@ const LEGAL_TEXT = `/*
 * Attribution and license information can be found at https://github.com/MyPureCloud/client-app-sdk/blob/master/README.md
 */`;
 
+const {
+    npm_package_name,
+    npm_package_version,
+    CLIENT_APP_SDK_HOST_APP_DEV_ORIGIN: devOrigin,
+    CLIENT_APP_SDK_PC_DEV_ENVS: devEnvs
+} = process.env;
+
 // Packages to exclude from esm/cjs bundles
 const EXTERNAL_DEPS = [
     'query-string',
@@ -47,8 +54,10 @@ const baseRollupConfig = {
     cache: false,
     plugins: [
         replace({
-            '__PACKAGE_NAME__': JSON.stringify(process.env.npm_package_name),
-            '__PACKAGE_VERSION__': JSON.stringify(process.env.npm_package_version)
+            '__PACKAGE_NAME__': JSON.stringify(npm_package_name),
+            '__PACKAGE_VERSION__': JSON.stringify(npm_package_version),
+            '__HOST_APP_DEV_ORIGIN__': JSON.stringify(devOrigin),
+            '__PC_DEV_ENVS__': JSON.stringify(devEnvs ? devEnvs.split(',') : []),
         }),
         commonjs(),
         resolve({ extensions: ['.js', '.ts'] }),

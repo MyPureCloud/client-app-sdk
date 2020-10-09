@@ -32,9 +32,33 @@ $ yarn run watch:test
 $ npm run watch:test 
 
 # Starts a test server with the examples using the local sdk build. Watches for changes.
-$ yarn run serve 
+$ yarn start 
 # -or-
-$ npm run serve
+$ npm start
+```
+
+## Examples
+
+The examples in this repository serve a few different purposes:
+
+1. Showcase functionality that can be achieved with the SDK
+1. Run the SDK locally and test new feature development against the examples
+1. Test SDK functionality against deployed examples in ad-hoc client apps in Genesys Cloud  
+
+### Running Locally
+
+To run the examples locally, you should start the dev server - `npm start`. The dev server will live reload and
+rebuild on any changes to the example files or SDK source files.
+
+### Deploy Examples
+
+The `build-examples` script should primarily serve as a deploy function. The `build-examples` accepts a `bundle` option
+to specify which file to reference as the SDK bundle.
+
+```bash
+$ npm run examples -- --bundle={BUNDLE_PATH}
+# -or-
+$ yarn run examples --bundle={BUNDLE_PATH}
 ```
 
 ## Contributing
@@ -42,11 +66,27 @@ $ npm run serve
 1. Add your code (Don't forget the unit tests!)
 1. Test your code
   * `npm test` -or- `npm run watch:test`
-  * `npm run build` and try the version in an app -or- `npm run serve` and try the example in PC
+  * `npm run build` and try the version in an app -or- `npm start` and try the example in GC
 1. Rebase onto upstream/master
 1. Push your branch up to your remote
   * Note: pre-push hooks will ensure your code lints, builds, and passes the test suite
 1. Open a PR to `https://github.com/MyPureCloud/client-app-sdk`
+
+### Environment Variables
+
+#### CLIENT_APP_SDK_HOST_APP_DEV_ORIGIN
+Specify the full target origin for the `postMessage` request when the host app is running on `localhost`.
+
+#### CLIENT_APP_SDK_PC_DEV_ENVS
+Whitelist additional comma-delimited top level domains (e.g. example.com).
+
+#### CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS
+Specify a JSON string mapping environment to OAuth client id to be injected into example html files.
+```json
+{
+  "mypurecloud.com": "some-oauth-client-id"
+}
+```
 
 ## Publishing:
 

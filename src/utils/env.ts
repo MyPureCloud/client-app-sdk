@@ -8,7 +8,8 @@ const PC_ENV_TLDS = [
     'usw2.pure.cloud',
     'euw2.pure.cloud',
     'cac1.pure.cloud',
-    'apne2.pure.cloud'
+    'apne2.pure.cloud',
+    ...__PC_DEV_ENVS__
 ];
 
 export interface PcEnv {
@@ -16,20 +17,12 @@ export interface PcEnv {
     pcAppOrigin: string;
 }
 
-let DEFAULT_PC_ENV!: PcEnv;
-const PC_ENVS = PC_ENV_TLDS.reduce<PcEnv[]>((result, currEnvTld) => {
-    const currEnv: PcEnv = {
-        pcEnvTld: currEnvTld,
-        pcAppOrigin: `https://apps.${currEnvTld}`
-    };
+const PC_ENVS = PC_ENV_TLDS.map<PcEnv>(tld => ({
+    pcEnvTld: tld,
+    pcAppOrigin: `https://apps.${tld}`
+}));
 
-    if (currEnvTld === DEFAULT_PC_ENV_TLD) {
-        DEFAULT_PC_ENV = currEnv;
-    }
-
-    result.push(currEnv);
-    return result;
-}, []);
+const [DEFAULT_PC_ENV] = PC_ENVS.filter(env => env.pcEnvTld === DEFAULT_PC_ENV_TLD);
 
 export default {
     DEFAULT_PC_ENV,
@@ -43,9 +36,13 @@ export default {
      * @returns A PureCloud environment object if found; null otherwise.
      */
     lookupPcEnv(pcEnvTld: string, lenient = false): PcEnv | null {
-        let result: PcEnv | null = null;
-
         if (pcEnvTld && typeof pcEnvTld === 'string') {
+            if (pcEnvTld === 'localhost' && __HOST_APP_DEV_ORIGIN__) {
+                return {
+                    pcEnvTld: 'localhost',
+                    pcAppOrigin: __HOST_APP_DEV_ORIGIN__
+                };
+            }
             let toSearch = pcEnvTld;
 
             if (lenient) {
@@ -60,13 +57,11 @@ export default {
                 }
             }
 
-            PC_ENVS.forEach(currEnv => {
-                if (!result && currEnv.pcEnvTld === toSearch) {
-                    result = currEnv;
-                }
-            });
+            for (const env of PC_ENVS) {
+                if (env.pcEnvTld === toSearch) return env;
+            }
         }
 
-        return result;
+        return null;
     }
 };
