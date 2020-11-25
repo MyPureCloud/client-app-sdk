@@ -42,6 +42,13 @@ class AlertingApi extends BaseApi {
     /**
      * Displays a toast popup.
      *
+     * Permanent/Sticky toasts are not allowed.  Therefore, toasts must specify either a manual
+     * dismissal (`showCloseButton: true`) or an automatic dismissal (`timeout >= 0`). Both
+     * `showCloseButton` and `timeout` can be specified to provide both dismissal options.
+     *
+     * Error toasts (`type: 'error'`) require manual dismissal and must be specified with `showCloseButton: true`.
+     * Any specified `timeout` will be ignored.
+     *
      * ```ts
      * myClientApp.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?");
      * ```
@@ -72,7 +79,7 @@ class AlertingApi extends BaseApi {
      * };
      * myClientApp.alerting.showToastPopup("Hello world", "Hello :earth_americas: How are *you* doing today?", options);
      * ```
-     * 
+     *
      * @param title - Toast title.
      * @param message - Toast Message.  Supports emoticons, emoji (unicode, shortcodes) and markdown (with markdwownMessage boolean).
      * @param options - Additonal toast options.
@@ -118,7 +125,7 @@ class AlertingApi extends BaseApi {
 
     /**
      * Displays badging for unread messages and notifications
-     * 
+     *
      * ```ts
      * myClientApp.alerting.setAttentionCount(2);
      * ```
@@ -126,7 +133,7 @@ class AlertingApi extends BaseApi {
      * ```ts
      * myClientApp.alerting.setAttentionCount(0);
      * ```
-     * 
+     *
      * @param count - The updated number of unread messages or notifications
      *
      * @since 1.0.0
