@@ -41,6 +41,7 @@
             (function () {
                 var DEFAULT_LANG_TAG = 'en-us';
                 var langTag = null;
+                var conversationId = null;
                 var welcomeTokens = {
                     de: "Willkommen bei PureCloud",
                     'en-us': "Welcome to Purecloud",
@@ -76,14 +77,18 @@
                     var currParam = pairs[i].split('=');
                     var currLi = '';
 
-                    if(currParam[0] === 'langTag') {
+                    if(['langTag', 'pcLangTag'].indexOf(currParam[0]) !== -1) {
                         langTag = getParamValue(currParam);
                         currLi = '<dt>{{pcLangTag}}</dt><dd>' + langTag + '</dd>';
                     } else if(currParam[0] === 'pcEnvironment') {
                         pcEnv = getParamValue(currParam);
                     } else if(currParam[0] === 'environment' && pcEnv === null) {
                         pcEnv = getParamValue(currParam);
+                    } else if(['conversationId', 'pcConversationId'].indexOf(currParam[0]) !== -1) {
+                        conversationId = getParamValue(currParam);
+                        currLi = '<dt>{{pcConversationId}}</dt><dd>' + conversationId + '</dd>';
                     }
+
 
                     if (currLi) {
                         $('dl.url-vars').append(currLi);

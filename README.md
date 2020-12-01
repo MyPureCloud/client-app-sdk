@@ -85,7 +85,7 @@ PUT /api/v2/integrations/{integrationInstanceId}/config/current
     "version": {currAppConfigVersion},
     "properties" : {
         "url" : "https://mypurecloud.github.io/client-app-sdk/help.html",
-        "sandbox" : "allow-forms,allow-modals,allow-popups,allow-presentation,allow-same-origin,allow-scripts",
+        "sandbox" : "allow-forms,allow-modals,allow-popups,allow-presentation,allow-same-origin,allow-scripts,allow-downloads",
         "displayType": "standalone", // standalone, widget
         "featureCategory": "", // directory, contactCenterInsights
         /*
