@@ -41,24 +41,27 @@ type ToastOptions<Type extends ValidMessageType, Timeout extends number> = {
 type ToastTimeoutConfig<Type extends ValidMessageType, Timeout extends number> = Type extends 'error'
     ? {
         /**
-         * Time in seconds to show the toast.  Set to 0 to disable automatic dismissal. (Default is 5)
+         * Time in seconds to show the toast.  Set to 0 to disable automatic dismissal. (Default is 7)
          * Timeout must be 0 for toasts with type 'error'.
          */
         timeout: 0;
     } : {
-        /** Time in seconds to show the toast.  Set to 0 to disable automatic dismissal. (Default is 5) */
+        /** Time in seconds to show the toast.  Set to 0 to disable automatic dismissal. (Default is 7) */
         timeout?: Timeout;
     }
 
 type ToastCloseButtonConfig<Timeout extends number> = Timeout extends 0
     ? {
         /**
-         * Boolean indicating if the close button should be shown. (Default is false)
-         * Must show close button when `timeout` is 0.
+         * Boolean indicating if the close button should be shown.
+         * Must explicitly set to true when `timeout` is 0; otherwise, default is true
          */
-        showCloseButton: true 
-    } : { 
-        /** Boolean indicating if the close button should be shown. (Default is false) */
+        showCloseButton: true
+    } : {
+        /**
+         * Boolean indicating if the close button should be shown.
+         * Must explicitly set to true when `type` is 'error'; otherwise, default is true
+         */
         showCloseButton?: boolean
     }
 
@@ -76,8 +79,9 @@ class AlertingApi extends BaseApi {
      * dismissal (`showCloseButton: true`) or an automatic dismissal (`timeout > 0`). Both
      * `showCloseButton` and `timeout` can be specified to provide both dismissal options.
      *
-     * Error toasts (`type: 'error'`) require manual dismissal and must be specified with `showCloseButton: true`.
-     * Any specified `timeout` will be ignored.
+     * Error toasts (`type: 'error'`) require manual dismissal and must be explictly specified with `showCloseButton: true`.
+     * TypeScript users will also specify `timeout: 0` while JavaScript users can specify 0 or omit the prop entirely.
+     * The `timeout` prop will be ignored regardless.
      *
      * ```ts
      * myClientApp.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?");
@@ -122,7 +126,12 @@ class AlertingApi extends BaseApi {
     >(
         title: string,
         message: string,
-        options: ToastOptions<MessageType, Timeout> = {} as ToastOptions<MessageType, Timeout>
+        options: ToastOptions<MessageType, Timeout> = {
+            type: 'info',
+            timeout: 7,
+            showCloseButton: true,
+            markdownMessage: true
+        } as unknown as ToastOptions<MessageType, Timeout>
     ) {
         const messageParams = {
             title,
