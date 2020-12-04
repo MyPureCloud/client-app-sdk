@@ -1,5 +1,5 @@
 /**
- * Utilities for monitoring and updating the lifecycle of a PureCloud Client App
+ * Utilities for monitoring and updating the lifecycle of a Genesys Cloud Client App
  *
  * @since 1.0.0
  */
@@ -18,7 +18,7 @@ const BLUR_HOOK_FILTER = buildHookFilter('blur');
 const STOP_HOOK_FILTER = buildHookFilter('stop');
 
 /**
- * Utilities for monitoring and updating the lifecycle of a PureCloud Client App
+ * Utilities for monitoring and updating the lifecycle of a Genesys Cloud Client App
  *
  * ### Lifecycle Hooks
  *
@@ -46,11 +46,11 @@ const STOP_HOOK_FILTER = buildHookFilter('stop');
  */
 class LifecycleApi extends BaseApi {
     /**
-     * Attach a listener function to be called when PureCloud has loaded the app.
+     * Attach a listener function to be called when Genesys Cloud has loaded the app.
      *
      * This provides a hook for implementers to do any post-load initialization
-     * work with PureCloud.  Implementers should call bootstrapped() after initialization work is
-     * complete.  PureCloud will eventually timeout and show the app anyway if the bootstrapped()
+     * work with Genesys Cloud.  Implementers should call bootstrapped() after initialization work is
+     * complete.  Genesys Cloud will eventually timeout and show the app anyway if the bootstrapped()
      * function is not called in a timely manor.
      *
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
@@ -67,7 +67,7 @@ class LifecycleApi extends BaseApi {
      * });
      * ```
      * 
-     * @param listener - The function to call when PureCloud is ready for the app to
+     * @param listener - The function to call when Genesys Cloud is ready for the app to
      * perform post-load initialization work.  This function will be passed the lifecycle event and
      * does not augment the this context.
      * @param once - If the listener should only be invoked once or repeatedly; true by default.
@@ -84,7 +84,7 @@ class LifecycleApi extends BaseApi {
     }
 
     /**
-     * Signals PureCloud that this app has finished its initialization work and
+     * Signals Genesys Cloud that this app has finished its initialization work and
      * can be shown to the user.
      *
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
@@ -267,12 +267,12 @@ class LifecycleApi extends BaseApi {
     }
 
     /**
-     * Attach a listener function to be called when PureCloud is about to shut down your app.
+     * Attach a listener function to be called when Genesys Cloud is about to shut down your app.
      * For instance, this can happen if the user has loaded too many apps and your app needs to be
      * stopped to conserve resources.
      *
      * This provides a hook for you to do any app cleanup work.  Implementers should call
-     * stopped() after shutdown work is complete.  PureCloud will eventually timeout and permanenty
+     * stopped() after shutdown work is complete.  Genesys Cloud will eventually timeout and permanenty
      * remove the app anyway if stopped() is not called in a timely manor.
      *
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
@@ -289,7 +289,7 @@ class LifecycleApi extends BaseApi {
      * });
      * ```
      *
-     * @param listener - The function to call when PureCloud is about to stop this app.
+     * @param listener - The function to call when Genesys Cloud is about to stop this app.
      * This function will be passed the lifecycle event and does not augment the this context.
      * @param once - If the listener should only be invoked once or repeatedly; true by default.
      *
@@ -305,8 +305,8 @@ class LifecycleApi extends BaseApi {
     }
 
     /**
-     * Signals PureCloud that this app has finished its tear down work and the iframe
-     * can be removed from purecloud permanently.
+     * Signals Genesys Cloud that this app has finished its tear down work and the iframe
+     * can be removed from Genesys Cloud permanently.
      *
      * #### Required Lifecycle Hooks ([More Info](/api/client-apps/advanced.html#lifecycle_events))
      * * `stop`
@@ -333,7 +333,7 @@ class LifecycleApi extends BaseApi {
      * let onStop = evt => {
      *   // Perform cleanup work
      *
-     *   // Don't forget to notify PureCloud on complete
+     *   // Don't forget to notify Genesys Cloud on complete
      *   myClientApp.lifecycle.stopped();
      *
      *   // Remove the stop listener (since you passed false for the once option)

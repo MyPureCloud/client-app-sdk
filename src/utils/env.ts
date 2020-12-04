@@ -30,10 +30,10 @@ export default {
     /**
      * Attempts to locate a PC environment corresponding to the provided search params
      *
-     * @param pcEnvTld A string representing the PureCloud environment top-level domain to search for
+     * @param pcEnvTld A string representing the Genesys Cloud environment top-level domain to search for
      * @param lenient When true, trims leading/trailing whitespace, ignores leading '.', and ignores trailing '/'.
      *
-     * @returns A PureCloud environment object if found; null otherwise.
+     * @returns A Genesys Cloud environment object if found; null otherwise.
      */
     lookupPcEnv(pcEnvTld: string, lenient = false): PcEnv | null {
         if (pcEnvTld && typeof pcEnvTld === 'string') {

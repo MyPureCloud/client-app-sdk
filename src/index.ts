@@ -1,5 +1,5 @@
 /**
- * SDK to work with PureCloud Client Apps
+ * SDK to work with Genesys Cloud Client Apps
  *
  * {@link https://developer.mypurecloud.com/api/client-apps/index.html}
  *
@@ -20,8 +20,8 @@ import MyConversationsApi from './modules/myConversations';
 import ExternalContactsApi from './modules/externalContacts';
 
 /**
- * Provides bi-directional communication and integration between this instance of a PureCloud Client Application
- * and the PureCloud host application
+ * Provides bi-directional communication and integration between this instance of a Genesys Cloud Client Application
+ * and the Genesys Cloud host application
  */
 class ClientApp {
     /**
@@ -121,7 +121,7 @@ class ClientApp {
      * let clientApp = new ClientApp({
      *   pcEnvironmentQueryParam: 'pcEnvironment'
      * });
-     * 
+     *
      * clientApp.externalContacts.someMethod(...);
      * ```
      *
@@ -130,14 +130,14 @@ class ClientApp {
     externalContacts: ExternalContactsApi;
 
     /**
-     * Constructs an instance of a PureCloud Client Application to communicate with purecloud
+     * Constructs an instance of a Genesys Cloud Client Application to communicate with Genesys Cloud
      *
      * ```ts
      * let clientApp = new ClientApp({
      *   pcEnvironmentQueryParam: 'pcEnvironment'
      * });
      * ```
-     * 
+     *
      * @param cfg - Runtime config of the client
      */
     constructor(cfg: {
@@ -145,7 +145,7 @@ class ClientApp {
         pcEnvironmentQueryParam?: string;
         /** The PC top-level domain (e.g. mypurecloud.com, mypurecloud.au); Must be a valid PC Env tld; Prefered over pcOrigin. */
         pcEnvironment?: string;
-        /** The full origin (protocol, host, port) of the PureCloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property. */
+        /** The full origin (protocol, host, port) of the Genesys Cloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property. */
         pcOrigin?: string;
     } = {}) {
         if (cfg) {
@@ -197,10 +197,10 @@ class ClientApp {
 
     /**
      * Returns the pcEnvironment (e.g. mypurecloud.com, mypurecloud.jp) if known; null otherwise.
-     * This value will be available if a valid PureCloud Environment is provided, inferred, or
+     * This value will be available if a valid Genesys Cloud Environment is provided, inferred, or
      * defaulted from the config passed to this instance.
      *
-     * @returns the valid PureCloud environment; null if unknown.
+     * @returns the valid Genesys Cloud environment; null if unknown.
      *
      * @since 1.0.0
      */
@@ -214,8 +214,8 @@ class ClientApp {
      * ```ts
      * ClientApp.version
      * ```
-     * 
-     * @returns The version of the PureCloud Client App SDK
+     *
+     * @returns The version of the Genesys Cloud Client App SDK
      *
      * @since 1.0.0
      */
@@ -229,7 +229,7 @@ class ClientApp {
      * ```ts
      * ClientApp.about(); // SDK details returned as a string
      * ```
-     * 
+     *
      * @returns A string of information describing this library
      *
      * @since 1.0.0

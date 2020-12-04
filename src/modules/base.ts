@@ -43,7 +43,7 @@ interface ListenerConfig {
 }
 
 /**
- * Base Class for PureCloud Client App APIs
+ * Base Class for Genesys Cloud Client App APIs
  *
  * @since 1.0.0
  */
@@ -97,7 +97,7 @@ class BaseApi {
     }
 
     /**
-     * Sends the message to purecloud augmenting with environmental details such as
+     * Sends the message to Genesys Cloud augmenting with environmental details such as
      * target env origin and version info.  Accessible by extenders.
      *
      * @param actionName
@@ -110,7 +110,7 @@ class BaseApi {
     }
 
     /**
-     * Constructs a payload tailored for the PureCloud Client Apps SDK.  Can be
+     * Constructs a payload tailored for the Genesys Cloud Client Apps SDK.  Can be
      * overridden by extenders, but should not be invoked externally.
      *
      * @param actionName - The name of the client-app action to invoke
@@ -139,7 +139,7 @@ class BaseApi {
     // ----- Message Listening
 
     /**
-     * Adds the specified listener to messages sent from the host PureCloud appliation
+     * Adds the specified listener to messages sent from the host Genesys Cloud appliation
      * on the specified eventType
      *
      * @param eventType - The name of the purecloudEventType in the message; case and leading/trailing space sensitive
@@ -188,7 +188,7 @@ class BaseApi {
     }
 
     /**
-     * Removes the specified listener from messages sent from the host PureCloud appliation
+     * Removes the specified listener from messages sent from the host Genesys Cloud appliation
      * on the specified eventType. eventType, listener (strict equality), and options must match.
      *
      * @param eventType - The name of the purecloudEventType previously registered; case and leading/trailing space sensitive
@@ -255,14 +255,14 @@ class BaseApi {
     }
 
     /**
-     * Initiate listening for messages from the host PureCloud application
+     * Initiate listening for messages from the host Genesys Cloud application
      */
     private _subscribeToMsgs() {
         this._myWindow.addEventListener('message', this._msgHandler);
     }
 
     /**
-     * Stop listening for messages from the host PureCloud application
+     * Stop listening for messages from the host Genesys Cloud application
      */
     private _unsubscribeFromMsgs() {
         this._myWindow.removeEventListener('message', this._msgHandler);
