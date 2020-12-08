@@ -4,7 +4,10 @@ const fs = require('fs-extra');
 const path = require('path');
 const glob = require('glob');
 
-const { CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS: oauthClientIds } = process.env;
+const {
+    CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS: oauthClientIds,
+    CLIENT_APP_SDK_PC_DEV_PLATFORM_ENV: devPlatformEnv
+} = process.env;
 const BROWSER_FILENAME = `/${pkg.name}.js`;
 
 // Called from command line
@@ -30,11 +33,21 @@ function transformSdkOAuthClientIds(buffer, ids) {
     );
 }
 
+function transformPlatformEnvironment(buffer, env) {
+    return buffer.replace(
+        /(platformEnvironment =)[^;]+;/,
+        `$1 pcEnvironment === 'localhost' ? '${env}' : pcEnvironment;`
+    );
+}
+
 function buildExample(outDir, relativeFilePath, bundleFileName) {
     let buffer = fs.readFileSync(relativeFilePath, 'utf8');
     buffer = transformExampleSdkUrl(buffer, bundleFileName);
     if (oauthClientIds) {
         buffer = transformSdkOAuthClientIds(buffer, oauthClientIds);
+    }
+    if (devPlatformEnv) {
+        buffer = transformPlatformEnvironment(buffer, devPlatformEnv);
     }
     fs.outputFileSync(
         path.join(outDir, relativeFilePath.replace('examples/', '')),

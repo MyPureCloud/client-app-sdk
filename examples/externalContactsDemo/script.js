@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
     updateProgressBar(60);
 
     let client = platformClient.ApiClient.instance;
-    client.setEnvironment(pcEnvironment);
-
     let clientApp = null;
     try {
         clientApp = new window.purecloud.apps.ClientApp({

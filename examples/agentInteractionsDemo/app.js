@@ -159,9 +159,6 @@ new Vue({
         }
 
         let client = platformClient.ApiClient.instance;
-        client.setEnvironment(pcEnvironment);
-        client.setPersistSettings(true);
-
         let clientApp = null;
         try {
             clientApp = new window.purecloud.apps.ClientApp({
