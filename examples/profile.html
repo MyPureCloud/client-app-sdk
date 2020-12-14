@@ -104,8 +104,6 @@
 
             let platformClient = window.require('platformClient');
             let client = platformClient.ApiClient.instance;
-            client.setEnvironment(pcEnvironment);
-
             let clientApp = null;
             try {
                 clientApp = new window.purecloud.apps.ClientApp({

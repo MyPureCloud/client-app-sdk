@@ -77,6 +77,9 @@ $ yarn run examples --bundle={BUNDLE_PATH}
 #### CLIENT_APP_SDK_HOST_APP_DEV_ORIGIN
 Specify the full target origin for the `postMessage` request when the host app is running on `localhost`.
 
+### CLIENT_APP_SDK_PC_DEV_PLATFORM_ENV
+Specify the Genesys Cloud environment to target when host app is running on `localhost`. (e.g mypurecloud.com)
+
 #### CLIENT_APP_SDK_PC_DEV_ENVS
 Whitelist additional comma-delimited top level domains (e.g. example.com).
 
