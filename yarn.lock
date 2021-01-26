@@ -2572,6 +2572,13 @@ generate-object-property@^1.1.0:
   dependencies:
     is-property "^1.0.0"
 
+genesys-cloud-service-discovery-web@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/genesys-cloud-service-discovery-web/-/genesys-cloud-service-discovery-web-1.0.1.tgz#9168159633b3c5a028da91d1ff5f11f06838590f"
+  integrity sha512-bYED0YGBE3EBjfSegOxydtPnhLfgOjV+DOD/D7LiiclBg7wnmbAlgYru1fm09N6/Rpf2Vxq3K03Qfq7uPozDDA==
+  dependencies:
+    url-parse "^1.4.7"
+
 gensync@^1.0.0-beta.1:
   version "1.0.0-beta.1"
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.1.tgz#58f4361ff987e5ff6e1e7a210827aa371eaac269"
@@ -4086,6 +4093,11 @@ query-string@^5.0.0:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
+querystringify@^2.1.1:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
+  integrity sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
+
 randombytes@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/randombytes/-/randombytes-2.1.0.tgz#df6f84372f0270dc65cdf6291349ab7a473d4f2a"
@@ -5175,6 +5187,14 @@ uri-js@^4.2.2:
   integrity sha512-KY9Frmirql91X2Qgjry0Wd4Y+YTdrdZheS8TFwvkbLWf/G5KNJDCh6pKL5OZctEW4+0Baa5idK2ZQuELRwPznQ==
   dependencies:
     punycode "^2.1.0"
+
+url-parse@^1.4.7:
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.7.tgz#a8a83535e8c00a316e403a5db4ac1b9b853ae278"
+  integrity sha512-d3uaVyzDB9tQoSXFvuSUNFibTd9zxd2bkVrDRvF5TmvWWQwqE4lgYJ5m+x1DbecWkw+LK4RNl2CU1hHuOKPVlg==
+  dependencies:
+    querystringify "^2.1.1"
+    requires-port "^1.0.0"
 
 url2@^0.0.0:
   version "0.0.0"

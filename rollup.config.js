@@ -32,6 +32,7 @@ const {
 // Packages to exclude from esm/cjs bundles
 const EXTERNAL_DEPS = [
     'query-string',
+    'genesys-cloud-service-discovery-web',
     /@babel\/runtime/ // Need to use a regex here: https://github.com/rollup/plugins/issues/475#issuecomment-652416290
 ];
 
