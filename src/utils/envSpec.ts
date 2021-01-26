@@ -1,4 +1,4 @@
-import envUtils from './env';
+import * as envUtils from './env';
 
 export default describe('env utils', () => {
     const VALID_PC_TLDS = [
