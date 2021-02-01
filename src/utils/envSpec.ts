@@ -1,34 +1,39 @@
 import * as envUtils from './env';
 
 export default describe('env utils', () => {
-    const VALID_PC_TLDS = [
-        'mypurecloud.com',
-        'mypurecloud.com.au',
-        'mypurecloud.ie',
-        'mypurecloud.jp',
-        'mypurecloud.de',
-        'usw2.pure.cloud',
-        'euw2.pure.cloud',
-        'cac1.pure.cloud',
-        'apne2.pure.cloud'
-    ];
-
     it('should provide the default environment', () => {
         expect(envUtils.DEFAULT_PC_ENV.pcEnvTld).toBe('mypurecloud.com');
         expect(envUtils.DEFAULT_PC_ENV.pcAppOrigin).toBe('https://apps.mypurecloud.com');
     });
 
-    it('should parse valid TLDs and return the environment object', () => {
-        VALID_PC_TLDS.forEach(currTld => {
-            const resolvedEnv = envUtils.lookupPcEnv(currTld)!;
-            expect(resolvedEnv).not.toBeNull();
-            expect(resolvedEnv.pcEnvTld).toBe(currTld);
-            expect(resolvedEnv.pcAppOrigin).toBe(`https://apps.${currTld}`);
-        });
+    it('should parse a valid TLD and return the environment object', () => {
+        const resolvedEnv = envUtils.lookupPcEnv('mypurecloud.com')!;
+        expect(resolvedEnv).not.toBeNull();
+        expect(resolvedEnv.pcEnvTld).toBe('mypurecloud.com');
+        expect(resolvedEnv.pcAppOrigin).toBe('https://apps.mypurecloud.com');
+    });
+
+    it('should resolve a local environment object with a custom dev origin if passed', () => {
+        const env = envUtils.lookupPcEnv('localhost', true, [], 'https://localhost:3000')!;
+        expect(env).not.toBeNull();
+        expect(env.pcEnvTld).toBe('localhost');
+        expect(env.pcAppOrigin).toBe('https://localhost:3000');
+    });
+
+    it('should resolve an env when in the list of TLDs passed in via param', () => {
+        const resolvedEnv = envUtils.lookupPcEnv('example.com', true, ['example.com'])!;
+        expect(resolvedEnv).not.toBeNull();
+        expect(resolvedEnv.pcEnvTld).toBe('example.com');
+        expect(resolvedEnv.pcAppOrigin).toBe('https://apps.example.com');
+    });
+
+    it('should not resolve an env when it is not in the list of TLDs passed in via param', () => {
+        const env = envUtils.lookupPcEnv('example2.com', true, ['example.com']);
+        expect(env).toBeNull();
     });
 
     it('should allow lenient parsing of TLDs and return the environment object', () => {
-        const seedTld = VALID_PC_TLDS[0];
+        const seedTld = 'mypurecloud.com';
 
         const variations = [
             ` ${seedTld}`, // Leading whitespace
@@ -51,7 +56,7 @@ export default describe('env utils', () => {
     });
 
     it('should return null if the pcEnvTld cannot be parsed or is unknown', () => {
-        const seedTld = VALID_PC_TLDS[0];
+        const seedTld = 'mypurecloud.com';
 
         const variations = [
             undefined,
