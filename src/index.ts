@@ -10,7 +10,7 @@
  */
 
 import * as queryString from 'query-string';
-import envUtils, { PcEnv } from './utils/env';
+import { lookupPcEnv, PcEnv, DEFAULT_PC_ENV } from './utils/env';
 import AlertingApi from './modules/alerting';
 import LifecycleApi from './modules/lifecycle';
 import CoreUiApi from './modules/ui';
@@ -167,7 +167,7 @@ class ClientApp {
 
         if (!this._pcEnv && !this._customPcOrigin) {
             // Use the default PC environment
-            this._pcEnv = envUtils.DEFAULT_PC_ENV;
+            this._pcEnv = DEFAULT_PC_ENV;
         }
 
         const apiCfg = {
@@ -189,8 +189,8 @@ class ClientApp {
         }
     }
 
-    private lookupEnv = (env: string) => {
-        const pcEnv = envUtils.lookupPcEnv(env, true);
+    protected lookupEnv(env: string, envTlds?: string[], hostAppDevOrigin?: string) {
+        const pcEnv = lookupPcEnv(env, true, envTlds, hostAppDevOrigin);
         if (!pcEnv) throw new Error(`Could not parse '${env}' into a known PureCloud environment`);
         return pcEnv;
     }
