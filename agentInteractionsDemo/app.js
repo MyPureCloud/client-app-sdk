@@ -158,23 +158,7 @@ new Vue({
             return;
         }
 
-        /*
-            * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
-            * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
-            * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
-            */
-        let pcOAuthClientIds = {'mypurecloud.com': 'implicit-oauth-client-id-here'};
-
-        let clientId = pcOAuthClientIds[pcEnvironment];
-        if (!clientId) {
-            this.errorMessage = pcEnvironment + ': Unknown/Unsupported PureCloud Environment';
-            return;
-        }
-
         let client = platformClient.ApiClient.instance;
-        client.setEnvironment(pcEnvironment);
-        client.setPersistSettings(true);
-
         let clientApp = null;
         try {
             clientApp = new window.purecloud.apps.ClientApp({
@@ -183,7 +167,7 @@ new Vue({
             Vue.prototype.$clientApp = clientApp;
         } catch (e) {
             console.log(e);
-            this.errorMessage = pcEnvironment + ": Unknown/Unsupported PureCloud Embed Context";
+            this.errorMessage = pcEnvironment + ": Unknown/Unsupported Genesys Cloud Embed Context";
             return;
         }
 
@@ -198,16 +182,9 @@ new Vue({
         let authenticated = false;
         let agentUserId = "";
 
-        let redirectUrl = window.location.origin;
-        if (!redirectUrl) {
-            redirectUrl = window.location.protocol + '//' + window.location.host;
-        }
-        redirectUrl += window.location.pathname;
-
         // Authentication and main flow
-        client.loginImplicitGrant(clientId, redirectUrl, { state: ("pcEnvironment=" + pcEnvironment) })
+        authenticate(client, pcEnvironment)
             .then(() => {
-                // Get userme info
                 authenticated = true;
                 return usersApi.getUsersMe({ "expand": ["presence"] });
             })
@@ -267,8 +244,10 @@ new Vue({
             })
             .catch((err) => {
                 console.log(err);
-                this.errorMessage = !authenticated ? "Failed to Authenticate with PureCloud" :
-                                    "Failed to fetch/display profile";
+                this.errorMessage =
+                    !authenticated
+                        ? "Failed to Authenticate with Genesys Cloud - " + err.message
+                        : "Failed to fetch/display profile";
             });
     },
 });

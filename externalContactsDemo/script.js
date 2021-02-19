@@ -11,30 +11,13 @@ document.addEventListener('DOMContentLoaded', function () {
     let pcEnvironment = getEmbeddingPCEnv();
     if (!pcEnvironment) {
         setErrorState(
-            "Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app's query string?"
-        );
-        return;
-    }
-    updateProgressBar(40);
-
-    /*
-    * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
-    * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
-    * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
-    */
-    let pcOAuthClientIds = { 'mypurecloud.com': 'implicit-oauth-client-id-here' };
-    let clientId = pcOAuthClientIds[pcEnvironment];
-    if (!clientId) {
-        setErrorState(
-            pcEnvironment + ': Unknown/Unsupported PureCloud Environment'
+            "Cannot identify App Embedding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app's query string?"
         );
         return;
     }
     updateProgressBar(60);
 
     let client = platformClient.ApiClient.instance;
-    client.setEnvironment(pcEnvironment);
-
     let clientApp = null;
     try {
         clientApp = new window.purecloud.apps.ClientApp({
@@ -42,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     } catch (e) {
         setErrorState(
-            pcEnvironment + ': Unknown/Unsupported PureCloud Embed Context'
+            pcEnvironment + ': Unknown/Unsupported Genesys Cloud Embed Context'
         );
         return;
     }
@@ -71,28 +54,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-    let redirectUrl = window.location.origin;
-    if (!redirectUrl) {
-        redirectUrl = window.location.protocol + '//' + window.location.host;
-    }
-    redirectUrl += window.location.pathname;
-
-    // Authenticate with PureCloud
+    // Authenticate with Genesys Cloud
     let authenticated = false;
     let userDataAcquired = false;
 
-    client
-        .loginImplicitGrant(clientId, redirectUrl, {
-            state: 'pcEnvironment=' + pcEnvironment
-        })
-        .then(function () {
+    authenticate(client, pcEnvironment)
+        .then(() => {
             updateProgressBar(100);
             authenticated = true;
             return new platformClient.UsersApi().getUsersMe({
                 expand: ['authorization']
             });
         })
-        .then(function (profileData) {
+        .then(profileData => {
             userDataAcquired = true;
             // Check if the current user will be able to view external contacts
             let permissions = profileData.authorization.permissions;
@@ -137,11 +111,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 setErrorState('You do not have the proper permissions to view external contacts.');
             }
         })
-        .catch(function () {
+        .catch(err => {
             if (!authenticated) {
-                setErrorState('Failed to Authenticate with PureCloud');
+                setErrorState('Failed to Authenticate with Genesys Cloud - ' + err.message);
             } else if (!userDataAcquired) {
-                setErrorState('Failed to locate user in PureCloud');
+                setErrorState('Failed to locate user in Genesys Cloud');
             }
         });
 
@@ -201,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /**
-     * Determine the embedding PureCloud environment seeded on the query string or
+     * Determine the embedding Genesys Cloud environment seeded on the query string or
      * being returned through the OAuth2 Implicit grant state hash param.
      *
      * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.

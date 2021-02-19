@@ -12,11 +12,12 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-    <script src="https://sdk-cdn.mypurecloud.com/javascript/72.0.0/purecloud-platform-client-v2.min.js"></script>
-    <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-49c1570bfd8967d8861435e0e7178035.min.js"></script>
+    <script src="https://sdk-cdn.mypurecloud.com/javascript/106.0.0/purecloud-platform-client-v2.min.js"></script>
+    <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.0.0/purecloud-client-app-sdk-e9989de7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+    <script src="../utils/oauth.js"></script>
     <script src="util.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -29,7 +30,7 @@
         <div>
             <section class="authenticating"
                     v-bind:class="{'hidden':this.authenticated || this.errorMessage}">
-                Authenticating to PureCloud ...
+                Authenticating to Genesys Cloud ...
             </section>
             <section class="failure"
                     v-bind:class="{'hidden':!this.errorMessage}">
@@ -42,7 +43,7 @@
     <script type="text/x-template" id="profile-template">
         <section class="user-profile">
             <div @click="profileLinkListener" class="profile-link">
-                <a href="#" aria-label="Click to view user's profile in PureCloud">
+                <a href="#" aria-label="Click to view user's profile in Genesys Cloud">
                     <div v-bind:class="{'placeholder-pic':true, hidden:imageUri}" aria-label="User profile picture missing">?</div>
                     <img v-bind:class="{'profile-pic':true, hidden:!imageUri}" v-bind:src="imageUri" aria-label="Profile picture for User">
                 </a>

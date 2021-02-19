@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html>
     <!--
-        Demo to illustrate fetching PureCloud data and the showProfile(...) SDK method
+        Demo to illustrate fetching Genesys Cloud data and the showProfile(...) SDK method
 
         Note:  Although this example is hosted with the others here on github; it won't work without
           configuring an OAuth Client and hosting it elsewhere. See js code below for details.
 
         Reminder: This example is using CDNs and simple javascript to illustrate the SDK. Both the
-          PureCloud SDK and Apps SDK can be obtained via npm and support many build tools
+          Genesys Cloud SDK and Apps SDK can be obtained via npm and support many build tools
           and javascript libraries to fit within your development environment.
     -->
     <head>
-        <title>PureCloud Profile Example</title>
+        <title>Genesys Cloud Profile Example</title>
 
-        <script src="https://sdk-cdn.mypurecloud.com/javascript/72.0.0/purecloud-platform-client-v2.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-49c1570bfd8967d8861435e0e7178035.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/javascript/106.0.0/purecloud-platform-client-v2.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.0.0/purecloud-client-app-sdk-e9989de7.min.js"></script>
+        <script src="utils/oauth.js"></script>
 
         <style>
             body {
@@ -71,13 +72,13 @@
         </noscript>
 
         <section class="authenticating hidden">
-            Authenticating to PureCloud ...
+            Authenticating to Genesys Cloud ...
         </section>
         <section class="failure hidden">
             Sorry, an error has occurred.
         </section>
         <section class="user-profile hidden">
-            <a href="#" class="profile-link" aria-label="Click to view user's profile in PureCloud">
+            <a href="#" class="profile-link" aria-label="Click to view user's profile in Genesys Cloud">
                 <div class="placeholder-pic" aria-label="User profile picture missing">?</div>
                 <img class="profile-pic" src="" aria-label="Profile picture for User">
             </a>
@@ -89,74 +90,54 @@
         </section>
 
         <script>document.addEventListener('DOMContentLoaded', function () {
-          /*
-           * The Client Apps SDK can interpolate the current PC Environment into your app's URL
-           * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
-           *
-           * Reading the PC Environment from the query string or state param returned from OAuth2 response
-           */
-          let pcEnvironment = getEmbeddingPCEnv();
-          if (!pcEnvironment) {
-              setErrorState('Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?');
-              return;
-          }
+            /*
+            * The Client Apps SDK can interpolate the current PC Environment into your app's URL
+            * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
+            *
+            * Reading the PC Environment from the query string or state param returned from OAuth2 response
+            */
+            let pcEnvironment = getEmbeddingPCEnv();
+            if (!pcEnvironment) {
+                setErrorState('Cannot identify App Embedding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?');
+                return;
+            }
 
-          /*
-           * Note: To use this app in your own org, you will need to create your own OAuth2 Client(s)
-           * in your PureCloud org.  After creating the Implicit grant client, map the client id(s) to
-           * the specified region key(s) in the object below, deploy the page, and configure an app to point to that URL.
-           */
-          let pcOAuthClientIds = {'mypurecloud.com': 'implicit-oauth-client-id-here'};
+            let platformClient = window.require('platformClient');
+            let client = platformClient.ApiClient.instance;
+            let clientApp = null;
+            try {
+                clientApp = new window.purecloud.apps.ClientApp({
+                    pcEnvironment: pcEnvironment
+                });
+            } catch (e) {
+                setErrorState(pcEnvironment + ': Unknown/Unsupported Genesys Cloud Embed Context');
+                return;
+            }
 
-          let clientId = pcOAuthClientIds[pcEnvironment];
-          if (!clientId) {
-              setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Environment');
-              return;
-          }
+            // Authenticate with Genesys Cloud
+            let authenticated = false;
+            let authenticatingEl = document.querySelector('.authenticating');
+            setHidden(authenticatingEl, false);
+            authenticate(client, pcEnvironment)
+                .then(() => {
+                    authenticated = true;
+                    return new platformClient.UsersApi().getUsersMe();
+                })
+                .then(profileData => {
+                    setHidden(authenticatingEl, true);
 
-          let platformClient = window.require('platformClient');
-          let client = platformClient.ApiClient.instance;
-          client.setEnvironment(pcEnvironment);
-
-          let clientApp = null;
-          try {
-            clientApp = new window.purecloud.apps.ClientApp({
-                pcEnvironment: pcEnvironment
-            });
-          } catch (e) {
-              setErrorState(pcEnvironment + ': Unknown/Unsupported PureCloud Embed Context');
-              return;
-          }
-
-          let redirectUrl = window.location.origin;
-          if (!redirectUrl) {
-              redirectUrl = window.location.protocol + '//' + window.location.host;
-          }
-          redirectUrl += window.location.pathname;
-
-          // Authenticate with PureCloud
-          let authenticated = false;
-          let authenticatingEl = document.querySelector('.authenticating');
-          setHidden(authenticatingEl, false);
-          client.loginImplicitGrant(clientId, redirectUrl, {state: ('pcEnvironment=' + pcEnvironment)})
-            .then(function() {
-                authenticated = true;
-
-                return new platformClient.UsersApi().getUsersMe();
-            })
-            .then(function(profileData) {
-                setHidden(authenticatingEl, true);
-
-                let profileEl = document.querySelector('.user-profile');
-                renderUserProfile(profileEl, profileData);
-                setHidden(profileEl, false);
-            })
-            .catch(function(err) {
-                setHidden(authenticatingEl, true);
-
-                setErrorState(!authenticated ? 'Failed to Authenticate with PureCloud' :
-                    'Failed to fetch/display your profile');
-            });
+                    let profileEl = document.querySelector('.user-profile');
+                    renderUserProfile(profileEl, profileData);
+                    setHidden(profileEl, false);
+                })
+                .catch(err => {
+                    setHidden(authenticatingEl, true);
+                    setErrorState(
+                        !authenticated
+                            ? 'Failed to Authenticate with Genesys Cloud - ' + err.message
+                            : 'Failed to fetch/display your profile'
+                    );
+                });
 
             // ----- Helper Functions
 
@@ -236,7 +217,7 @@
             }
 
             /**
-             * Determine the embedding PureCloud environment seeded on the query string or
+             * Determine the embedding Genesys Cloud environment seeded on the query string or
              * being returned through the OAuth2 Implicit grant state hash param.
              *
              * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.
