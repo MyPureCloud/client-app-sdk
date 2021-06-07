@@ -12,7 +12,7 @@ const buildPcEnv = (tld: string): PcEnv => ({
 
 const DEFAULT_ENV_REGION = 'us-east-1';
 
-const environments = getEnvironments({ env: ['prod'], status: ['beta', 'stable'] });
+const environments = getEnvironments({ env: ['prod', 'fedramp'], status: ['beta', 'stable'] });
 
 const PC_ENV_TLDS = environments
     .reduce((tlds, env) => {
