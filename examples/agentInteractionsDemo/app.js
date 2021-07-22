@@ -175,12 +175,55 @@ new Vue({
         const usersApi = new platformClient.UsersApi();
         const qualityApi = new platformClient.QualityApi();
         const conversationsApi = new platformClient.ConversationsApi();
+        const externalContactsApi = new platformClient.ExternalContactsApi();
         Vue.prototype.$usersApi = usersApi;
         Vue.prototype.$qualityApi = qualityApi;
         Vue.prototype.$conversationsApi = conversationsApi;
+        Vue.prototype.$externalContactsApi = externalContactsApi;
 
         let authenticated = false;
         let agentUserId = "";
+
+        function getCustomerParticipant(conv) {
+            let newConv = conv;
+            newConv.customer = newConv.participants.find((part) => {
+                return part.purpose === "customer" || part.purpose === "external";
+            }) || { name: "Unknown" };
+            return newConv.customer
+        }
+
+        async function getCustomerName(customer){
+            if (customer.externalContactId){
+                return externalContactsApi.getExternalcontactsContact(customer.externalContactId)
+                    .then((externalContact) => {
+                        const name = `${externalContact.firstName} ${externalContact.lastName}`;
+                        return Promise.resolve(name)
+                    })
+            } else{
+                if(!customer.name){
+                    return Promise.resolve("Unknown")
+                } else{
+                    return Promise.resolve(customer.name)
+                }
+            } 
+        }
+
+        async function getEvalConversationsData(evaluations){
+
+            const evalConversations = await Promise.all(
+                evaluations.map(eval => conversationsApi.getConversation(eval.conversation.id).then(
+                    async (conv) => {
+                        conv.customer = getCustomerParticipant(conv);
+                        const name = await getCustomerName(conv.customer);
+                        conv.customer.name = name;
+                        return await Promise.resolve(conv);
+                    }
+                ).catch((err) => {
+                    console.log(`Error: ${err}`);
+                }))
+            );
+            return await Promise.resolve(evalConversations);
+        }
 
         // Authentication and main flow
         authenticate(client, pcEnvironment)
@@ -202,25 +245,18 @@ new Vue({
                     .then((data) => {
                         // Process evaluations data
                         const evaluations = data.entities;
-                        evaluations.forEach((eval) => {
-                            conversationsApi.getConversation(eval.conversation.id)
-                                .then((conv) => {
-                                    let newConv = conv;
-                                    newConv.customer = conv.participants.find((part) => {
-                                        return part.purpose === "customer";
-                                    });
-                                    this.conversationsData.conversations.push(newConv);
+                        getEvalConversationsData(evaluations)
+                            .then((evalConversations) => {
+                                evalConversations.forEach((evalConv, index) => {
+                                    this.conversationsData.conversations.push(evalConv);
                                     this.conversationsData.conversations = _.uniqWith(this.conversationsData.conversations, _.isEqual);
-                                    if (this.conversationsData.convEvalMap.has(conv.id)) {
-                                        this.conversationsData.convEvalMap.get(conv.id).push(eval);
+                                    if (this.conversationsData.convEvalMap.has(evalConv.id)) {
+                                        this.conversationsData.convEvalMap.get(evalConv.id).push(evaluations[index]);
                                     } else {
-                                        this.conversationsData.convEvalMap.set(conv.id, [eval]);
+                                        this.conversationsData.convEvalMap.set(evalConv.id, [evaluations[index]]);
                                     }
                                 })
-                                .catch((err) => {
-                                    console.log(`Error: ${err}`);
-                                });
-                        });
+                            })
                     })
                     .catch((err) => {
                         console.log(`Error: ${err}`);
@@ -229,12 +265,11 @@ new Vue({
                 conversationsApi.getConversations()
                     .then((data) => {
                         data.entities.forEach((conv) => {
-                            let newConv = conv;
-                            newConv.customer = conv.participants.find((part) => {
-                                return part.purpose === "customer";
-                            });
-                            this.conversationsData.conversations.push(newConv);
-
+                            conv.customer = getCustomerParticipant(conv)
+                            getCustomerName(conv.customer).then((name) => {
+                                conv.customer.name = name
+                                this.conversationsData.conversations.push(conv)
+                            })
                         });
                         this.conversationsData.conversations = _.uniqWith(this.conversationsData.conversations, _.isEqual);
                     })
