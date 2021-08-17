@@ -35,6 +35,22 @@ class ConversationsApi extends BaseApi {
     showInteractionDetails(conversationId: string) {
         super.sendMsgToPc('showInteractionDetails', {conversationId: conversationId});
     }
+
+    /**
+     * Send a message to be filled into the interaction message box for the agent to review and send.
+     * This function works specifically with a bound interaction when both the interaction and calling app
+     * are visible, it is not intended (and will not work) for situations where the interaction is not active.
+     * Furthermore, this function should only be called in response to user interaction to ensure the agent is
+     * aware of the impending text insertion and so their existing draft state is not unexpectedly altered.
+     * 
+     * @param mode - The insertion mode to use when injecting the text into the agent's text box.
+     * 'insert' -> injects text at agent's cursor position, leaving other text intact.
+     * 
+     * @param message - The message to inject into the agent's text box.
+     */
+    proposeInteractionMessage(mode: 'insert', message: string) {
+        super.sendMsgToPc('proposeInteractionMessage', { mode, message });
+    }
 }
 
 export default ConversationsApi;
