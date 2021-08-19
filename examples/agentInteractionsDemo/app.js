@@ -185,44 +185,86 @@ new Vue({
         let agentUserId = "";
 
         function getCustomerParticipant(conv) {
+            // Function returns null if there is no valid participant found.
             let newConv = conv;
             newConv.customer = newConv.participants.find((part) => {
                 return part.purpose === "customer" || part.purpose === "external";
-            }) || { name: "Unknown" };
-            return newConv.customer
+            }) || null; 
+            return newConv.customer;
         }
 
         async function getCustomerName(customer){
-            if (customer.externalContactId){
-                return externalContactsApi.getExternalcontactsContact(customer.externalContactId)
-                    .then((externalContact) => {
-                        const name = `${externalContact.firstName} ${externalContact.lastName}`;
-                        return Promise.resolve(name)
-                    })
+            if (customer === null){
+                return "Unknown";
+            } else if (customer.externalContactId){
+                const externalContact = await externalContactsApi.getExternalcontactsContact(customer.externalContactId)
+                const name = `${externalContact.firstName} ${externalContact.lastName}`;
+                return name;
+            } else if (!customer.name){
+                return "Unknown";
             } else{
-                if(!customer.name){
-                    return Promise.resolve("Unknown")
-                } else{
-                    return Promise.resolve(customer.name)
-                }
-            } 
+                return customer.name;
+            }
         }
 
-        async function getEvalConversationsData(evaluations){
+        function buildConversationCustomer(customer, name){
+            if(customer === null) customer = {};
+            customer.name = name;
+            return customer;
+        }
 
-            const evalConversations = await Promise.all(
-                evaluations.map(eval => conversationsApi.getConversation(eval.conversation.id).then(
-                    async (conv) => {
-                        conv.customer = getCustomerParticipant(conv);
-                        const name = await getCustomerName(conv.customer);
-                        conv.customer.name = name;
-                        return await Promise.resolve(conv);
+        async function getConversationData(convId){
+            try{
+                const conv = await conversationsApi.getConversation(convId);
+                const customerParticipant = getCustomerParticipant(conv);
+                const name = await getCustomerName(customerParticipant);
+                conv.customer = buildConversationCustomer(customerParticipant, name);
+                return conv;
+            } catch(err){
+                console.log(`Error: ${err}`);
+                throw err;
+            }
+        }
+
+        async function getConversationsAndEvaluations(agentUserId) {
+            const startTime = moment('1997-01-01').toISOString();
+            const endTime = moment().toISOString();
+            const data = await getEvaluations(qualityApi, startTime, endTime, agentUserId);
+            
+            const evaluations = data.entities;
+            const evalConversations = {};
+
+            await Promise.allSettled(
+                // Gets conversations with evaluations
+                evaluations.map(async eval => {
+                    const evalConvId = eval.conversation.id;
+                    const evalConv = await getConversationData(evalConvId);
+
+                    if(evalConv !== undefined) {
+                        if (!(evalConvId in evalConversations)){
+                            evalConversations[evalConvId] = {evals: []};
+                        }
+                        evalConversations[evalConvId].evals.push(eval);
+                        return evalConversations[evalConvId].conv = evalConv;
                     }
-                ).catch((err) => {
-                    console.log(`Error: ${err}`);
-                }))
+                })
             );
-            return await Promise.resolve(evalConversations);
+
+            const conversationsData = await conversationsApi.getConversations();
+            const conversations = {}
+            await Promise.all(
+                // Gets all conversations
+                conversationsData.entities.filter(conv => !(conv.id in evalConversations))
+                    .map(async conv => {
+                        conversations[conv.id] = {
+                            evals: []
+                        };
+                        const newConv = await getConversationData(conv.id);
+                        return conversations[newConv.id].conv = newConv;
+                    })
+            );
+
+            return Object.assign(conversations, evalConversations);
         }
 
         // Authentication and main flow
@@ -231,51 +273,23 @@ new Vue({
                 authenticated = true;
                 return usersApi.getUsersMe({ "expand": ["presence"] });
             })
-            .then((profileData) => {
+            .then(async (profileData) => {
                 // Process agent's profile data
                 this.profileData = profileData;
                 agentUserId = profileData.id;
                 this.authenticated = true;
 
-                // Get evaluations data
-                const startTime = moment('1997-01-01').toISOString();
-                const endTime = moment().toISOString();
+                const conversations = await getConversationsAndEvaluations(agentUserId);
+                for (var convId in conversations){
+                    try {
+                        this.conversationsData.conversations.push(conversations[convId].conv);
+                        if(conversations[convId].evals.length > 0) this.conversationsData.convEvalMap.set(convId, conversations[convId].evals);
+                    } catch(e){
+                        console.error(e);
+                        this.errorMessage = "Failed to fetch conversations/evaluations";
+                    }
+                }
 
-                getEvaluations(qualityApi, startTime, endTime, agentUserId)
-                    .then((data) => {
-                        // Process evaluations data
-                        const evaluations = data.entities;
-                        getEvalConversationsData(evaluations)
-                            .then((evalConversations) => {
-                                evalConversations.forEach((evalConv, index) => {
-                                    this.conversationsData.conversations.push(evalConv);
-                                    this.conversationsData.conversations = _.uniqWith(this.conversationsData.conversations, _.isEqual);
-                                    if (this.conversationsData.convEvalMap.has(evalConv.id)) {
-                                        this.conversationsData.convEvalMap.get(evalConv.id).push(evaluations[index]);
-                                    } else {
-                                        this.conversationsData.convEvalMap.set(evalConv.id, [evaluations[index]]);
-                                    }
-                                })
-                            })
-                    })
-                    .catch((err) => {
-                        console.log(`Error: ${err}`);
-                    });
-
-                conversationsApi.getConversations()
-                    .then((data) => {
-                        data.entities.forEach((conv) => {
-                            conv.customer = getCustomerParticipant(conv)
-                            getCustomerName(conv.customer).then((name) => {
-                                conv.customer.name = name
-                                this.conversationsData.conversations.push(conv)
-                            })
-                        });
-                        this.conversationsData.conversations = _.uniqWith(this.conversationsData.conversations, _.isEqual);
-                    })
-                    .catch((err) => {
-                        console.log(`Error: ${err}`);
-                    });
             })
             .catch((err) => {
                 console.log(err);
