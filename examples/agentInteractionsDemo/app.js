@@ -186,11 +186,12 @@ new Vue({
 
         function getCustomerParticipant(conv) {
             // Function returns null if there is no valid participant found.
-            let newConv = conv;
-            newConv.customer = newConv.participants.find((part) => {
+            if (!conv || !conv.participants) {
+                return null;
+            }
+            return conv.participants.find((part) => {
                 return part.purpose === "customer" || part.purpose === "external";
-            }) || null; 
-            return newConv.customer;
+            }) || null;
         }
 
         async function getCustomerName(customer){
@@ -200,10 +201,10 @@ new Vue({
                 const externalContact = await externalContactsApi.getExternalcontactsContact(customer.externalContactId)
                 const name = `${externalContact.firstName} ${externalContact.lastName}`;
                 return name;
-            } else if (!customer.name){
-                return "Unknown";
-            } else{
+            } else if (customer.name){
                 return customer.name;
+            } else{
+                return "Unknown";
             }
         }
 
@@ -221,7 +222,7 @@ new Vue({
                 conv.customer = buildConversationCustomer(customerParticipant, name);
                 return conv;
             } catch(err){
-                console.log(`Error: ${err}`);
+                console.log(`Failed to get conversation/customer: ${err}`);
                 throw err;
             }
         }
@@ -230,7 +231,7 @@ new Vue({
             const startTime = moment('1997-01-01').toISOString();
             const endTime = moment().toISOString();
             const data = await getEvaluations(qualityApi, startTime, endTime, agentUserId);
-            
+
             const evaluations = data.entities;
             const evalConversations = {};
 
@@ -242,25 +243,27 @@ new Vue({
 
                     if(evalConv !== undefined) {
                         if (!(evalConvId in evalConversations)){
-                            evalConversations[evalConvId] = {evals: []};
+                            evalConversations[evalConvId] = {
+                                conv: evalConv,
+                                evals: []
+                            };
                         }
                         evalConversations[evalConvId].evals.push(eval);
-                        return evalConversations[evalConvId].conv = evalConv;
                     }
                 })
             );
 
             const conversationsData = await conversationsApi.getConversations();
-            const conversations = {}
-            await Promise.all(
-                // Gets all conversations
+            const conversations = {};
+            await Promise.allSettled(
+                // Gets all active conversations
                 conversationsData.entities.filter(conv => !(conv.id in evalConversations))
                     .map(async conv => {
-                        conversations[conv.id] = {
-                            evals: []
-                        };
                         const newConv = await getConversationData(conv.id);
-                        return conversations[newConv.id].conv = newConv;
+                        conversations[conv.id] = {
+                            evals: [],
+                            conv: newConv
+                        };
                     })
             );
 
@@ -277,19 +280,21 @@ new Vue({
                 // Process agent's profile data
                 this.profileData = profileData;
                 agentUserId = profileData.id;
-                this.authenticated = true;
 
-                const conversations = await getConversationsAndEvaluations(agentUserId);
-                for (var convId in conversations){
-                    try {
+
+                try {
+                    const conversations = await getConversationsAndEvaluations(agentUserId);
+                    for (var convId in conversations){
                         this.conversationsData.conversations.push(conversations[convId].conv);
                         if(conversations[convId].evals.length > 0) this.conversationsData.convEvalMap.set(convId, conversations[convId].evals);
-                    } catch(e){
-                        console.error(e);
-                        this.errorMessage = "Failed to fetch conversations/evaluations";
                     }
-                }
 
+                    // Set this boolean to indicated loading complete
+                    this.authenticated = true;
+                } catch(e) {
+                    console.error(e);
+                    this.errorMessage = "Failed to fetch conversations/evaluations";
+                }
             })
             .catch((err) => {
                 console.log(err);
