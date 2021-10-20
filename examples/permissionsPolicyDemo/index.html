@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  
+    <head>
+        <title>Embedded Page</title>
+        <style>
+            body {
+                margin: auto 20px;
+            }
+
+            h2 {
+                margin-top: 40px;
+                border-bottom: 1px solid #0e536f;
+            }
+        </style>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+    </head>
+
+    <body>
+      
+      <h1 id='title'>permissionsPolicy Demo</h1>
+      <h2>Clipboard</h2>
+      <input id='clipboardTextInput' type='text'>
+      <button id='clipboardWriteText'  onclick="clipboardWriteText()">Write text to clipboard</button>
+      <button id='clipboardWrite'  onclick="clipboardWrite()">Write to clipboard</button>
+      <button id='clipboardRead'  onclick="clipboardRead()">Read from clipboard</button>
+      <button id='clipboardReadText'  onclick="clipboardReadText()">Read text from clipboard</button>
+
+      <br>
+      <h5>Clipboard Text History</h5>
+      <div id='clipboardHistory'>
+      </div>
+      <br>
+      <h5>Clipboard Image</h5>
+      <img src='' id='clipboardImage'>
+
+      <h2>Fullscreen</h2>
+      <button id='fullscreen'  onclick="enterFullscreen()">Enter Fullscreen</button>
+      <br>
+      <img src='fullscreenImage.jpeg' id='fullscreenImage' width='50%' height='50%'/>
+      
+      <h2>Display Capture</h2>
+      <button id='displayCapture'  onclick="displayCapture()">Display Capture</button>
+      <br><br><br>
+      
+    </body>
+    </html>
+    

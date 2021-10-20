@@ -1,0 +1,13 @@
+#clipboardHistory {
+  display: block;
+  background-color: #EEEEEE;
+  width: 90%;
+  height: 200px;
+  overflow: scroll;
+  padding: 0px 10px;
+}
+
+#clipboardImage {
+  width: 150px;
+  height: 150px;
+}
