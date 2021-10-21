@@ -3,6 +3,7 @@ const pkg = require('../package.json');
 const fs = require('fs-extra');
 const path = require('path');
 const glob = require('glob');
+const last = require('lodash/last');
 
 const {
     CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS: oauthClientIds,
@@ -41,14 +42,26 @@ function transformPlatformEnvironment(buffer, env) {
 }
 
 function buildExample(outDir, relativeFilePath, bundleFileName) {
-    let buffer = fs.readFileSync(relativeFilePath, 'utf8');
-    buffer = transformExampleSdkUrl(buffer, bundleFileName);
-    if (oauthClientIds) {
-        buffer = transformSdkOAuthClientIds(buffer, oauthClientIds);
+    const filename = last(relativeFilePath.split('/'));
+    const [, ext] = filename.split('.');
+
+    let buffer = null;
+
+    if (!ext || !['js', 'html'].includes(ext)) {
+        // Read as a binary buffer
+        buffer = fs.readFileSync(relativeFilePath);
+    } else {
+        // Read as utf-8 text and transform
+        buffer = fs.readFileSync(relativeFilePath, 'utf8');
+        buffer = transformExampleSdkUrl(buffer, bundleFileName);
+        if (oauthClientIds) {
+            buffer = transformSdkOAuthClientIds(buffer, oauthClientIds);
+        }
+        if (devPlatformEnv) {
+            buffer = transformPlatformEnvironment(buffer, devPlatformEnv);
+        }
     }
-    if (devPlatformEnv) {
-        buffer = transformPlatformEnvironment(buffer, devPlatformEnv);
-    }
+
     fs.outputFileSync(
         path.join(outDir, relativeFilePath.replace('examples/', '')),
         buffer
