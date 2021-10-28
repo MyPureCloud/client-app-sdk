@@ -6,21 +6,17 @@
     const type = "text/plain";
     const blob = new Blob([textInput], { type });
     const data = [new ClipboardItem({ [type]: blob })];
-    navigator.clipboard.write(data)
+    navigator.clipboard.write(data);
   }
   const clipboardWriteText = () => {
     const textInput = document.getElementById('clipboardTextInput').value;
     const type = "text/plain";
     const blob = new Blob([textInput], { type });
     const data = [new ClipboardItem({ [type]: blob })];
-    navigator.clipboard.write(data)
+    navigator.clipboard.writeText(textInput);
   }
   const clipboardReadText = (trigger) => {
     navigator.clipboard.readText().then((data) => {
-      const clipboardContents = document.getElementById('clipboard');
-      if (clipboardContents) {
-        clipboardContents.innerHTML = data;
-      }
       const clipboardHistory = document.getElementById('clipboardHistory');
       const text = document.createElement('p');
       text.innerHTML = (trigger ? trigger : 'button trigger: ') + data;
@@ -52,14 +48,14 @@
     })
   }
   document.addEventListener('copy', function() {
-    clipboardReadText('copy event: ')
+    clipboardReadText('copy event: ');
   }); 
   document.addEventListener('paste', function() {
-    clipboardReadText('paste event: ')
+    clipboardReadText('paste event: ');
   }); 
+
   const displayCapture = async () => {
     let captureStream = null;
-
     try {
       captureStream = await navigator.mediaDevices.getDisplayMedia();
     } catch(err) {
@@ -68,12 +64,22 @@
     return captureStream;
   }
  
-  // To test if permission requires focus: Call the following function
-  // with the function you want to test, refresh the page,
-  // and click anywhere in the top level page.
-  const testUnfocusedPermission = (functionToTest) => {
+  const testTimeoutPermission = (functionToTest) => {
     setTimeout(() => {
-      console.log('Testing without iframe focus');
       functionToTest();
     }, 5000)
   };
+
+  let intervals = [];
+  const testIntervalPermission = (functionToTest) => {
+    let newInterval = setInterval(() => {
+      functionToTest();
+    }, 2000)
+    intervals.push(newInterval);
+  };
+
+  const stopIntervalPermissions = () => {
+    intervals.forEach(curr => {
+      clearInterval(curr);
+    })
+  }

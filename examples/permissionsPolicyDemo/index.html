@@ -14,8 +14,15 @@
       <input id='clipboardTextInput' type='text'>
       <button id='clipboardWriteText'  onclick="clipboardWriteText()">Write text to clipboard</button>
       <button id='clipboardWrite'  onclick="clipboardWrite()">Write to clipboard</button>
+      <button id='clipboardWriteTimer'  onclick="testTimeoutPermission(clipboardWrite)">Write to clipboard on timer</button>
+      <button id='clipboardWriteInterval'  onclick="testIntervalPermission(clipboardWrite)">Write to clipboard on interval</button>
+      <br><br>
       <button id='clipboardRead'  onclick="clipboardRead()">Read from clipboard</button>
       <button id='clipboardReadText'  onclick="clipboardReadText()">Read text from clipboard</button>
+      <button id='clipboardReadTimer'  onclick="testTimeoutPermission(clipboardRead)">Read from clipboard on timer</button>
+      <button id='clipboardReadInterval'  onclick="testIntervalPermission(clipboardRead)">Read from clipboard on interval</button>
+      <br><br>
+      <button id='clearIntervals'  onclick="stopIntervalPermissions()">Clear intervals</button>
 
       <br>
       <h5>Clipboard Text History</h5>
