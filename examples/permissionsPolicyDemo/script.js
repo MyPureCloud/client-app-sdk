@@ -60,7 +60,7 @@
   const displayCapture = async () => {
     let captureStream = null;
     try {
-      captureStream = await navigator.mediaDevices.getDisplayMedia();
+      captureStream = await navigator.mediaDevices.getDisplayMedia({ video:true });
     } catch(err) {
       console.error("Error: " + err);
     }
