@@ -1,5 +1,11 @@
   const enterFullscreen = () => {
-    document.getElementById('fullscreenImage').requestFullscreen();
+    const image = document.getElementById('fullscreenImage');
+    if (image.requestFullscreen) {
+      image.requestFullscreen();
+    } else if (image.webkitRequestFullscreen) {
+      //Safari
+      image.webkitRequestFullscreen();
+    }
   }
   const clipboardWrite = () => {
     const textInput = document.getElementById('clipboardTextInput').value;
