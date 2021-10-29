@@ -10,9 +10,6 @@
   }
   const clipboardWriteText = () => {
     const textInput = document.getElementById('clipboardTextInput').value;
-    const type = "text/plain";
-    const blob = new Blob([textInput], { type });
-    const data = [new ClipboardItem({ [type]: blob })];
     navigator.clipboard.writeText(textInput);
   }
   const clipboardReadText = (trigger) => {
