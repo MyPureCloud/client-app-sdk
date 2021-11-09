@@ -3,7 +3,6 @@ const pkg = require('../package.json');
 const fs = require('fs-extra');
 const path = require('path');
 const glob = require('glob');
-const last = require('lodash/last');
 
 const {
     CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS: oauthClientIds,
@@ -42,12 +41,11 @@ function transformPlatformEnvironment(buffer, env) {
 }
 
 function buildExample(outDir, relativeFilePath, bundleFileName) {
-    const filename = last(relativeFilePath.split('/'));
-    const [, ext] = filename.split('.');
+    const exampleExt = path.extname(relativeFilePath);
 
     let buffer = null;
 
-    if (!ext || !['js', 'html'].includes(ext)) {
+    if (!exampleExt || !['.js', '.html'].includes(exampleExt)) {
         // Read as a binary buffer
         buffer = fs.readFileSync(relativeFilePath);
     } else {
