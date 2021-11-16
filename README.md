@@ -2,7 +2,7 @@
 
 A JavaScript library to deeply integrate a 3rd-party applications within Genesys Cloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, plese use the [Genesys Cloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
 
-* [API](https://developer.mypurecloud.com/api/client-apps/client-app-sdk.html)
+* [API](https://developer.mypurecloud.com/api/client-apps/sdk.html)
 * [Developer Guides](https://developer.mypurecloud.com/api/client-apps/index.html)
 * [User Guides](https://help.mypurecloud.com/articles/about-custom-client-application-integrations/)
 
@@ -37,7 +37,7 @@ In the simpliest form, a Genesys Cloud App is simply a web page that enhances or
 
 Use this API to improve the integration of your app with Genesys Cloud.  Navigate, notify, and request attention all through a simple JS API.
 
-[Live API Docs](https://developer.mypurecloud.com/api/client-apps/client-app-sdk.html)
+[Live API Docs](https://developer.mypurecloud.com/api/client-apps/sdk.html)
 
 ### Accessing Genesys Cloud Data
 

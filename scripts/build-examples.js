@@ -41,14 +41,25 @@ function transformPlatformEnvironment(buffer, env) {
 }
 
 function buildExample(outDir, relativeFilePath, bundleFileName) {
-    let buffer = fs.readFileSync(relativeFilePath, 'utf8');
-    buffer = transformExampleSdkUrl(buffer, bundleFileName);
-    if (oauthClientIds) {
-        buffer = transformSdkOAuthClientIds(buffer, oauthClientIds);
+    const exampleExt = path.extname(relativeFilePath);
+
+    let buffer = null;
+
+    if (!exampleExt || !['.js', '.html'].includes(exampleExt)) {
+        // Read as a binary buffer
+        buffer = fs.readFileSync(relativeFilePath);
+    } else {
+        // Read as utf-8 text and transform
+        buffer = fs.readFileSync(relativeFilePath, 'utf8');
+        buffer = transformExampleSdkUrl(buffer, bundleFileName);
+        if (oauthClientIds) {
+            buffer = transformSdkOAuthClientIds(buffer, oauthClientIds);
+        }
+        if (devPlatformEnv) {
+            buffer = transformPlatformEnvironment(buffer, devPlatformEnv);
+        }
     }
-    if (devPlatformEnv) {
-        buffer = transformPlatformEnvironment(buffer, devPlatformEnv);
-    }
+
     fs.outputFileSync(
         path.join(outDir, relativeFilePath.replace('examples/', '')),
         buffer

@@ -1,0 +1,21 @@
+body {
+  margin: auto 20px;
+}
+
+h2 {
+  margin-top: 40px;
+  border-bottom: 1px solid #0e536f;
+}
+#clipboardHistory {
+  display: block;
+  background-color: #EEEEEE;
+  width: 90%;
+  height: 200px;
+  overflow: scroll;
+  padding: 0px 10px;
+}
+
+#clipboardImage {
+  width: 150px;
+  height: 150px;
+}
