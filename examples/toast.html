@@ -147,13 +147,6 @@
                 <div class="col-sm-11">
                     <input type="text" class="form-control" id="targetURL" placeholder="https://en.wikipedia.org/wiki/Main_Page">
                 </div>
-                <label for="relPath" class="col-sm-1 control-label">Window Name</label>
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" id="windowName" placeholder="_blank">
-                    <div class="help-block">
-                        <p>If left blank, will default to '_blank'</p>
-                    </div>
-                </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-1 col-sm-11">
@@ -242,8 +235,7 @@
                 // OpenWindow
                 $('#openWindow').on('click', function () {
                     const targetURL = document.getElementById('targetURL').value
-                    const windowName = document.getElementById('windowName').value
-                    myClientApp.coreUi.openWindow(targetURL, windowName);
+                    myClientApp.coreUi.openWindow(targetURL);
                 });
             });
         </script>
