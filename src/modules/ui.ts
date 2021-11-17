@@ -76,6 +76,37 @@ class CoreUiApi extends BaseApi {
     openWindow(targetUrl: string) {
         super.sendMsgToPc('openWindow', {targetUrl});
     }
+
+    /**
+     * Shows the profile of a specified user
+     *
+     * ```ts
+     * myClientApp.users.showProfile("targetUserId");
+     * ```
+     *
+     * @param userId - The id of the user to show
+     * 
+     * @since 1.0.0
+     */
+
+    showProfile(userId: string) {
+        super.sendMsgToPc('showProfile', {'profileId': userId});
+    }
+
+    /**
+     * Shows the specified group
+     *
+     * ```ts
+     * myClientApp.users.showGroup("targetGroupId");
+     * ```
+     *
+     * @param groupId - The id of the group to show
+     * 
+     * @since 1.0.0
+     */ 
+    showGroup(groupId: string) {
+        super.sendMsgToPc('showGroup', {'groupId': groupId});
+    }
 }
 
 export default CoreUiApi;
