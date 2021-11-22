@@ -60,6 +60,11 @@
                 flex: 0 1 auto;
             }
 
+            .group-item {
+              padding-bottom: 10px;
+              cursor: pointer;
+            }
+
             .hidden {
                 display: none
             }
@@ -88,11 +93,16 @@
                 <div class="department"></div>
             </div>
         </section>
+        <section class="group hidden">
+            <h1>Groups</h1>
+            <ul class="group-list">
+            </ul>
+        </section>
 
         <script>document.addEventListener('DOMContentLoaded', function () {
             /*
             * The Client Apps SDK can interpolate the current PC Environment into your app's URL
-            * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
+            * EX: https://mypurecloud.github.io/client-app-sdk/directoryNavigationDemo.html?pcEnvironment={{pcEnvironment}}
             *
             * Reading the PC Environment from the query string or state param returned from OAuth2 response
             */
@@ -121,7 +131,7 @@
             authenticate(client, pcEnvironment)
                 .then(() => {
                     authenticated = true;
-                    return new platformClient.UsersApi().getUsersMe();
+                    return new platformClient.UsersApi().getUsersMe({expand: ['groups']});
                 })
                 .then(profileData => {
                     setHidden(authenticatingEl, true);
@@ -148,6 +158,40 @@
                 let failureEl = document.querySelector('.failure');
                 failureEl.textContent = errorMsg;
                 setHidden(failureEl, false);
+            }
+
+            function setGroupEventListeners(groupIds, groupListEl) {
+              groupIds.forEach(curr => {
+                let linkEl = document.getElementById(`${curr}`);
+                groupLinkListener = function (evt) {
+                    evt.preventDefault();
+                    if (curr) {
+                      clientApp.coreUi.showGroup(curr);
+                    } else {
+                        console.info('No group ID available to route to group profile');
+                    }
+                }
+                linkEl.addEventListener('click', groupLinkListener);
+              })
+            }
+
+            /**
+             * Updates the Group List element state with the 
+             * user's group data
+             */
+             async function setGroupList(groupIds) {
+              const groupListEl = document.querySelector('.group-list');
+              const groupDataRequests = groupIds.map(currGroupId => new platformClient.GroupsApi().getGroup(currGroupId.id));
+              Promise.all(groupDataRequests)
+              .then(groupDataResponses => {groupDataResponses.forEach(
+                groupData => {
+                  groupListEl.innerHTML = groupListEl.innerHTML + `<li id=${groupData.id} class='group-item'>${groupData.name}</li>`;
+                })
+              }).then(()=>{
+                groupIds.forEach(currGroupId => {
+                  setGroupEventListeners([currGroupId.id], groupListEl);
+                })
+              });
             }
 
             let profileLinkListener = null;
@@ -214,6 +258,11 @@
                 let deptEl = profileRootEl.querySelector('.base-info .department');
                 deptEl.innerText = profileData.department || '';
                 setHidden(deptEl, !profileData.department);
+                if(profileData.groups.length > 0) {
+                  setGroupList(profileData.groups);
+                  const groupEl = document.querySelector('.group');
+                  setHidden(groupEl, false)
+                }
             }
 
             /**
