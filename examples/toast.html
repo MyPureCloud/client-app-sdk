@@ -139,6 +139,22 @@
             <button class="btn btn-primary clear-attn-btn">Clear Attention Count</button>
         </div>
 
+        <h1>Open Window Handler</h1>
+
+        <form class="form-horizontal container-fluid">
+            <div class="form-group target-url-group">
+                <label for="targetURL" class="col-sm-1 control-label">URL</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="targetURL" placeholder="https://en.wikipedia.org/wiki/Main_Page">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <button type="submit" class="btn btn-primary" id="openWindow">Open Window</button>
+                </div>
+            </div>
+        </form>
+
         <script>$(function () {
                 let myClientApp = null;
 
@@ -215,6 +231,12 @@
                     count = 0;
                     myClientApp.alerting.setAttentionCount(0);
                 }
+
+                // OpenWindow
+                $('#openWindow').on('click', function () {
+                    const targetURL = document.getElementById('targetURL').value
+                    myClientApp.coreUi.openWindow(targetURL);
+                });
             });
         </script>
     </body>

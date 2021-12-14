@@ -61,6 +61,21 @@ class CoreUiApi extends BaseApi {
     hideHelp() {
         super.sendMsgToPc('hideHelp');
     }
+
+    /**
+     * Open a URL in a new window.
+     *
+     * ```ts
+     * myClientApp.coreUi.openWindow("https://en.wikipedia.org/wiki/Main_Page");
+     * ```
+     *
+     * @param targetUrl - The URL to open in a new window
+     *
+     * @since 2.3.0
+     */
+    openWindow(targetUrl: string) {
+        super.sendMsgToPc('openWindow', {targetUrl});
+    }
 }
 
 export default CoreUiApi;
