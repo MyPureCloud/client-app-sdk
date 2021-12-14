@@ -68,10 +68,10 @@ class CoreUiApi extends BaseApi {
      * ```ts
      * myClientApp.coreUi.openWindow("https://en.wikipedia.org/wiki/Main_Page");
      * ```
-     * 
+     *
      * @param targetUrl - The URL to open in a new window
-     * 
-     * @since 1.0.0
+     *
+     * @since 2.3.0
      */
     openWindow(targetUrl: string) {
         super.sendMsgToPc('openWindow', {targetUrl});
