@@ -174,7 +174,8 @@
              */
             function setGroupList(listContainer, groupIds) {
                 listContainer.textContent = '';
-                Promise.all(groupIds.map(currGroupId => new platformClient.GroupsApi().getGroup(currGroupId.id)))
+                const groupsApi = new platformClient.GroupsApi();
+                Promise.all(groupIds.map(currGroupId => groupsApi.getGroup(currGroupId.id)))
                     .then(groups => groups.map(currGroup => buildGroupItemEl(currGroup)))
                     .then(groupItems => {
                         groupItems.forEach(curr => listContainer.append(curr));
@@ -187,7 +188,7 @@
 
                 const groupLinkEl = result.querySelector("a");
                 groupLinkEl.id = group.id;
-                groupLinkEl.appendChild(document.createTextNode(group.name));
+                groupLinkEl.appendChild(document.createTextNode(group.name || group.id));
                 groupLinkEl.addEventListener('click', evt => {
                     evt.preventDefault();
                     clientApp.directory.showGroup(group.id);
