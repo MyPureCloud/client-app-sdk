@@ -15,6 +15,7 @@ import AlertingApi from './modules/alerting';
 import LifecycleApi from './modules/lifecycle';
 import CoreUiApi from './modules/ui';
 import UsersApi from './modules/users';
+import DirectoryApi from './modules/directory';
 import ConversationsApi from './modules/conversations';
 import MyConversationsApi from './modules/myConversations';
 import ExternalContactsApi from './modules/externalContacts';
@@ -83,8 +84,24 @@ class ClientApp {
      *
      * clientApp.users.someMethod(...);
      * ```
+     *
+     * @deprecated Since 2.3.0.  @see [directory](#directory) for replacements
      */
     users: UsersApi;
+
+    /**
+     * The DirectoryApi instance.
+     *
+     * ```ts
+     * let clientApp = new ClientApp({
+     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     * });
+     *
+     * clientApp.directory.someMethod(...);
+     * ```
+     * @since 2.3.0
+     */
+    directory: DirectoryApi;
 
     /**
      * The ConversationsApi instance.
@@ -178,6 +195,7 @@ class ClientApp {
         this.lifecycle = new LifecycleApi(apiCfg);
         this.coreUi = new CoreUiApi(apiCfg);
         this.users = new UsersApi(apiCfg);
+        this.directory = new DirectoryApi(apiCfg);
         this.conversations = new ConversationsApi(apiCfg);
         this.myConversations = new MyConversationsApi(apiCfg);
         this.externalContacts = new ExternalContactsApi(apiCfg);

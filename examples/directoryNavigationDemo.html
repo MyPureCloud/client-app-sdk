@@ -26,6 +26,9 @@
 
             a:link, a:visited, a:hover, a:active {
                 color: #000000;
+            }
+
+            a.profile-link:link, a.profile-link:visited, a.profile-link:hover, a.profile-link:active {
                 text-decoration: none;
             }
 
@@ -60,6 +63,14 @@
                 flex: 0 1 auto;
             }
 
+            .groups ul {
+                list-style: none;
+            }
+
+            .groups li {
+              padding-bottom: 10px;
+            }
+
             .hidden {
                 display: none
             }
@@ -88,11 +99,19 @@
                 <div class="department"></div>
             </div>
         </section>
+        <section class="groups hidden">
+            <h2>Groups</h2>
+            <ul>
+                <template id="group-item-template">
+                    <li><a id="" href="#"></a></li>
+                </template>
+            </ul>
+        </section>
 
         <script>document.addEventListener('DOMContentLoaded', function () {
             /*
             * The Client Apps SDK can interpolate the current PC Environment into your app's URL
-            * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
+            * EX: https://mypurecloud.github.io/client-app-sdk/directoryNavigationDemo.html?pcEnvironment={{pcEnvironment}}
             *
             * Reading the PC Environment from the query string or state param returned from OAuth2 response
             */
@@ -121,7 +140,7 @@
             authenticate(client, pcEnvironment)
                 .then(() => {
                     authenticated = true;
-                    return new platformClient.UsersApi().getUsersMe();
+                    return new platformClient.UsersApi().getUsersMe({expand: ['groups']});
                 })
                 .then(profileData => {
                     setHidden(authenticatingEl, true);
@@ -150,6 +169,34 @@
                 setHidden(failureEl, false);
             }
 
+            /**
+             * Updates the Group List element state with the user's group data
+             */
+            function setGroupList(listContainer, groupIds) {
+                listContainer.textContent = '';
+                const groupsApi = new platformClient.GroupsApi();
+                Promise.all(groupIds.map(currGroupId => groupsApi.getGroup(currGroupId.id)))
+                    .then(groups => groups.map(currGroup => buildGroupItemEl(currGroup)))
+                    .then(groupItems => {
+                        groupItems.forEach(curr => listContainer.append(curr));
+                    });
+            }
+
+            const groupItemTemplate = document.getElementById('group-item-template');
+            function buildGroupItemEl(group) {
+                const result = groupItemTemplate.content.cloneNode(true);
+
+                const groupLinkEl = result.querySelector("a");
+                groupLinkEl.id = group.id;
+                groupLinkEl.appendChild(document.createTextNode(group.name || group.id));
+                groupLinkEl.addEventListener('click', evt => {
+                    evt.preventDefault();
+                    clientApp.directory.showGroup(group.id);
+                });
+
+                return result;
+            }
+
             let profileLinkListener = null;
             /**
              * Updates the provided User Profile element state
@@ -167,7 +214,7 @@
                     evt.preventDefault();
 
                     if (profileData.id) {
-                        clientApp.users.showProfile(profileData.id);
+                        clientApp.directory.showUser(profileData.id);
                     } else {
                         console.info('No user ID available to route to user profile');
                     }
@@ -214,6 +261,15 @@
                 let deptEl = profileRootEl.querySelector('.base-info .department');
                 deptEl.innerText = profileData.department || '';
                 setHidden(deptEl, !profileData.department);
+
+                if(profileData.groups.length > 0) {
+                  const groupsContainerEl = document.querySelector('.groups');
+
+                  // Fetch and render up to 10 groups
+                  setGroupList(groupsContainerEl.querySelector('ul'), profileData.groups.slice(0, 10));
+
+                  setHidden(groupsContainerEl, false)
+                }
             }
 
             /**

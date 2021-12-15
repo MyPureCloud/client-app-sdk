@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     * The Client Apps SDK can interpolate the current PC Environment into your app's URL
-    * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
+    * EX: https://mypurecloud.github.io/client-app-sdk/directoryNavigationDemo.html?pcEnvironment={{pcEnvironment}}
     *
     * Reading the PC Environment from the query string or state param returned from OAuth2 response
     */
