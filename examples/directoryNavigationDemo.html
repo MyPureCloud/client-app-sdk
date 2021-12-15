@@ -26,6 +26,9 @@
 
             a:link, a:visited, a:hover, a:active {
                 color: #000000;
+            }
+
+            a.profile-link:link, a.profile-link:visited, a.profile-link:hover, a.profile-link:active {
                 text-decoration: none;
             }
 
@@ -60,9 +63,12 @@
                 flex: 0 1 auto;
             }
 
-            .group-item {
+            .groups ul {
+                list-style: none;
+            }
+
+            .groups li {
               padding-bottom: 10px;
-              cursor: pointer;
             }
 
             .hidden {
@@ -93,9 +99,12 @@
                 <div class="department"></div>
             </div>
         </section>
-        <section class="group hidden">
-            <h1>Groups</h1>
-            <ul class="group-list">
+        <section class="groups hidden">
+            <h2>Groups</h2>
+            <ul>
+                <template id="group-item-template">
+                    <li><a id="" href="#"></a></li>
+                </template>
             </ul>
         </section>
 
@@ -160,38 +169,31 @@
                 setHidden(failureEl, false);
             }
 
-            function setGroupEventListeners(groupIds, groupListEl) {
-              groupIds.forEach(curr => {
-                let linkEl = document.getElementById(`${curr}`);
-                groupLinkListener = function (evt) {
-                    evt.preventDefault();
-                    if (curr) {
-                      clientApp.directory.showGroup(curr);
-                    } else {
-                        console.info('No group ID available to route to group profile');
-                    }
-                }
-                linkEl.addEventListener('click', groupLinkListener);
-              })
+            /**
+             * Updates the Group List element state with the user's group data
+             */
+            function setGroupList(listContainer, groupIds) {
+                listContainer.textContent = '';
+                Promise.all(groupIds.map(currGroupId => new platformClient.GroupsApi().getGroup(currGroupId.id)))
+                    .then(groups => groups.map(currGroup => buildGroupItemEl(currGroup)))
+                    .then(groupItems => {
+                        groupItems.forEach(curr => listContainer.append(curr));
+                    });
             }
 
-            /**
-             * Updates the Group List element state with the 
-             * user's group data
-             */
-             async function setGroupList(groupIds) {
-              const groupListEl = document.querySelector('.group-list');
-              const groupDataRequests = groupIds.map(currGroupId => new platformClient.GroupsApi().getGroup(currGroupId.id));
-              Promise.all(groupDataRequests)
-              .then(groupDataResponses => {groupDataResponses.forEach(
-                groupData => {
-                  groupListEl.innerHTML = groupListEl.innerHTML + `<li id=${groupData.id} class='group-item'>${groupData.name}</li>`;
-                })
-              }).then(()=>{
-                groupIds.forEach(currGroupId => {
-                  setGroupEventListeners([currGroupId.id], groupListEl);
-                })
-              });
+            const groupItemTemplate = document.getElementById('group-item-template');
+            function buildGroupItemEl(group) {
+                const result = groupItemTemplate.content.cloneNode(true);
+
+                const groupLinkEl = result.querySelector("a");
+                groupLinkEl.id = group.id;
+                groupLinkEl.appendChild(document.createTextNode(group.name));
+                groupLinkEl.addEventListener('click', evt => {
+                    evt.preventDefault();
+                    clientApp.directory.showGroup(group.id);
+                });
+
+                return result;
             }
 
             let profileLinkListener = null;
@@ -258,10 +260,14 @@
                 let deptEl = profileRootEl.querySelector('.base-info .department');
                 deptEl.innerText = profileData.department || '';
                 setHidden(deptEl, !profileData.department);
+
                 if(profileData.groups.length > 0) {
-                  setGroupList(profileData.groups);
-                  const groupEl = document.querySelector('.group');
-                  setHidden(groupEl, false)
+                  const groupsContainerEl = document.querySelector('.groups');
+
+                  // Fetch and render up to 10 groups
+                  setGroupList(groupsContainerEl.querySelector('ul'), profileData.groups.slice(0, 10));
+
+                  setHidden(groupsContainerEl, false)
                 }
             }
 
