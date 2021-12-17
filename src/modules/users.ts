@@ -3,7 +3,7 @@
  *
  * @since 1.0.0
  *
- * @deprecated Since 2.3.0. @see The [Directory Module](directoryapi.md) for replacements.
+ * @deprecated Use {@link module:directory} instead. (Since 2.3.0)
  */
 
 import BaseApi from './base';
@@ -14,7 +14,7 @@ import BaseApi from './base';
  * @noInheritDoc
  * @since 1.0.0
  *
- * @deprecated Since 2.3.0.  @see [DirectoryApi](directoryapi.md) for replacements.
+ * @deprecated Use {@link DirectoryApi} instead. (Since 2.3.0)
  */
 class UsersApi extends BaseApi {
     /**
@@ -28,7 +28,9 @@ class UsersApi extends BaseApi {
      *
      * @since 1.0.0
      *
-     * @deprecated Since 2.3.0. @see [DirectoryApi#showUser](directoryapi.md#showuser) for a replacement.
+     * @deprecated Use {@link ClientApp#directory#showUser} instead. (Since 2.3.0)
+     *
+     * @see [DirectoryApi#showUser](directoryapi.md#showuser) for a replacement.
      */
     showProfile(userId: string) {
         super.sendMsgToPc('showProfile', {'profileId': userId});
