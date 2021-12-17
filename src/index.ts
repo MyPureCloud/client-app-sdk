@@ -85,7 +85,7 @@ class ClientApp {
      * clientApp.users.someMethod(...);
      * ```
      *
-     * @deprecated Since 2.3.0.  @see [directory](#directory) for replacements
+     * @deprecated Use {@link directory} property instead. (Since 2.3.0)
      */
     users: UsersApi;
 
