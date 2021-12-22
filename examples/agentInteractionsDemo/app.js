@@ -24,7 +24,7 @@ const profileComponent = {
             evt.preventDefault();
 
             if (this.profileData.id) {
-                Vue.prototype.$clientApp.users.showProfile(this.profileData.id);
+                Vue.prototype.$clientApp.directory.showUser(this.profileData.id);
             } else {
                 console.info("No user ID available to route to user profile");
             }
