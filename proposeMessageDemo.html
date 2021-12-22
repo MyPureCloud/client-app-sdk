@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Genesys Cloud Propose Message Demo</title>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.3.0/purecloud-client-app-sdk-70ec0c8b.min.js"></script>
+        <style>
+            #app {
+                display: flex;
+                flex-direction: column;
+                max-width: 300px;
+            }
+            .button-list, form {
+                display: flex;
+                flex-direction: column;
+                border: 1px solid #ccc;
+                padding: 0 5px;
+            }
+            button, input, div {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 16px;
+                margin: 5px 0;
+            }
+            button {
+                border: none;
+                background-color: #2a60c8;
+                color: #fdfdfd;
+                border-radius: 4px;
+                padding: 6px 10px;
+                box-shadow: 1px 1px 4px -1px #666;
+                cursor: pointer;
+            }
+            input {
+                padding: 6px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+            button:active {
+                box-shadow: none;
+            }
+            button:disabled {
+                background-color: grey;
+                cursor: not-allowed;
+            }
+        </style>
+    </head>
+    <body>
+        <script>
+        (function () {
+        const clientApp = new window.purecloud.apps.ClientApp({ pcEnvironmentQueryParam: 'pcEnvironment' });
+
+        const html = (htmlStr, template = document.createElement('template')) => {
+            template.innerHTML = htmlStr.trim();
+            return template.content.firstChild;
+        };
+
+        const node = (parent, htmlStr) => parent.appendChild(html(htmlStr));
+
+        const App = node(document.body, `<div id='app' />`);
+
+        const container = node(App, `
+            <div class="button-list">
+                <div class="header">Pre-made:</div>
+            </div>
+        `);
+
+        const precannedButtons = [
+            node(container, `<button>Thank you for contacting us</button`),
+            node(container, `<button>Have a nice day!</button`),
+            node(container, `<button>Let me ask my manager about that</button>`),
+            node(container, `<button>HTML will be <b>Sanitized</b></button>`)
+        ];
+
+        const customResponse = node(App, `
+            <form>
+                <div class="header">Custom:</div>
+                <input type="text" />
+                <button disabled type="submit">Fill</button>
+            </form>
+        `);
+
+        const [,customInput,fillCustomBtn] = customResponse.children;
+        customInput.oninput = e => {
+            fillCustomBtn.disabled = !e.target.value;
+        }
+
+        customResponse.addEventListener('submit', event => {
+            let message = event.target[0].value;
+            console.log('form: ', message);
+            clientApp.conversations.proposeInteractionMessage('insert', message);
+            event.preventDefault();
+        });
+
+        precannedButtons.forEach(button =>
+            button.addEventListener('click', event => {
+                let message = event.target.innerHTML;
+                console.log('button: ', message);
+                clientApp.conversations.proposeInteractionMessage('insert', message);
+            }));
+        }());
+        </script>
+    </body>
+</html>

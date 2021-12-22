@@ -18,8 +18,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
             crossorigin="anonymous">
-        <script src="https://sdk-cdn.mypurecloud.com/javascript/106.0.0/purecloud-platform-client-v2.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.0.0/purecloud-client-app-sdk-e9989de7.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/javascript/128.0.0/purecloud-platform-client-v2.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.3.0/purecloud-client-app-sdk-70ec0c8b.min.js"></script>
         <script src="utils/oauth.js"></script>
 
         <style>
@@ -152,7 +152,7 @@
 
                 /*
                 * The Client Apps SDK can interpolate the current PC Environment into your app's URL
-                * EX: https://mypurecloud.github.io/client-app-sdk/profile.html?pcEnvironment={{pcEnvironment}}
+                * EX: https://mypurecloud.github.io/client-app-sdk/directoryNavigationDemo.html?pcEnvironment={{pcEnvironment}}
                 *
                 * Reading the PC Environment from the query string or state param returned from OAuth2 response
                 */
@@ -502,7 +502,7 @@
 
                     let query = {
                         "interval": intervalStart.toISOString() + "/" + intervalEnd.toISOString(),
-                        "order": "asc",
+                        "order": "desc",
                         "orderBy": "conversationStart",
                         "paging": {
                             "pageSize": 25,

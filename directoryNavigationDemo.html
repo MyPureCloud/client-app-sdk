@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+    <!--
+        Demo to illustrate fetching Genesys Cloud data and the showProfile(...) SDK method
+
+        Note:  Although this example is hosted with the others here on github; it won't work without
+          configuring an OAuth Client and hosting it elsewhere. See js code below for details.
+
+        Reminder: This example is using CDNs and simple javascript to illustrate the SDK. Both the
+          Genesys Cloud SDK and Apps SDK can be obtained via npm and support many build tools
+          and javascript libraries to fit within your development environment.
+    -->
+    <head>
+        <title>Genesys Cloud Profile Example</title>
+
+        <script src="https://sdk-cdn.mypurecloud.com/javascript/128.0.0/purecloud-platform-client-v2.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.3.0/purecloud-client-app-sdk-70ec0c8b.min.js"></script>
+        <script src="utils/oauth.js"></script>
+
+        <style>
+            body {
+                margin: 20px;
+                padding: 0;
+                width: 100%;
+            }
+
+            a:link, a:visited, a:hover, a:active {
+                color: #000000;
+            }
+
+            a.profile-link:link, a.profile-link:visited, a.profile-link:hover, a.profile-link:active {
+                text-decoration: none;
+            }
+
+            .user-profile {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                align-items: center;
+            }
+
+            .user-profile .profile-link {
+                flex: 0 2 auto;
+            }
+
+            .user-profile .profile-pic {
+                max-width: 200px;
+                max-height: 200px;
+                border-radius: 50%;
+            }
+
+            .user-profile .placeholder-pic {
+                font-size: 200px;
+                line-height: 200px;
+                width: 200px;
+                text-align: center;
+                background-color: #C0C0C0;
+                border-radius: 50%;
+            }
+
+            .user-profile .base-info {
+                flex: 0 1 auto;
+            }
+
+            .groups ul {
+                list-style: none;
+            }
+
+            .groups li {
+              padding-bottom: 10px;
+            }
+
+            .hidden {
+                display: none
+            }
+        </style>
+    </head>
+
+    <body>
+        <noscript>
+            For full functionality of this site it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.
+        </noscript>
+
+        <section class="authenticating hidden">
+            Authenticating to Genesys Cloud ...
+        </section>
+        <section class="failure hidden">
+            Sorry, an error has occurred.
+        </section>
+        <section class="user-profile hidden">
+            <a href="#" class="profile-link" aria-label="Click to view user's profile in Genesys Cloud">
+                <div class="placeholder-pic" aria-label="User profile picture missing">?</div>
+                <img class="profile-pic" src="" aria-label="Profile picture for User">
+            </a>
+            <div class="base-info">
+                <div class="name"></div>
+                <div class="title"></div>
+                <div class="department"></div>
+            </div>
+        </section>
+        <section class="groups hidden">
+            <h2>Groups</h2>
+            <ul>
+                <template id="group-item-template">
+                    <li><a id="" href="#"></a></li>
+                </template>
+            </ul>
+        </section>
+
+        <script>document.addEventListener('DOMContentLoaded', function () {
+            /*
+            * The Client Apps SDK can interpolate the current PC Environment into your app's URL
+            * EX: https://mypurecloud.github.io/client-app-sdk/directoryNavigationDemo.html?pcEnvironment={{pcEnvironment}}
+            *
+            * Reading the PC Environment from the query string or state param returned from OAuth2 response
+            */
+            let pcEnvironment = getEmbeddingPCEnv();
+            if (!pcEnvironment) {
+                setErrorState('Cannot identify App Embedding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?');
+                return;
+            }
+
+            let platformClient = window.require('platformClient');
+            let client = platformClient.ApiClient.instance;
+            let clientApp = null;
+            try {
+                clientApp = new window.purecloud.apps.ClientApp({
+                    pcEnvironment: pcEnvironment
+                });
+            } catch (e) {
+                setErrorState(pcEnvironment + ': Unknown/Unsupported Genesys Cloud Embed Context');
+                return;
+            }
+
+            // Authenticate with Genesys Cloud
+            let authenticated = false;
+            let authenticatingEl = document.querySelector('.authenticating');
+            setHidden(authenticatingEl, false);
+            authenticate(client, pcEnvironment)
+                .then(() => {
+                    authenticated = true;
+                    return new platformClient.UsersApi().getUsersMe({expand: ['groups']});
+                })
+                .then(profileData => {
+                    setHidden(authenticatingEl, true);
+
+                    let profileEl = document.querySelector('.user-profile');
+                    renderUserProfile(profileEl, profileData);
+                    setHidden(profileEl, false);
+                })
+                .catch(err => {
+                    setHidden(authenticatingEl, true);
+                    setErrorState(
+                        !authenticated
+                            ? 'Failed to Authenticate with Genesys Cloud - ' + err.message
+                            : 'Failed to fetch/display your profile'
+                    );
+                });
+
+            // ----- Helper Functions
+
+            /**
+             * Sets the base mode of the app to error and show the provided message
+             */
+            function setErrorState(errorMsg) {
+                let failureEl = document.querySelector('.failure');
+                failureEl.textContent = errorMsg;
+                setHidden(failureEl, false);
+            }
+
+            /**
+             * Updates the Group List element state with the user's group data
+             */
+            function setGroupList(listContainer, groupIds) {
+                listContainer.textContent = '';
+                const groupsApi = new platformClient.GroupsApi();
+                Promise.all(groupIds.map(currGroupId => groupsApi.getGroup(currGroupId.id)))
+                    .then(groups => groups.map(currGroup => buildGroupItemEl(currGroup)))
+                    .then(groupItems => {
+                        groupItems.forEach(curr => listContainer.append(curr));
+                    });
+            }
+
+            const groupItemTemplate = document.getElementById('group-item-template');
+            function buildGroupItemEl(group) {
+                const result = groupItemTemplate.content.cloneNode(true);
+
+                const groupLinkEl = result.querySelector("a");
+                groupLinkEl.id = group.id;
+                groupLinkEl.appendChild(document.createTextNode(group.name || group.id));
+                groupLinkEl.addEventListener('click', evt => {
+                    evt.preventDefault();
+                    clientApp.directory.showGroup(group.id);
+                });
+
+                return result;
+            }
+
+            let profileLinkListener = null;
+            /**
+             * Updates the provided User Profile element state
+             * with the provided profileData
+             */
+            function renderUserProfile(profileRootEl, profileData) {
+                let linkEl = profileRootEl.querySelector('.profile-link');
+
+                if (profileLinkListener) {
+                    linkEl.removeEventListener('click', profileLinkListener);
+                    profileLinkListener = null;
+                }
+
+                profileLinkListener = function (evt) {
+                    evt.preventDefault();
+
+                    if (profileData.id) {
+                        clientApp.directory.showUser(profileData.id);
+                    } else {
+                        console.info('No user ID available to route to user profile');
+                    }
+                }
+                linkEl.addEventListener('click', profileLinkListener);
+
+                let bestImage = {
+                    size: 0,
+                    uri: null
+                };
+                if (profileData.images) {
+                    profileData.images.forEach(function(currImg) {
+                        if (!currImg.resolution || !currImg.imageUri) {
+                            return;
+                        }
+
+                        let currRes = parseInt(currImg.resolution.substr(1), 10);
+                        if (currRes && !isNaN(currRes) && currRes > bestImage.size && currRes <= 400) {
+                            bestImage.size = currRes;
+                            bestImage.uri = currImg.imageUri;
+                        }
+                    });
+                }
+
+                let placeholderPicEl = profileRootEl.querySelector('.placeholder-pic');
+                let picEl = profileRootEl.querySelector('.profile-pic');
+                if (bestImage.size) {
+                    setHidden(placeholderPicEl, true);
+
+                    picEl.setAttribute('src', bestImage.uri);
+                    picEl.setAttribute('aria-label', 'Profile picture for ' + (profileData.name || 'User'));
+                    setHidden(picEl, false);
+                } else {
+                    setHidden(placeholderPicEl, false);
+                    setHidden(picEl, true);
+                }
+
+                profileRootEl.querySelector('.base-info .name').innerText = profileData.name || 'Unknown User';
+
+                let titleEl = profileRootEl.querySelector('.base-info .title');
+                titleEl.innerText = profileData.title || '';
+                setHidden(titleEl, !profileData.title);
+
+                let deptEl = profileRootEl.querySelector('.base-info .department');
+                deptEl.innerText = profileData.department || '';
+                setHidden(deptEl, !profileData.department);
+
+                if(profileData.groups.length > 0) {
+                  const groupsContainerEl = document.querySelector('.groups');
+
+                  // Fetch and render up to 10 groups
+                  setGroupList(groupsContainerEl.querySelector('ul'), profileData.groups.slice(0, 10));
+
+                  setHidden(groupsContainerEl, false)
+                }
+            }
+
+            /**
+             * Determine the embedding Genesys Cloud environment seeded on the query string or
+             * being returned through the OAuth2 Implicit grant state hash param.
+             *
+             * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.
+             */
+            function getEmbeddingPCEnv() {
+              let result = null;
+
+              if (window.location.hash && window.location.hash.indexOf('access_token') >= 0) {
+                let oauthParams = extractParams(window.location.hash.substring(1));
+                if (oauthParams && oauthParams.access_token && oauthParams.state) {
+                  // OAuth2 spec dictates this encoding
+                  // See: https://tools.ietf.org/html/rfc6749#appendix-B
+                  let stateSearch = unescape(oauthParams.state);
+                  result = extractParams(stateSearch).pcEnvironment;
+                }
+              }
+
+              if (!result && window.location.search) {
+                result = extractParams(window.location.search.substring(1)).pcEnvironment || null;
+              }
+
+              return result;
+            }
+
+            // ----- Utility Functions
+
+            function setHidden(el, hidden) {
+                if (hidden) {
+                    el.classList.add('hidden');
+                } else {
+                    el.classList.remove('hidden');
+                }
+            }
+
+            function extractParams(paramStr) {
+              let result = {};
+
+              if (paramStr) {
+                  let params = paramStr.split('&');
+                  params.forEach(function(currParam) {
+                    if (currParam) {
+                        let paramTokens = currParam.split('=');
+                        let paramName = paramTokens[0];
+                        let paramValue = paramTokens[1];
+                        if (paramName) {
+                            paramName = decodeURIComponent(paramName);
+                            paramValue = paramValue ? decodeURIComponent(paramValue) : null;
+
+                            if (!result.hasOwnProperty(paramName)) {
+                                result[paramName] = paramValue;
+                            } else if (Array.isArray(result[paramName])) {
+                                result[paramName].push(paramValue);
+                            } else {
+                                result[paramName] = [result[paramName], paramValue];
+                            }
+                        }
+                    }
+                  });
+              }
+
+              return result;
+            }
+          });
+        </script>
+    </body>
+</html>

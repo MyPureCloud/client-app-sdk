@@ -42,6 +42,7 @@
                 var DEFAULT_LANG_TAG = 'en-us';
                 var langTag = null;
                 var conversationId = null;
+                var usePopupAuth = null;
                 var welcomeTokens = {
                     de: "Willkommen bei Genesys Cloud",
                     'en-us': "Welcome to Genesys Cloud",
@@ -90,6 +91,10 @@
                         conversationId = getParamValue(currParam);
                         currLiDt = '<dt>{{pcConversationId}}</dt>';
                         currLiDd.textContent = conversationId;
+                    } else if(['usePopupAuth', 'pcUsePopupAuth'].indexOf(currParam[0]) !== -1){
+                        usePopupAuth = getParamValue(currParam)
+                        currLiDt = '<dt>{{pcUsePopupAuth}}</dt>';
+                        currLiDd.textContent = usePopupAuth;
                     }
 
 

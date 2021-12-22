@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PermissionsPolicy Demo</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+
+  <body>
+    <h1 id="title">PermissionsPolicy Demo</h1>
+    <section>
+      <h2>Clipboard</h2>
+      <input id="clipboardTextInput" type="text" />
+      <button id="clipboardWriteText">
+        Write text to clipboard
+      </button>
+      <button id="clipboardWrite">Write to clipboard</button>
+      <button id="clipboardWriteTimer">
+        Write to clipboard on timer
+      </button>
+      <button id="clipboardWriteInterval">
+        Write to clipboard on interval
+      </button>
+
+      <br><br>
+      <button id="clipboardRead">Read from clipboard</button>
+      <button id="clipboardReadText">Read text from clipboard</button>
+      <button id="clipboardReadTimer">
+        Read from clipboard on timer
+      </button>
+      <button id="clipboardReadInterval">
+        Read from clipboard on interval
+      </button>
+      <br><br>
+      <button id="clearIntervals">Clear intervals</button>
+
+      <br>
+      <h3>Clipboard Text History</h3>
+      <div id="clipboardHistory"></div>
+
+      <br>
+      <h3>Clipboard Image</h3>
+      <img src="" id="clipboardImage" />
+    </section>
+
+    <section>
+      <h2>Fullscreen</h2>
+      <button id="fullscreen">Enter Fullscreen</button>
+      <br>
+      <br>
+      <img src="fullscreenImage.jpeg" id="fullscreenImage" width="50%" height="50%" />
+    </section>
+
+    <section>
+      <h2>Display Capture</h2>
+      <button id="displayCapture">Display Capture</button>
+    </section>
+  </body>
+</html>

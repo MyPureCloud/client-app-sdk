@@ -24,7 +24,7 @@ const profileComponent = {
             evt.preventDefault();
 
             if (this.profileData.id) {
-                Vue.prototype.$clientApp.users.showProfile(this.profileData.id);
+                Vue.prototype.$clientApp.directory.showUser(this.profileData.id);
             } else {
                 console.info("No user ID available to route to user profile");
             }
@@ -175,12 +175,100 @@ new Vue({
         const usersApi = new platformClient.UsersApi();
         const qualityApi = new platformClient.QualityApi();
         const conversationsApi = new platformClient.ConversationsApi();
+        const externalContactsApi = new platformClient.ExternalContactsApi();
         Vue.prototype.$usersApi = usersApi;
         Vue.prototype.$qualityApi = qualityApi;
         Vue.prototype.$conversationsApi = conversationsApi;
+        Vue.prototype.$externalContactsApi = externalContactsApi;
 
         let authenticated = false;
         let agentUserId = "";
+
+        function getCustomerParticipant(conv) {
+            // Function returns null if there is no valid participant found.
+            if (!conv || !conv.participants) {
+                return null;
+            }
+            return conv.participants.find((part) => {
+                return part.purpose === "customer" || part.purpose === "external";
+            }) || null;
+        }
+
+        async function getCustomerName(customer){
+            if (customer === null){
+                return "Unknown";
+            } else if (customer.externalContactId){
+                const externalContact = await externalContactsApi.getExternalcontactsContact(customer.externalContactId)
+                const name = `${externalContact.firstName} ${externalContact.lastName}`;
+                return name;
+            } else if (customer.name){
+                return customer.name;
+            } else{
+                return "Unknown";
+            }
+        }
+
+        function buildConversationCustomer(customer, name){
+            if(customer === null) customer = {};
+            customer.name = name;
+            return customer;
+        }
+
+        async function getConversationData(convId){
+            try{
+                const conv = await conversationsApi.getConversation(convId);
+                const customerParticipant = getCustomerParticipant(conv);
+                const name = await getCustomerName(customerParticipant);
+                conv.customer = buildConversationCustomer(customerParticipant, name);
+                return conv;
+            } catch(err){
+                console.log(`Failed to get conversation/customer: ${err}`);
+                throw err;
+            }
+        }
+
+        async function getConversationsAndEvaluations(agentUserId) {
+            const startTime = moment('1997-01-01').toISOString();
+            const endTime = moment().toISOString();
+            const data = await getEvaluations(qualityApi, startTime, endTime, agentUserId);
+
+            const evaluations = data.entities;
+            const evalConversations = {};
+
+            await Promise.allSettled(
+                // Gets conversations with evaluations
+                evaluations.map(async eval => {
+                    const evalConvId = eval.conversation.id;
+                    const evalConv = await getConversationData(evalConvId);
+
+                    if(evalConv !== undefined) {
+                        if (!(evalConvId in evalConversations)){
+                            evalConversations[evalConvId] = {
+                                conv: evalConv,
+                                evals: []
+                            };
+                        }
+                        evalConversations[evalConvId].evals.push(eval);
+                    }
+                })
+            );
+
+            const conversationsData = await conversationsApi.getConversations();
+            const conversations = {};
+            await Promise.allSettled(
+                // Gets all active conversations
+                conversationsData.entities.filter(conv => !(conv.id in evalConversations))
+                    .map(async conv => {
+                        const newConv = await getConversationData(conv.id);
+                        conversations[conv.id] = {
+                            evals: [],
+                            conv: newConv
+                        };
+                    })
+            );
+
+            return Object.assign(conversations, evalConversations);
+        }
 
         // Authentication and main flow
         authenticate(client, pcEnvironment)
@@ -188,59 +276,25 @@ new Vue({
                 authenticated = true;
                 return usersApi.getUsersMe({ "expand": ["presence"] });
             })
-            .then((profileData) => {
+            .then(async (profileData) => {
                 // Process agent's profile data
                 this.profileData = profileData;
                 agentUserId = profileData.id;
-                this.authenticated = true;
 
-                // Get evaluations data
-                const startTime = moment('1997-01-01').toISOString();
-                const endTime = moment().toISOString();
 
-                getEvaluations(qualityApi, startTime, endTime, agentUserId)
-                    .then((data) => {
-                        // Process evaluations data
-                        const evaluations = data.entities;
-                        evaluations.forEach((eval) => {
-                            conversationsApi.getConversation(eval.conversation.id)
-                                .then((conv) => {
-                                    let newConv = conv;
-                                    newConv.customer = conv.participants.find((part) => {
-                                        return part.purpose === "customer";
-                                    });
-                                    this.conversationsData.conversations.push(newConv);
-                                    this.conversationsData.conversations = _.uniqWith(this.conversationsData.conversations, _.isEqual);
-                                    if (this.conversationsData.convEvalMap.has(conv.id)) {
-                                        this.conversationsData.convEvalMap.get(conv.id).push(eval);
-                                    } else {
-                                        this.conversationsData.convEvalMap.set(conv.id, [eval]);
-                                    }
-                                })
-                                .catch((err) => {
-                                    console.log(`Error: ${err}`);
-                                });
-                        });
-                    })
-                    .catch((err) => {
-                        console.log(`Error: ${err}`);
-                    });
+                try {
+                    const conversations = await getConversationsAndEvaluations(agentUserId);
+                    for (var convId in conversations){
+                        this.conversationsData.conversations.push(conversations[convId].conv);
+                        if(conversations[convId].evals.length > 0) this.conversationsData.convEvalMap.set(convId, conversations[convId].evals);
+                    }
 
-                conversationsApi.getConversations()
-                    .then((data) => {
-                        data.entities.forEach((conv) => {
-                            let newConv = conv;
-                            newConv.customer = conv.participants.find((part) => {
-                                return part.purpose === "customer";
-                            });
-                            this.conversationsData.conversations.push(newConv);
-
-                        });
-                        this.conversationsData.conversations = _.uniqWith(this.conversationsData.conversations, _.isEqual);
-                    })
-                    .catch((err) => {
-                        console.log(`Error: ${err}`);
-                    });
+                    // Set this boolean to indicated loading complete
+                    this.authenticated = true;
+                } catch(e) {
+                    console.error(e);
+                    this.errorMessage = "Failed to fetch conversations/evaluations";
+                }
             })
             .catch((err) => {
                 console.log(err);
