@@ -16,7 +16,7 @@ export default describe('ClientApp', () => {
 
     it('should have instances of all the modules', () => {
         const myClientApp = new ClientApp();
-        (['alerting', 'lifecycle', 'coreUi', 'users', 'myConversations', 'externalContacts'] as const).forEach(currModuleName => {
+        (['alerting', 'lifecycle', 'coreUi', 'users', 'myConversations', 'externalContacts', 'directory'] as const).forEach(currModuleName => {
             expect(myClientApp[currModuleName] instanceof BaseApi).toBe(true);
         });
     });
