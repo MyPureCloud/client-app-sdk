@@ -84,7 +84,7 @@
         }
 
         customResponse.addEventListener('submit', event => {
-            let message = event.target[0].value;
+            let message = event.currentTarget[0].value;
             console.log('form: ', message);
             clientApp.conversations.proposeInteractionMessage('insert', message);
             event.preventDefault();
@@ -92,7 +92,7 @@
 
         precannedButtons.forEach(button =>
             button.addEventListener('click', event => {
-                let message = event.target.innerHTML;
+                let message = event.currentTarget.innerHTML;
                 console.log('button: ', message);
                 clientApp.conversations.proposeInteractionMessage('insert', message);
             }));
