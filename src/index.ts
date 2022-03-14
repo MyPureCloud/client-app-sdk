@@ -36,6 +36,17 @@ class ClientApp {
     private _customPcOrigin: string | null = null;
 
     /**
+     * The private reference to the Genesys Cloud Host Origin, if provided.
+     */
+    private _gcHostOrigin: string | null = null;
+
+    /**
+     * Variable for the name of the type of environment
+     */
+    // @ts-ignore
+    private gcTargetEnv: string | null = null; 
+
+    /**
      * The AlertingApi instance.
      *
      * ```ts
@@ -158,6 +169,10 @@ class ClientApp {
      * @param cfg - Runtime config of the client
      */
     constructor(cfg: {
+        /** The origin of the genesys cloud parent. Overrides the pcEnvironment and functions similar to pcOrigin except the gcHostOrigin can be passed by the genesys cloud parent*/
+        gcHostOriginQueryParam?: string;
+        /** The type of environment the genesys cloud parent is running under(e.g. dev, test, prod)*/
+        gcTargetEnvQueryParam?: string;
         /** Name of a query param to auto parse into the pcEnvironment; Must be valid and a single param.  Best Practice. */
         pcEnvironmentQueryParam?: string;
         /** The PC top-level domain (e.g. mypurecloud.com, mypurecloud.au); Must be a valid PC Env tld; Prefered over pcOrigin. */
@@ -166,9 +181,16 @@ class ClientApp {
         pcOrigin?: string;
     } = {}) {
         if (cfg) {
-            if ('pcEnvironmentQueryParam' in cfg) {
-                const paramName = cfg.pcEnvironmentQueryParam;
+            if ('gcHostOriginQueryParam' in cfg){
+                const paramName = cfg.gcHostOriginQueryParam;
                 this.assertNonEmptyString(paramName, 'query param name');
+                const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
+                const paramValue = decodeURI(parsedQueryString[paramName]);
+                this._gcHostOrigin = paramValue;
+            }
+            else if ('pcEnvironmentQueryParam' in cfg) {
+                const paramName = cfg.pcEnvironmentQueryParam;
+                this.assertNonEmptyString(paramName, 'gc host query param name');
                 const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
                 const paramValue = parsedQueryString[paramName];
                 this.assertNonEmptyString(paramValue, `value for query param '${paramName}'`);
@@ -180,15 +202,24 @@ class ClientApp {
                 this.assertNonEmptyString(cfg.pcOrigin, 'pcOrigin');
                 this._customPcOrigin = cfg.pcOrigin;
             }
+
+            if("gcTargetEnvQueryParam" in cfg){
+                const paramName = cfg.gcTargetEnvQueryParam;
+                this.assertNonEmptyString(paramName, 'target env query param name');
+                const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
+                const paramValue = decodeURI(parsedQueryString[paramName]);
+                this.gcTargetEnv = paramValue;
+            }
         }
 
         if (!this._pcEnv && !this._customPcOrigin) {
             // Use the default PC environment
             this._pcEnv = DEFAULT_PC_ENV;
         }
-
+        let targetPcOrigin = this._gcHostOrigin;
+        targetPcOrigin = targetPcOrigin ?? (this._pcEnv ? this._pcEnv.pcAppOrigin : this._customPcOrigin);
         const apiCfg = {
-            targetPcOrigin: (this._pcEnv ? this._pcEnv.pcAppOrigin : this._customPcOrigin)
+            targetPcOrigin
         };
 
         this.alerting = new AlertingApi(apiCfg);
