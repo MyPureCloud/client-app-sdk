@@ -2201,12 +2201,13 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
 
-genesys-cloud-service-discovery-web@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/genesys-cloud-service-discovery-web/-/genesys-cloud-service-discovery-web-2.0.5.tgz#afe9719f4c8a7559a6d715a6f91d29ee489a4dc5"
-  integrity sha512-NupzAdsQKojL0ym2QwPgCepERWD8N+eSTk/hDM/mM281y7AeK5qoyDYRGjbVjbiDuNvlJs60vSb78eVvH7dpVQ==
+genesys-cloud-service-discovery-web@^3.0.55:
+  version "3.0.55"
+  resolved "https://registry.yarnpkg.com/genesys-cloud-service-discovery-web/-/genesys-cloud-service-discovery-web-3.0.55.tgz#a673c8262c705dafc625267deff1405e725eb38c"
+  integrity sha512-o/+9A4qJsaGQ3dPLA9mhI1Q6yLZ8LsYdXMol7W0ykQbfu6sdYansV5wPMl0PaWqYzpthOhYcb5fds0Mxzq0G1w==
   dependencies:
-    url-parse "^1.4.7"
+    tslib "~2.4.0"
+    url-parse "^1.5.10"
 
 gensync@^1.0.0-beta.1:
   version "1.0.0-beta.1"
@@ -3985,6 +3986,11 @@ tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
 
+tslib@~2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
+  integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
+
 tsutils@^3.17.1:
   version "3.17.1"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.17.1.tgz#ed719917f11ca0dee586272b2ac49e015a2dd759"
@@ -4128,10 +4134,10 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-url-parse@^1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.7.tgz#a8a83535e8c00a316e403a5db4ac1b9b853ae278"
-  integrity sha512-d3uaVyzDB9tQoSXFvuSUNFibTd9zxd2bkVrDRvF5TmvWWQwqE4lgYJ5m+x1DbecWkw+LK4RNl2CU1hHuOKPVlg==
+url-parse@^1.5.10:
+  version "1.5.10"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.10.tgz#9d3c2f736c1d75dd3bd2be507dcc111f1e2ea9c1"
+  integrity sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
