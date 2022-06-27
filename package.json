@@ -59,8 +59,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.10.3",
-    "genesys-cloud-service-discovery-web": "^3.0.53",
-    "jasmine-core": "^3.10.1",
+    "genesys-cloud-service-discovery-web": "^3.0.55",
     "query-string": "^5.0.0"
   },
   "devDependencies": {
