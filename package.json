@@ -99,7 +99,6 @@
     "karma-jasmine": "^1.0.2",
     "karma-rollup-preprocessor": "^7.0.5",
     "lodash": "^4.17.20",
-    "phantomjs-prebuilt": "^2.1.7",
     "playwright": "^1.23.0",
     "pre-push": "^0.1.1",
     "rollup": "^2.12.1",
