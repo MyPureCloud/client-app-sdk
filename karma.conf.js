@@ -43,7 +43,8 @@ module.exports = (config) => {
         autoWatch: true,
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['PhantomJS', 'Chrome'],
+        browsers: ['Chromium', 'Firefox', 'WebKit'],
+        plugins: ['@endyjasmi/karma-playwright-launcher', 'karma-*'],
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false,
