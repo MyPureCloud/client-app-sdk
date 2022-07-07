@@ -108,11 +108,11 @@ We recommend configuring your app so the PC environment can be seeded into the u
 
 ### Manual Configuration
 
-You can also manually specify the Genesys Cloud environment or origin.  For details on supported options, see [ClientApp](./ClientApp.md)
+You can also manually specify the Genesys Cloud environment or origin.  For details on supported options, see [ClientApp](./clientapp.md)
 
 ## Modules
 
-Features of the SDK are bundled into modules and can be accessed from the root [ClientApp](./ClientApp.md) instance.
+Features of the SDK are bundled into modules and can be accessed from the root [ClientApp](./clientapp.md) instance.
 
 ## Versioning
 
