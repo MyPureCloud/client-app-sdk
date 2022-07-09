@@ -18,7 +18,7 @@
     "examples": "examples"
   },
   "scripts": {
-    "lint": "eslint . --ext js,ts",
+    "lint": "eslint --ext .js,.ts scripts/ src/ *.js",
     "tsc": "tsc --project tsconfig.json --noEmit",
     "tsc:build": "tsc --project tsconfig.build.json",
     "examples": "node scripts/build-examples.js",
@@ -29,6 +29,7 @@
     "pre-push": "./scripts/pre-push.sh",
     "pretest": "npm run tsc",
     "test": "karma start --single-run --browsers Chromium,Firefox,WebKit",
+    "test:ci": "BROWSER_NO_ACTIVITY_TIMEOUT=60000 karma start --single-run --browsers Chromium,WebKit --log-level debug",
     "watch:test": "karma start",
     "publish-examples": "ts-node scripts/publish-examples.ts",
     "about": "node scripts/about.js"
