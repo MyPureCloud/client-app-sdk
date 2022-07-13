@@ -9,7 +9,8 @@ const {
     npm_package_name,
     npm_package_version,
     CLIENT_APP_SDK_HOST_APP_DEV_ORIGIN: devOrigin,
-    CLIENT_APP_SDK_PC_DEV_ENVS: devEnvs
+    CLIENT_APP_SDK_PC_DEV_ENVS: devEnvs,
+    BROWSER_NO_ACTIVITY_TIMEOUT: browserNoActivityTimeoutArg
 } = process.env;
 
 module.exports = (config) => {
@@ -83,4 +84,14 @@ module.exports = (config) => {
             }
         }
     });
+
+    // Use select env vars to augment config
+    if (browserNoActivityTimeoutArg) {
+        const browserNoActivityTimeout = parseInt(browserNoActivityTimeoutArg, 10);
+        if (Number.isInteger(browserNoActivityTimeout)) {
+            config.set({
+                browserNoActivityTimeout
+            });
+        }
+    }
 };
