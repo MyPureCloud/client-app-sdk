@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Genesys Cloud Propose Message Demo</title>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.3.0/purecloud-client-app-sdk-70ec0c8b.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.4.0/purecloud-client-app-sdk-bb974a18.min.js"></script>
         <style>
             #app {
                 display: flex;
@@ -84,7 +84,7 @@
         }
 
         customResponse.addEventListener('submit', event => {
-            let message = event.target[0].value;
+            let message = event.currentTarget[0].value;
             console.log('form: ', message);
             clientApp.conversations.proposeInteractionMessage('insert', message);
             event.preventDefault();
@@ -92,7 +92,7 @@
 
         precannedButtons.forEach(button =>
             button.addEventListener('click', event => {
-                let message = event.target.innerHTML;
+                let message = event.currentTarget.innerHTML;
                 console.log('button: ', message);
                 clientApp.conversations.proposeInteractionMessage('insert', message);
             }));
