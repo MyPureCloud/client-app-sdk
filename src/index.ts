@@ -10,7 +10,8 @@
  */
 
 import * as queryString from 'query-string';
-import { lookupPcEnv, PcEnv, DEFAULT_PC_ENV } from './utils/env';
+import { Environment } from 'genesys-cloud-service-discovery-web';
+import { lookupPcEnv, lookupGcEnv, PcEnv, DEFAULT_PC_ENV } from './utils/env';
 import AlertingApi from './modules/alerting';
 import LifecycleApi from './modules/lifecycle';
 import CoreUiApi from './modules/ui';
@@ -164,12 +165,20 @@ class ClientApp {
         pcEnvironment?: string;
         /** The full origin (protocol, host, port) of the Genesys Cloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property. */
         pcOrigin?: string;
+        /** Name of a query param to auto parse into the gcHostOrigin; Must be valid and used with gcTargetEnvQueryParam. */
+        gcHostOriginQueryParam?: string;
+        /** Name of a query param to auto parse into the gcTargetEnv; Must be valid and used with gcHostOriginQueryParam. */
+        gcTargetEnvQueryParam?: string;
     } = {}) {
         if (cfg) {
-            if ('pcEnvironmentQueryParam' in cfg) {
+            const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
+            if ('gcHostOriginQueryParam' in cfg || 'gcTargetEnvQueryParam' in cfg) {
+                this.assertNonEmptyString(cfg.gcHostOriginQueryParam, 'host origin query param name');
+                this.assertNonEmptyString(cfg.gcTargetEnvQueryParam, 'target env query param name');
+                this._pcEnv = this.lookupGcEnv(parsedQueryString[cfg.gcHostOriginQueryParam], parsedQueryString[cfg.gcTargetEnvQueryParam]);
+            } else if ('pcEnvironmentQueryParam' in cfg) {
                 const paramName = cfg.pcEnvironmentQueryParam;
                 this.assertNonEmptyString(paramName, 'query param name');
-                const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
                 const paramValue = parsedQueryString[paramName];
                 this.assertNonEmptyString(paramValue, `value for query param '${paramName}'`);
                 this._pcEnv = this.lookupEnv(paramValue);
@@ -210,6 +219,11 @@ class ClientApp {
     protected lookupEnv(env: string, envTlds?: string[], hostAppDevOrigin?: string) {
         const pcEnv = lookupPcEnv(env, true, envTlds, hostAppDevOrigin);
         if (!pcEnv) throw new Error(`Could not parse '${env}' into a known PureCloud environment`);
+        return pcEnv;
+    }
+    protected lookupGcEnv(hostOrigin: string, targetEnv: string, envList?: Environment[]) {
+        const pcEnv = lookupGcEnv(hostOrigin, targetEnv, envList);
+        if (!pcEnv) throw new Error(`Could not parse ${hostOrigin} (${targetEnv}) into a known GenesysCloud environment`);
         return pcEnv;
     }
 

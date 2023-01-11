@@ -83,6 +83,9 @@ Specify the Genesys Cloud environment to target when host app is running on `loc
 #### CLIENT_APP_SDK_PC_DEV_ENVS
 Whitelist additional comma-delimited top level domains (e.g. example.com).
 
+#### CLIENT_APP_SDK_GC_EXTRA_ENVS
+Adds a list of Genesys Cloud environments that should be supported.
+
 #### CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS
 Specify a JSON string mapping environment to OAuth client id to be injected into example html files.
 ```json

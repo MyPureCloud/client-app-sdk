@@ -10,6 +10,7 @@ const {
     npm_package_version,
     CLIENT_APP_SDK_HOST_APP_DEV_ORIGIN: devOrigin,
     CLIENT_APP_SDK_PC_DEV_ENVS: devEnvs,
+    CLIENT_APP_SDK_GC_EXTRA_ENVS: extraEnvs,
     BROWSER_NO_ACTIVITY_TIMEOUT: browserNoActivityTimeoutArg
 } = process.env;
 
@@ -59,6 +60,7 @@ module.exports = (config) => {
                     '__PACKAGE_VERSION__': JSON.stringify(npm_package_version),
                     '__HOST_APP_DEV_ORIGIN__': JSON.stringify(devOrigin),
                     '__PC_DEV_ENVS__': JSON.stringify(devEnvs ? devEnvs.split(',') : []),
+                    '__GC_DEV_EXTRA_ENVS__': extraEnvs || '[]',
                 }),
                 commonjs(),
                 resolve({

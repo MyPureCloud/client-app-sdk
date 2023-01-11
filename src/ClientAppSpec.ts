@@ -139,6 +139,90 @@ export default describe('ClientApp', () => {
                 });
             });
         });
+        describe('gcHostOriginQueryParam and gcTargetEnvQueryParam config', () => {
+            it('should allow a user to pass valid query param names into the constructor', () => {
+                // External
+                let query = '?gcHostOrigin=https://apps.mypurecloud.com&gcTargetEnv=prod';
+                spyOn(ClientApp, '_getQueryString').and.callFake(() => query);
+                let myClientApp = new ClientApp({
+                    gcHostOriginQueryParam: 'gcHostOrigin',
+                    gcTargetEnvQueryParam: 'gcTargetEnv'
+                });
+                expect(myClientApp.pcEnvironment).toBe('mypurecloud.com');
+                // Localhost
+                query = '?gcHostOrigin=https://localhost:1337&gcTargetEnv=prod';
+                myClientApp = new ClientApp({
+                    gcHostOriginQueryParam: 'gcHostOrigin',
+                    gcTargetEnvQueryParam: 'gcTargetEnv'
+                });
+                expect(myClientApp.pcEnvironment).toBe('localhost');
+            });
+            it('should fail if is not targeting a valid env', () => {
+                // External
+                let query = '?gcHostOrigin=https://invalid.com&gcTargetEnv=prod';
+                spyOn(ClientApp, '_getQueryString').and.callFake(() => query);
+                expect(() => {
+                    new ClientApp({
+                        gcHostOriginQueryParam: 'gcHostOrigin',
+                        gcTargetEnvQueryParam: 'gcTargetEnv'
+                    });
+                }).toThrow();
+                // Localhost
+                query = '?gcHostOrigin=https://apps.mypurecloud.com&gcTargetEnv=invalid';
+                expect(() => {
+                    new ClientApp({
+                        gcHostOriginQueryParam: 'gcHostOrigin',
+                        gcTargetEnvQueryParam: 'gcTargetEnv'
+                    });
+                }).toThrow();
+            });
+            it('should fail if the query params are badly configured or not set', () => {
+                // Missing gcHostOrigin config option
+                expect(() => {
+                    new ClientApp({ gcHostOriginQueryParam: 'gcHostOrigin' });
+                }).toThrow();
+                // Missing gcTargetEnv config option
+                expect(() => {
+                    new ClientApp({ gcTargetEnvQueryParam: 'gcTargetEnv' });
+                }).toThrow();
+                // Missing gcHostOrigin query param
+                let query = '?gcTargetEnv=prod';
+                spyOn(ClientApp, '_getQueryString').and.callFake(() => query);
+                expect(() => {
+                    new ClientApp({
+                        gcHostOriginQueryParam: 'gcHostOrigin',
+                        gcTargetEnvQueryParam: 'gcTargetEnv'
+                    });
+                }).toThrow();
+                // Missing gcTargetEnv query param
+                query = '?gcHostOrigin=https://apps.mypurecloud.com';
+                expect(() => {
+                    new ClientApp({
+                        gcHostOriginQueryParam: 'gcHostOrigin',
+                        gcTargetEnvQueryParam: 'gcTargetEnv'
+                    });
+                }).toThrow();
+            });
+            it('should fail if the query params are badly configured or not set', () => {
+                const invalidQueryParamNames = [undefined, null, 3, [], {}, '', ' '];
+                invalidQueryParamNames.forEach((currInvalidParamName) => {
+                    expect(() => {
+                        new ClientApp({
+                            gcHostOriginQueryParam: 'gcHostOrigin',
+                            // @ts-expect-error
+                            gcTargetEnvQueryParam: currInvalidParamName
+                        });
+                    }).toThrow();
+                    expect(() => {
+                        new ClientApp({
+                            gcTargetEnvQueryParam: 'gcTargetEnv',
+                            // @ts-expect-error
+                            gcHostOriginQueryParam: currInvalidParamName
+                        });
+                    }).toThrow();
+                });
+            });
+        });
         /* eslint-enable no-new */
     });
 });
