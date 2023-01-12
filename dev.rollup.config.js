@@ -43,7 +43,7 @@ export default Object.assign({}, umdConfig, {
         dir: tmpDestPath
     }),
     watch: {
-        clearScreen: false,
+        clearScreen: false
     },
     plugins: [
         ...umdConfig.plugins,

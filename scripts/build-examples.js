@@ -9,7 +9,6 @@ const {
     CLIENT_APP_SDK_PC_DEV_PLATFORM_ENV: devPlatformEnv
 } = process.env;
 const BROWSER_FILENAME = `/${pkg.name}.js`;
-const examplesPath = path.resolve('examples');
 
 // Called from command line
 if (!module.parent) {
@@ -60,9 +59,8 @@ function buildExample(outDir, relativeFilePath, bundleFileName) {
             buffer = transformPlatformEnvironment(buffer, devPlatformEnv);
         }
     }
-
     fs.outputFileSync(
-        path.join(outDir, path.relative(examplesPath, relativeFilePath)),
+        path.join(outDir, relativeFilePath.replace(/examples[/|\\]/, '')),
         buffer
     );
 }

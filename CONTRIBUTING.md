@@ -85,6 +85,14 @@ Whitelist additional comma-delimited top level domains (e.g. example.com).
 
 #### CLIENT_APP_SDK_GC_EXTRA_ENVS
 Adds a list of Genesys Cloud environments that should be supported.
+``` json
+[
+    {
+        "env": "dev",
+        "publicDomainName": "some-domain-name.ext"
+    }
+]
+```
 
 #### CLIENT_APP_SDK_PC_OAUTH_CLIENT_IDS
 Specify a JSON string mapping environment to OAuth client id to be injected into example html files.

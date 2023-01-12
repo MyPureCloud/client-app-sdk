@@ -10,7 +10,7 @@
  */
 
 import * as queryString from 'query-string';
-import { Environment } from 'genesys-cloud-service-discovery-web';
+import type { Environment } from 'genesys-cloud-service-discovery-web';
 import { lookupPcEnv, lookupGcEnv, PcEnv, DEFAULT_PC_ENV } from './utils/env';
 import AlertingApi from './modules/alerting';
 import LifecycleApi from './modules/lifecycle';

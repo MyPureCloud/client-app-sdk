@@ -165,7 +165,7 @@
                 const targetEnvQueryParamName = 'gcTargetEnv';
                 const locationSearch = (window && window.location && typeof window.location.search === 'string') ? window.location.search : '';
                 const queryParams = new URLSearchParams(locationSearch);
-                if (queryParams.get(hostQueryParamName) && queryParams.get(targetEnvQueryParamName)) {
+                if (queryParams.get(hostQueryParamName) || queryParams.get(targetEnvQueryParamName)) {
                     // Compute Genesys Cloud region from host origin
                     myClientApp = new window.purecloud.apps.ClientApp({
                         gcHostOriginQueryParam: hostQueryParamName,
