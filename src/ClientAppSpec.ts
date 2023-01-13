@@ -169,7 +169,6 @@ export default describe('ClientApp', () => {
                 }).toThrow();
                 // External
                 query = '?gcHostOrigin=https://invalid.com&gcTargetEnv=prod';
-                spyOn(ClientApp, '_getQueryString').and.callFake(() => query);
                 expect(() => {
                     new ClientApp({
                         gcHostOriginQueryParam: 'gcHostOrigin',
