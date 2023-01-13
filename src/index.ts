@@ -10,8 +10,7 @@
  */
 
 import * as queryString from 'query-string';
-import type { Environment } from 'genesys-cloud-service-discovery-web';
-import { lookupPcEnv, lookupGcEnv, PcEnv, DEFAULT_PC_ENV } from './utils/env';
+import { lookupPcEnv, lookupGcEnv, PcEnv, DEFAULT_PC_ENV, EnvironmentParser } from './utils/env';
 import AlertingApi from './modules/alerting';
 import LifecycleApi from './modules/lifecycle';
 import CoreUiApi from './modules/ui';
@@ -221,8 +220,8 @@ class ClientApp {
         if (!pcEnv) throw new Error(`Could not parse '${env}' into a known PureCloud environment`);
         return pcEnv;
     }
-    protected lookupGcEnv(hostOrigin: string, targetEnv: string, envList?: Environment[]) {
-        const pcEnv = lookupGcEnv(hostOrigin, targetEnv, envList);
+    protected lookupGcEnv(hostOrigin: string, targetEnv: string, parseEnvironment?: EnvironmentParser) {
+        const pcEnv = lookupGcEnv(hostOrigin, targetEnv, parseEnvironment);
         if (!pcEnv) throw new Error(`Could not parse ${hostOrigin} (${targetEnv}) into a known GenesysCloud environment`);
         return pcEnv;
     }

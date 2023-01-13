@@ -1,8 +1,6 @@
-import { Environment, getEnvironments, parse } from 'genesys-cloud-service-discovery-web';
+import { getEnvironments, parse } from 'genesys-cloud-service-discovery-web';
 
-interface GCEnvironment extends Environment {
-    extra?: boolean;
-}
+export type EnvironmentParser = typeof parse;
 export interface PcEnv {
     pcEnvTld: string;
     pcAppOrigin: string;
@@ -23,31 +21,27 @@ const PC_ENV_TLDS = environments
         return tlds;
     }, [] as string[])
     .concat(__PC_DEV_ENVS__);
-const ALL_GC_ENVS: GCEnvironment[] = environments.concat(__GC_DEV_EXTRA_ENVS__.map((e) => { return { ...e, extra: true }; }));
 
 const [defaultEnv] = environments.filter(env => env.region === DEFAULT_ENV_REGION);
 
 export const DEFAULT_PC_ENV = buildPcEnv(defaultEnv.publicDomainName);
 
-function findPcEnvironment(location: URL, targetEnv: string, envList: GCEnvironment[]): PcEnv|null {
-    for (const environment of envList) {
-        if (environment.extra) {
+function findPcEnvironment(location: URL, targetEnv: string, parseEnvironment: EnvironmentParser): PcEnv|null {
+    const parsedEnv = parseEnvironment(location.origin, {});
+    if (parsedEnv && parsedEnv.name === targetEnv) {
+        return {
+            pcEnvTld: parsedEnv.publicDomainName,
+            pcAppOrigin: location.origin
+        };
+    } else {
+        for (const environment of __GC_DEV_EXTRA_ENVS__) {
             const publicDomains = [environment.publicDomainName, ...(environment.publicDomainAliases || [])];
-            const matchingDomain = publicDomains.find((p) => `apps.${p}` === location.hostname);
+            const matchingDomain = publicDomains.find((p) => location.hostname.endsWith(p));
             if (environment.env === targetEnv && matchingDomain) {
-                return buildPcEnv(matchingDomain);
-            }
-        } else {
-            try {
-                const parsedEnv = parse(location.origin, {});
-                if (parsedEnv && parsedEnv.name === targetEnv) {
-                    return {
-                        pcEnvTld: parsedEnv.publicDomainName,
-                        pcAppOrigin: location.origin
-                    };
-                }
-            } catch {
-                continue;
+                return {
+                    pcEnvTld: environment.publicDomainName,
+                    pcAppOrigin: location.origin
+                };
             }
         }
     }
@@ -99,7 +93,7 @@ export const lookupPcEnv = (pcEnvTld: string, lenient = false, envTlds: string[]
  * @param url A string representing the Genesys Cloud environment top-level domain to search for
  * @returns A Genesys Cloud environment object if found; null otherwise.
  */
-export const lookupGcEnv = (url: string, targetEnv: string, envList: GCEnvironment[] = ALL_GC_ENVS): PcEnv|null => {
+export const lookupGcEnv = (url: string, targetEnv: string, parseEnvironment: EnvironmentParser = parse): PcEnv|null => {
     try {
         const hostLocation = new URL(url);
         if (['localhost', '127.0.0.1'].includes(hostLocation.hostname)) {
@@ -108,7 +102,7 @@ export const lookupGcEnv = (url: string, targetEnv: string, envList: GCEnvironme
                 pcAppOrigin: hostLocation.origin
             };
         } else {
-            return findPcEnvironment(hostLocation, targetEnv, envList);
+            return findPcEnvironment(hostLocation, targetEnv, parseEnvironment);
         }
     } catch {
         return null;

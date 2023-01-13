@@ -158,8 +158,17 @@ export default describe('ClientApp', () => {
                 expect(myClientApp.pcEnvironment).toBe('localhost');
             });
             it('should fail if is not targeting a valid env', () => {
+                // Mismatch
+                let query = '?gcHostOrigin=https://apps.mypurecloud.jp&gcTargetEnv=prod';
+                spyOn(ClientApp, '_getQueryString').and.callFake(() => query);
+                expect(() => {
+                    new ClientApp({
+                        gcHostOriginQueryParam: 'gcHostOrigin',
+                        gcTargetEnvQueryParam: 'gcTargetEnv'
+                    });
+                }).toThrow();
                 // External
-                let query = '?gcHostOrigin=https://invalid.com&gcTargetEnv=prod';
+                query = '?gcHostOrigin=https://invalid.com&gcTargetEnv=prod';
                 spyOn(ClientApp, '_getQueryString').and.callFake(() => query);
                 expect(() => {
                     new ClientApp({
