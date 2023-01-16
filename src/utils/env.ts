@@ -21,10 +21,15 @@ const PC_ENV_TLDS = environments
         return tlds;
     }, [] as string[])
     .concat(__PC_DEV_ENVS__);
+const GC_ENV_TARGETS = new Set<string>([...environments, ...__GC_DEV_EXTRA_ENVS__].map((e) => e.env));
 
 const [defaultEnv] = environments.filter(env => env.region === DEFAULT_ENV_REGION);
 
 export const DEFAULT_PC_ENV = buildPcEnv(defaultEnv.publicDomainName);
+
+function isKnownTargetEnv(targetEnv: string) {
+    return GC_ENV_TARGETS.has(targetEnv);
+}
 
 function findPcEnvironment(location: URL, targetEnv: string, parseEnvironment: EnvironmentParser): PcEnv|null {
     const parsedEnv = parseEnvironment(location.origin, {});
@@ -36,7 +41,7 @@ function findPcEnvironment(location: URL, targetEnv: string, parseEnvironment: E
     } else {
         for (const environment of __GC_DEV_EXTRA_ENVS__) {
             const publicDomains = [environment.publicDomainName, ...(environment.publicDomainAliases || [])];
-            const matchingDomain = publicDomains.find((p) => location.hostname.endsWith(p));
+            const matchingDomain = publicDomains.find((p) => location.hostname === p || location.hostname.endsWith(`.${p}`));
             if (environment.env === targetEnv && matchingDomain) {
                 return {
                     pcEnvTld: environment.publicDomainName,
@@ -89,11 +94,16 @@ export const lookupPcEnv = (pcEnvTld: string, lenient = false, envTlds: string[]
 };
 
 /**
- * Attempts to locate a PC environment corresponding to the provided url
- * @param url A string representing the Genesys Cloud environment top-level domain to search for
+ * Attempts to locate a GC environment corresponding to the provided origin/targetEnv combination
+ * @param url A string representing the Genesys Cloud environment url
+ * @param targetEnv A string representing the Genesys Cloud environment target
+ * @param parseEnvironment A method used to parse the Genesys Cloud environment url
  * @returns A Genesys Cloud environment object if found; null otherwise.
  */
 export const lookupGcEnv = (url: string, targetEnv: string, parseEnvironment: EnvironmentParser = parse): PcEnv|null => {
+    if (!isKnownTargetEnv(targetEnv)) {
+        return null;
+    }
     try {
         const hostLocation = new URL(url);
         if (['localhost', '127.0.0.1'].includes(hostLocation.hostname)) {

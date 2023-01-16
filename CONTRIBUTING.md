@@ -89,7 +89,7 @@ Adds a list of Genesys Cloud environments that should be supported.
 [
     {
         "env": "dev",
-        "publicDomainName": "some-domain-name.ext"
+        "publicDomainName": "some-domain-name.tld"
     }
 ]
 ```
