@@ -134,5 +134,20 @@ export default describe('env utils', () => {
                 pcAppOrigin: 'https://apps.mypurecloud.jp:8443'
             });
         });
+        it('should support custom envs provided via environment variables', () => {
+            // Tests assume a prod-unit-testing env has been configured in this unit testing env (see karma.conf.js)
+            expect(envUtils.lookupGcEnv('https://localhost:8443', 'prod-unit-testing')).toEqual({
+                pcEnvTld: 'localhost',
+                pcAppOrigin: 'https://localhost:8443'
+            });
+            expect(envUtils.lookupGcEnv('https://apps.unit1.pure.cloud', 'prod-unit-testing')).toEqual({
+                pcEnvTld: 'unit1.pure.cloud',
+                pcAppOrigin: 'https://apps.unit1.pure.cloud'
+            });
+            expect(envUtils.lookupGcEnv('https://app.unit1.test.ftw', 'prod-unit-testing')).toEqual({
+                pcEnvTld: 'unit1.pure.cloud',
+                pcAppOrigin: 'https://app.unit1.test.ftw'
+            });
+        });
     });
 });

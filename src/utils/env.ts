@@ -42,7 +42,7 @@ function findPcEnvironment(location: URL, targetEnv: string, parseEnvironment: E
         for (const environment of __GC_DEV_EXTRA_ENVS__) {
             const publicDomains = [environment.publicDomainName, ...(environment.publicDomainAliases || [])];
             const matchingDomain = publicDomains.find((p) => location.hostname === p || location.hostname.endsWith(`.${p}`));
-            if (environment.env === targetEnv && matchingDomain) {
+            if (matchingDomain && environment.name === targetEnv) {
                 return {
                     pcEnvTld: environment.publicDomainName,
                     pcAppOrigin: location.origin
