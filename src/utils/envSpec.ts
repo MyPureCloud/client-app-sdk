@@ -104,6 +104,9 @@ export default describe('env utils', () => {
             expect(envUtils.lookupGcEnv('https://localhost:8443', 'prod-noMatch')).toBe(null);
             expect(envUtils.lookupGcEnv('https://apps.mypurecloud.com', 'prod-noMatch')).toBe(null);
         });
+        it('should fail if the targetOrigin does not match a known environment', () => {
+            expect(envUtils.lookupGcEnv('https://apps.mypurecloud.com.nomatch', 'prod')).toBe(null);
+        });
         it('should allow localhost origins with a valid targetEnv', () => {
             expect(envUtils.lookupGcEnv('http://127.0.0.1:8080', 'prod')).toEqual({
                 pcEnvTld: 'localhost',
@@ -148,6 +151,7 @@ export default describe('env utils', () => {
                 pcEnvTld: 'unit1.pure.cloud',
                 pcAppOrigin: 'https://app.unit1.test.ftw'
             });
+            expect(envUtils.lookupGcEnv('https://app.unit1.test.ftw.nomatch', 'prod-unit-testing')).toBe(null);
         });
     });
 });
