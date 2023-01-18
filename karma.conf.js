@@ -10,8 +10,21 @@ const {
     npm_package_version,
     CLIENT_APP_SDK_HOST_APP_DEV_ORIGIN: devOrigin,
     CLIENT_APP_SDK_PC_DEV_ENVS: devEnvs,
+    CLIENT_APP_SDK_GC_EXTRA_ENVS: extraEnvs,
     BROWSER_NO_ACTIVITY_TIMEOUT: browserNoActivityTimeoutArg
 } = process.env;
+
+// Add an env specifically for unit testing purposes
+const unitTestingEnv = {
+    "name": "prod-unit-testing",
+    "env": "prod",
+    "region": "un-it-1",
+    "status": "beta",
+    "publicDomainName": "unit1.pure.cloud",
+    "publicDomainAliases": [
+        "unit1.test.ftw"
+    ]
+};
 
 module.exports = (config) => {
     config.set({
@@ -59,6 +72,7 @@ module.exports = (config) => {
                     '__PACKAGE_VERSION__': JSON.stringify(npm_package_version),
                     '__HOST_APP_DEV_ORIGIN__': JSON.stringify(devOrigin),
                     '__PC_DEV_ENVS__': JSON.stringify(devEnvs ? devEnvs.split(',') : []),
+                    '__GC_DEV_EXTRA_ENVS__': JSON.stringify([...(extraEnvs ? JSON.parse(extraEnvs) : []), unitTestingEnv])
                 }),
                 commonjs(),
                 resolve({

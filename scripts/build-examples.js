@@ -59,9 +59,8 @@ function buildExample(outDir, relativeFilePath, bundleFileName) {
             buffer = transformPlatformEnvironment(buffer, devPlatformEnv);
         }
     }
-
     fs.outputFileSync(
-        path.join(outDir, relativeFilePath.replace('examples/', '')),
+        path.join(outDir, relativeFilePath.replace(/examples[/|\\]/, '')),
         buffer
     );
 }
@@ -69,7 +68,7 @@ function buildExample(outDir, relativeFilePath, bundleFileName) {
 function buildExamples(outDir, bundleFileName) {
     glob
         .sync('examples/**/*', { nodir: true })
-        .forEach(example => buildExample(outDir, example, bundleFileName));
+        .forEach((example) => buildExample(outDir, path.normalize(example), bundleFileName));
 }
 
 module.exports = { buildExample, buildExamples };

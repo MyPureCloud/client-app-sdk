@@ -6,8 +6,10 @@ import path from 'path';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
 import { umdConfig } from './rollup.config';
+
 const { buildExample, buildExamples } = require('./scripts/build-examples');
 
+const examplesPath = path.resolve('examples');
 const tmpDestPath = fs.mkdtempSync(path.join(os.tmpdir(), `${pkg.name}-dev-server-`));
 
 let httpsConfig;
@@ -21,14 +23,15 @@ try {
 }
 
 const tsc = () => {
-    return new Promise((resolve) => {
-        const bin = require.resolve('typescript/bin/tsc');
+    return new Promise((resolve, reject) => {
+        const bin = process.platform === 'win32' ? require.resolve('.bin/tsc.cmd') : require.resolve('.bin/tsc');
         spawn(bin, [
             '--incremental',
             '--outDir', `${tmpDestPath}/ts-build`,
             '--project', 'tsconfig.build.json'
         ], { stdio: 'inherit' })
-            .on('exit', resolve);
+            .on('exit', resolve)
+            .on('error', (err) => reject(err));
     });
 };
 
@@ -47,13 +50,14 @@ export default Object.assign({}, umdConfig, {
         {
             name: 'process-examples',
             async buildStart() {
-                this.addWatchFile(path.resolve('examples'));
+                this.addWatchFile(examplesPath);
                 await tsc(); // Check typescript types
             },
             watchChange(id) {
                 // Rebuild individual example file when changed
-                if (id.indexOf('examples/') < 0) return;
-                buildExample(tmpDestPath, path.relative(__dirname, id));
+                if (id.startsWith(examplesPath)) {
+                    buildExample(tmpDestPath, path.relative(__dirname, id));
+                }
             }
         },
         serve({

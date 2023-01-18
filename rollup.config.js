@@ -5,6 +5,10 @@ import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 import replace from '@rollup/plugin-replace';
+import dotenv from 'dotenv';
+
+// Get .env variables
+dotenv.config();
 
 const DEST_DIR = 'dist';
 const GLOBAL_LIBRARY_NAME = 'purecloud.apps.ClientApp';
@@ -26,7 +30,8 @@ const {
     npm_package_name,
     npm_package_version,
     CLIENT_APP_SDK_HOST_APP_DEV_ORIGIN: devOrigin,
-    CLIENT_APP_SDK_PC_DEV_ENVS: devEnvs
+    CLIENT_APP_SDK_PC_DEV_ENVS: devEnvs,
+    CLIENT_APP_SDK_GC_EXTRA_ENVS: extraEnvs
 } = process.env;
 
 // Packages to exclude from esm/cjs bundles
@@ -59,6 +64,7 @@ const baseRollupConfig = {
             '__PACKAGE_VERSION__': JSON.stringify(npm_package_version),
             '__HOST_APP_DEV_ORIGIN__': JSON.stringify(devOrigin),
             '__PC_DEV_ENVS__': JSON.stringify(devEnvs ? devEnvs.split(',') : []),
+            '__GC_DEV_EXTRA_ENVS__': extraEnvs || '[]',
         }),
         commonjs(),
         resolve({ extensions: ['.js', '.ts'] }),
