@@ -183,7 +183,7 @@ export default describe('ClientApp', () => {
                         gcTargetEnvQueryParam: 'gcTargetEnv'
                     });
                 }).toThrow();
-                // Localhost
+                // Invalid target env 
                 query = '?gcHostOrigin=https://apps.mypurecloud.com&gcTargetEnv=invalid';
                 expect(() => {
                     new ClientApp({

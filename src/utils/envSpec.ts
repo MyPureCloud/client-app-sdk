@@ -91,12 +91,47 @@ export default describe('env utils', () => {
                 [],
                 '', // Empty string
                 ' ', // Blank string
-                `. https://apps.mypurecloud.io /`, // Inner whitespace
+                '. https://apps.mypurecloud.io /', // Inner whitespace
+                'apps.mypurecloud.com', // Missing protocol
             ];
             variations.forEach((currentVariation) => {
                 // @ts-expect-error
                 const resolvedEnv = envUtils.lookupGcEnv(currentVariation, 'prod');
                 expect(resolvedEnv).toBe(null);
+            });
+        });
+        it('should fail if the targetEnv does not point to a valid env name', () => {
+            expect(envUtils.lookupGcEnv('https://localhost:8443', 'prod-noMatch')).toBe(null);
+            expect(envUtils.lookupGcEnv('https://apps.mypurecloud.com', 'prod-noMatch')).toBe(null);
+        });
+        it('should allow localhost origins with a valid targetEnv', () => {
+            expect(envUtils.lookupGcEnv('http://127.0.0.1:8080', 'prod')).toEqual({
+                pcEnvTld: 'localhost',
+                pcAppOrigin: 'http://127.0.0.1:8080'
+            });
+            expect(envUtils.lookupGcEnv('https://localhost:8443', 'prod-apne1')).toEqual({
+                pcEnvTld: 'localhost',
+                pcAppOrigin: 'https://localhost:8443'
+            });
+        });
+        it('should enforce that targetEnv matches the matched origin for a given env', () => {
+            const prodApne1Origin = 'https://apps.mypurecloud.jp';
+
+            expect(envUtils.lookupGcEnv(prodApne1Origin, 'prod')).toBe(null);
+            expect(envUtils.lookupGcEnv(prodApne1Origin, 'prod-apne1')).toEqual({
+                pcEnvTld: 'mypurecloud.jp',
+                pcAppOrigin: 'https://apps.mypurecloud.jp'
+            });
+        });
+        it('should use the specified url origin as the pcAppOrigin used for communicating with the host app', () => {
+            expect(envUtils.lookupGcEnv('https://app.mypurecloud.jp', 'prod-apne1')).toEqual({
+                pcEnvTld: 'mypurecloud.jp',
+                pcAppOrigin: 'https://app.mypurecloud.jp'
+            });
+            // This case of non-standard port is allowed, but, unlikely to be used
+            expect(envUtils.lookupGcEnv('https://apps.mypurecloud.jp:8443', 'prod-apne1')).toEqual({
+                pcEnvTld: 'mypurecloud.jp',
+                pcAppOrigin: 'https://apps.mypurecloud.jp:8443'
             });
         });
     });
