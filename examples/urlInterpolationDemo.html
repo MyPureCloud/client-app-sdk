@@ -73,6 +73,8 @@
                 var queryString = window.location.search.substring(1);
                 var pairs = queryString.split('&');
                 var pcEnv = null;
+                var gcHostOrigin = null;
+                var gcTargetEnv = null;
                 for (let i = 0; i < pairs.length; i++)
                 {
                     let currParam = pairs[i].split('=');
@@ -95,6 +97,10 @@
                         usePopupAuth = getParamValue(currParam)
                         currLiDt = '<dt>{{pcUsePopupAuth}}</dt>';
                         currLiDd.textContent = usePopupAuth;
+                    } else if (currParam[0] === 'gcHostOrigin') {
+                        gcHostOrigin = getParamValue(currParam)
+                    } else if (currParam[0] === 'gcTargetEnv') {
+                        gcTargetEnv = getParamValue(currParam)
                     }
 
 
@@ -108,7 +114,19 @@
                     let currLiDd = document.createElement('dd');
                     currLiDd.textContent = pcEnv;
                     $('dl.url-vars').append('<dt>{{pcEnvironment}}</dt>');
-                    $('dl.url-vars').append(currLiDd);                    
+                    $('dl.url-vars').append(currLiDd);
+                }
+                if (gcHostOrigin) {
+                    let currLiDd = document.createElement('dd');
+                    currLiDd.textContent = gcHostOrigin;
+                    $('dl.url-vars').append('<dt>{{gcHostOrigin}}</dt>');
+                    $('dl.url-vars').append(currLiDd);
+                }
+                if (gcTargetEnv) {
+                    let currLiDd = document.createElement('dd');
+                    currLiDd.textContent = gcTargetEnv;
+                    $('dl.url-vars').append('<dt>{{gcTargetEnv}}</dt>');
+                    $('dl.url-vars').append(currLiDd);
                 }
 
                 $('.welcome-text').text(welcomeTokens[langTag] || welcomeTokens[DEFAULT_LANG_TAG]);

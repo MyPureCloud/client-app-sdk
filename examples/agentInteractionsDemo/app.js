@@ -152,19 +152,27 @@ new Vue({
     },
 
     beforeMount() {
-        let pcEnvironment = getEmbeddingPCEnv();
-        if (!pcEnvironment) {
-            this.errorMessage = 'Cannot identify App Embeddding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?';
-            return;
-        }
+        const queryParameters = getQueryParameters();
+        const state = computeState(queryParameters);
+        let pcEnvironment = queryParameters.pcEnvironment;
 
         let client = platformClient.ApiClient.instance;
         let clientApp = null;
         try {
-            clientApp = new window.purecloud.apps.ClientApp({
-                pcEnvironment,
-            });
-            Vue.prototype.$clientApp = clientApp;
+            if (queryParameters.gcHostOrigin && queryParameters.gcTargetEnv) {
+                clientApp = new window.purecloud.apps.ClientApp({
+                    gcHostOrigin: queryParameters.gcHostOrigin,
+                    gcTargetEnv: queryParameters.gcTargetEnv
+                });
+                pcEnvironment = clientApp.pcEnvironment;
+                Vue.prototype.$clientApp = clientApp;
+            } else if (pcEnvironment) {
+                clientApp = new window.purecloud.apps.ClientApp({ pcEnvironment });
+                Vue.prototype.$clientApp = clientApp;
+            } else {
+                this.errorMessage = 'Cannot identify App Embedding context.  Did you forget to add gcHostOrigin={{gcHostOrigin}}&gcTargetEnv={{gcTargetEnv}} to your app\'s query string?';
+                return;
+            }
         } catch (e) {
             console.log(e);
             this.errorMessage = pcEnvironment + ": Unknown/Unsupported Genesys Cloud Embed Context";
@@ -271,7 +279,7 @@ new Vue({
         }
 
         // Authentication and main flow
-        authenticate(client, pcEnvironment)
+        authenticate(client, pcEnvironment, state)
             .then(() => {
                 authenticated = true;
                 return usersApi.getUsersMe({ "expand": ["presence"] });
