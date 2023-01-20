@@ -40,7 +40,8 @@ class ClientApp {
      *
      * ```ts
      * let clientApp = new ClientApp({
-     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     *   gcHostOriginQueryParam: 'gcHostOrigin',
+     *   gcTargetEnvQueryParam: 'gcTargetEnv'
      * });
      *
      * clientApp.alerting.someMethod(...);
@@ -53,7 +54,8 @@ class ClientApp {
      *
      * ```ts
      * let clientApp = new ClientApp({
-     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     *   gcHostOriginQueryParam: 'gcHostOrigin',
+     *   gcTargetEnvQueryParam: 'gcTargetEnv'
      * });
      *
      * clientApp.lifecycle.someMethod(...);
@@ -66,7 +68,8 @@ class ClientApp {
      *
      * ```ts
      * let clientApp = new ClientApp({
-     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     *   gcHostOriginQueryParam: 'gcHostOrigin',
+     *   gcTargetEnvQueryParam: 'gcTargetEnv'
      * });
      *
      * clientApp.coreUi.someMethod(...);
@@ -79,7 +82,8 @@ class ClientApp {
      *
      * ```ts
      * let clientApp = new ClientApp({
-     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     *   gcHostOriginQueryParam: 'gcHostOrigin',
+     *   gcTargetEnvQueryParam: 'gcTargetEnv'
      * });
      *
      * clientApp.users.someMethod(...);
@@ -94,7 +98,8 @@ class ClientApp {
      *
      * ```ts
      * let clientApp = new ClientApp({
-     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     *   gcHostOriginQueryParam: 'gcHostOrigin',
+     *   gcTargetEnvQueryParam: 'gcTargetEnv'
      * });
      *
      * clientApp.directory.someMethod(...);
@@ -108,7 +113,8 @@ class ClientApp {
      *
      * ```ts
      * let clientApp = new ClientApp({
-     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     *   gcHostOriginQueryParam: 'gcHostOrigin',
+     *   gcTargetEnvQueryParam: 'gcTargetEnv'
      * });
      *
      * clientApp.conversations.someMethod(...);
@@ -121,7 +127,8 @@ class ClientApp {
      *
      * ```ts
      * let clientApp = new ClientApp({
-     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     *   gcHostOriginQueryParam: 'gcHostOrigin',
+     *   gcTargetEnvQueryParam: 'gcTargetEnv'
      * });
      *
      * clientApp.myConversations.someMethod(...);
@@ -136,7 +143,8 @@ class ClientApp {
      *
      * ```ts
      * let clientApp = new ClientApp({
-     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     *   gcHostOriginQueryParam: 'gcHostOrigin',
+     *   gcTargetEnvQueryParam: 'gcTargetEnv'
      * });
      *
      * clientApp.externalContacts.someMethod(...);
@@ -151,23 +159,42 @@ class ClientApp {
      *
      * ```ts
      * let clientApp = new ClientApp({
-     *   pcEnvironmentQueryParam: 'pcEnvironment'
+     *   gcHostOriginQueryParam: 'gcHostOrigin',
+     *   gcTargetEnvQueryParam: 'gcTargetEnv'
      * });
      * ```
      *
      * @param cfg - Runtime config of the client
      */
     constructor(cfg: {
-        /** Name of a query param to auto parse into the pcEnvironment; Must be valid and a single param.  Best Practice. */
+        /** Name of a query param to auto parse into the pcEnvironment; Must be valid and a single param. */
         pcEnvironmentQueryParam?: string;
-        /** The PC top-level domain (e.g. mypurecloud.com, mypurecloud.au); Must be a valid PC Env tld; Prefered over pcOrigin. */
+        /** The PC top-level domain (e.g. mypurecloud.com, mypurecloud.au); Must be a valid PC Env tld; Preferred over pcOrigin. */
         pcEnvironment?: string;
         /** The full origin (protocol, host, port) of the Genesys Cloud host environment (e.g. https://apps.mypurecloud.com).  Prefer using pcEnvironment[QueryParam] over this property. */
         pcOrigin?: string;
-        /** Name of a query param to auto parse into the gcHostOrigin; Must be valid and used with gcTargetEnvQueryParam. */
+        /**
+         * Name of a query param to auto parse into the gcHostOrigin.
+         * Must be valid and used with gcTargetEnvQueryParam.
+         * Best Practice.
+         */
         gcHostOriginQueryParam?: string;
-        /** Name of a query param to auto parse into the gcTargetEnv; Must be valid and used with gcHostOriginQueryParam. */
+        /**
+         * Name of a query param to auto parse into the gcTargetEnv.
+         * Must be valid and used with gcHostOriginQueryParam.
+         * Best Practice.
+         */
         gcTargetEnvQueryParam?: string;
+        /**
+         * The GC host origin (e.g. https://apps.mypurecloud.com, https://apps.mypurecloud.au).
+         * Must be a valid origin and used with gcTargetEnv.
+         */
+        gcHostOrigin?: string;
+        /**
+         * The GC env target (e.g. prod, prod-euw2).
+         * Must be a valid environment name and used with gcHostOrigin.
+         */
+        gcTargetEnv?: string;
     } = {}) {
         if (cfg) {
             const parsedQueryString = queryString.parse(ClientApp._getQueryString() || '');
@@ -175,6 +202,10 @@ class ClientApp {
                 this.assertNonEmptyString(cfg.gcHostOriginQueryParam, 'host origin query param name');
                 this.assertNonEmptyString(cfg.gcTargetEnvQueryParam, 'target env query param name');
                 this._pcEnv = this.lookupGcEnv(parsedQueryString[cfg.gcHostOriginQueryParam], parsedQueryString[cfg.gcTargetEnvQueryParam]);
+            } else if ('gcHostOrigin' in cfg || 'gcTargetEnv' in cfg) {
+                this.assertNonEmptyString(cfg.gcHostOrigin, 'gcHostOrigin');
+                this.assertNonEmptyString(cfg.gcTargetEnv, 'gcTargetEnv');
+                this._pcEnv = this.lookupGcEnv(cfg.gcHostOrigin, cfg.gcTargetEnv);
             } else if ('pcEnvironmentQueryParam' in cfg) {
                 const paramName = cfg.pcEnvironmentQueryParam;
                 this.assertNonEmptyString(paramName, 'query param name');

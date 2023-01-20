@@ -183,7 +183,7 @@ export default describe('ClientApp', () => {
                         gcTargetEnvQueryParam: 'gcTargetEnv'
                     });
                 }).toThrow();
-                // Invalid target env 
+                // Invalid target env
                 query = '?gcHostOrigin=https://apps.mypurecloud.com&gcTargetEnv=invalid';
                 expect(() => {
                     new ClientApp({
@@ -234,6 +234,81 @@ export default describe('ClientApp', () => {
                             gcTargetEnvQueryParam: 'gcTargetEnv',
                             // @ts-expect-error
                             gcHostOriginQueryParam: currInvalidParamName
+                        });
+                    }).toThrow();
+                });
+            });
+        });
+        describe('gcHostOrigin and gcTargetEnv config', () => {
+            it('should allow a user to pass valid origin and target env into the constructor', () => {
+                // External
+                let myClientApp = new ClientApp({
+                    gcHostOrigin: 'https://apps.mypurecloud.com',
+                    gcTargetEnv: 'prod'
+                });
+                expect(myClientApp.pcEnvironment).toBe('mypurecloud.com');
+                // Localhost
+                myClientApp = new ClientApp({
+                    gcHostOrigin: 'https://localhost:1337',
+                    gcTargetEnv: 'prod'
+                });
+                expect(myClientApp.pcEnvironment).toBe('localhost');
+            });
+            it('should fail if is not targeting a valid env', () => {
+                // Mismatch Environment
+                expect(() => {
+                    new ClientApp({
+                        gcHostOrigin: 'https://apps.mypurecloud.jp',
+                        gcTargetEnv: 'prod'
+                    });
+                }).toThrow();
+                // Mismatch Localhost
+                expect(() => {
+                    new ClientApp({
+                        gcHostOrigin: 'https://localhost:1337',
+                        gcTargetEnv: 'unknown'
+                    });
+                }).toThrow();
+                // External
+                expect(() => {
+                    new ClientApp({
+                        gcHostOrigin: 'https://invalid.com',
+                        gcTargetEnv: 'prod'
+                    });
+                }).toThrow();
+                // Invalid target env
+                expect(() => {
+                    new ClientApp({
+                        gcHostOrigin: 'https://apps.mypurecloud.com',
+                        gcTargetEnv: 'invalid'
+                    });
+                }).toThrow();
+            });
+            it('should fail if the host origin and target env are not set', () => {
+                // Missing gcHostOrigin config option
+                expect(() => {
+                    new ClientApp({ gcHostOrigin: 'https://apps.mypurecloud.com' });
+                }).toThrow();
+                // Missing gcTargetEnv config option
+                expect(() => {
+                    new ClientApp({ gcTargetEnv: 'prod' });
+                }).toThrow();
+            });
+            it('should fail if the host origin and target env are not configured', () => {
+                const invalidValues = [undefined, null, 3, [], {}, '', ' '];
+                invalidValues.forEach((invalidValue) => {
+                    expect(() => {
+                        new ClientApp({
+                            gcHostOrigin: 'https://apps.mypurecloud.com',
+                            // @ts-expect-error
+                            gcTargetEnv: invalidValue
+                        });
+                    }).toThrow();
+                    expect(() => {
+                        new ClientApp({
+                            gcTargetEnv: 'prod',
+                            // @ts-expect-error
+                            gcHostOrigin: invalidValue
                         });
                     }).toThrow();
                 });
