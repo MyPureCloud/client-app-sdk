@@ -192,7 +192,7 @@ class ClientApp {
         gcHostOrigin?: string;
         /**
          * The GC env target (e.g. prod, prod-euw2).
-         * Must be a valid origin and used with gcHostOrigin.
+         * Must be a valid environment name and used with gcHostOrigin.
          */
         gcTargetEnv?: string;
     } = {}) {
