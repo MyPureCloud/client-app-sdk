@@ -167,14 +167,6 @@ export default describe('ClientApp', () => {
                         gcTargetEnvQueryParam: 'gcTargetEnv'
                     });
                 }).toThrow();
-                // Mismatch Localhost
-                query = '?gcHostOrigin=https://localhost:1337&gcTargetEnv=unknown';
-                expect(() => {
-                    new ClientApp({
-                        gcHostOriginQueryParam: 'gcHostOrigin',
-                        gcTargetEnvQueryParam: 'gcTargetEnv'
-                    });
-                }).toThrow();
                 // External
                 query = '?gcHostOrigin=https://invalid.com&gcTargetEnv=prod';
                 expect(() => {
@@ -260,13 +252,6 @@ export default describe('ClientApp', () => {
                     new ClientApp({
                         gcHostOrigin: 'https://apps.mypurecloud.jp',
                         gcTargetEnv: 'prod'
-                    });
-                }).toThrow();
-                // Mismatch Localhost
-                expect(() => {
-                    new ClientApp({
-                        gcHostOrigin: 'https://localhost:1337',
-                        gcTargetEnv: 'unknown'
                     });
                 }).toThrow();
                 // External

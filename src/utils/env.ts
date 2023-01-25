@@ -21,15 +21,10 @@ const PC_ENV_TLDS = environments
         return tlds;
     }, [] as string[])
     .concat(__PC_DEV_ENVS__);
-const GC_ENV_NAMES = new Set<string>([...environments, ...__GC_DEV_EXTRA_ENVS__].map((e) => e.name));
 
 const [defaultEnv] = environments.filter(env => env.region === DEFAULT_ENV_REGION);
 
 export const DEFAULT_PC_ENV = buildPcEnv(defaultEnv.publicDomainName);
-
-function isKnownEnvName(toCheck: string) {
-    return GC_ENV_NAMES.has(toCheck);
-}
 
 function findPcEnvironment(location: URL, targetEnv: string, parseEnvironment: EnvironmentParser): PcEnv|null {
     const parsedEnv = parseEnvironment(location.origin, {});
@@ -101,9 +96,6 @@ export const lookupPcEnv = (pcEnvTld: string, lenient = false, envTlds: string[]
  * @returns A Genesys Cloud environment object if found; null otherwise.
  */
 export const lookupGcEnv = (url: string, targetEnv: string, parseEnvironment: EnvironmentParser = parse): PcEnv|null => {
-    if (!isKnownEnvName(targetEnv)) {
-        return null;
-    }
     try {
         const hostLocation = new URL(url);
         if (['localhost', '127.0.0.1'].includes(hostLocation.hostname)) {
