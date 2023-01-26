@@ -1,6 +1,6 @@
-import { getEnvironments, parse } from 'genesys-cloud-service-discovery-web';
+/* eslint-disable no-console */
+import { EnvironmentFilters, getEnvironments } from 'genesys-cloud-service-discovery-web';
 
-export type EnvironmentParser = typeof parse;
 export interface PcEnv {
     pcEnvTld: string;
     pcAppOrigin: string;
@@ -12,7 +12,8 @@ const buildPcEnv = (tld: string): PcEnv => ({
 });
 
 const DEFAULT_ENV_REGION = 'us-east-1';
-const environments = getEnvironments({ env: ['prod', 'fedramp'], status: ['beta', 'stable'] });
+const ENVIRONMENT_FILTERS: EnvironmentFilters = { env: ['prod', 'fedramp'], status: ['beta', 'stable'] };
+const environments = getEnvironments(ENVIRONMENT_FILTERS);
 
 const PC_ENV_TLDS = environments
     .reduce((tlds, env) => {
@@ -21,18 +22,25 @@ const PC_ENV_TLDS = environments
         return tlds;
     }, [] as string[])
     .concat(__PC_DEV_ENVS__);
-const GC_ENV_NAMES = new Set<string>([...environments, ...__GC_DEV_EXTRA_ENVS__].map((e) => e.name));
 
 const [defaultEnv] = environments.filter(env => env.region === DEFAULT_ENV_REGION);
 
 export const DEFAULT_PC_ENV = buildPcEnv(defaultEnv.publicDomainName);
 
-function isKnownEnvName(toCheck: string) {
-    return GC_ENV_NAMES.has(toCheck);
+function isKnownEnvName(toCheck: string, envs: Environment[]) {
+    const envList = new Set<string>([...envs, ...__GC_DEV_EXTRA_ENVS__].map((e) => e.name));
+    return envList.has(toCheck);
 }
 
-function findPcEnvironment(location: URL, targetEnv: string, parseEnvironment: EnvironmentParser): PcEnv|null {
-    const parsedEnv = parseEnvironment(location.origin, {});
+const matchesHostname = (hostname: string) => (domain: string) => {
+    return hostname === domain || hostname.endsWith(`.${domain}`);
+};
+
+function findPcEnvironment(location: URL, targetEnv: string, envs: Environment[]): PcEnv|null {
+    const parsedEnv = envs.find(({ publicDomainName, publicDomainAliases }) => {
+        const domains = [publicDomainName, ...publicDomainAliases].filter(d => !!d);
+        return domains.some(matchesHostname(location.hostname));
+    });
     if (parsedEnv && parsedEnv.name === targetEnv) {
         return {
             pcEnvTld: parsedEnv.publicDomainName,
@@ -41,7 +49,7 @@ function findPcEnvironment(location: URL, targetEnv: string, parseEnvironment: E
     } else {
         for (const environment of __GC_DEV_EXTRA_ENVS__) {
             const publicDomains = [environment.publicDomainName, ...(environment.publicDomainAliases || [])];
-            const matchingDomain = publicDomains.find((p) => location.hostname === p || location.hostname.endsWith(`.${p}`));
+            const matchingDomain = publicDomains.find(matchesHostname(location.hostname));
             if (matchingDomain && environment.name === targetEnv) {
                 return {
                     pcEnvTld: environment.publicDomainName,
@@ -97,11 +105,11 @@ export const lookupPcEnv = (pcEnvTld: string, lenient = false, envTlds: string[]
  * Attempts to locate a GC environment corresponding to the provided origin/targetEnv combination
  * @param url A string representing the Genesys Cloud environment url
  * @param targetEnv A string representing the Genesys Cloud environment target
- * @param parseEnvironment A method used to parse the Genesys Cloud environment url
+ * @param envs A Environment array of all available Genesys Cloud environments
  * @returns A Genesys Cloud environment object if found; null otherwise.
  */
-export const lookupGcEnv = (url: string, targetEnv: string, parseEnvironment: EnvironmentParser = parse): PcEnv|null => {
-    if (!isKnownEnvName(targetEnv)) {
+export const lookupGcEnv = (url: string, targetEnv: string, envs: Environment[] = environments): PcEnv|null => {
+    if (!isKnownEnvName(targetEnv, envs)) {
         return null;
     }
     try {
@@ -112,7 +120,7 @@ export const lookupGcEnv = (url: string, targetEnv: string, parseEnvironment: En
                 pcAppOrigin: hostLocation.origin
             };
         } else {
-            return findPcEnvironment(hostLocation, targetEnv, parseEnvironment);
+            return findPcEnvironment(hostLocation, targetEnv, envs);
         }
     } catch {
         return null;
