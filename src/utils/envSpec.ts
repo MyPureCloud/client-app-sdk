@@ -101,6 +101,7 @@ export default describe('env utils', () => {
             });
         });
         it('should fail if the targetEnv does not point to a valid env name', () => {
+            expect(envUtils.lookupGcEnv('https://localhost:8443', 'prod-noMatch')).toBe(null);
             expect(envUtils.lookupGcEnv('https://apps.mypurecloud.com', 'prod-noMatch')).toBe(null);
         });
         it('should fail if the targetOrigin does not match a known environment', () => {
