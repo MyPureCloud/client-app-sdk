@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { EnvironmentFilters, getEnvironments } from 'genesys-cloud-service-discovery-web';
+import { getEnvironments } from 'genesys-cloud-service-discovery-web';
 
 export interface PcEnv {
     pcEnvTld: string;
@@ -12,8 +12,7 @@ const buildPcEnv = (tld: string): PcEnv => ({
 });
 
 const DEFAULT_ENV_REGION = 'us-east-1';
-const ENVIRONMENT_FILTERS: EnvironmentFilters = { env: ['prod', 'fedramp'], status: ['beta', 'stable'] };
-const environments = getEnvironments(ENVIRONMENT_FILTERS);
+const environments = getEnvironments({ env: ['prod', 'fedramp'], status: ['beta', 'stable'] });
 
 const PC_ENV_TLDS = environments
     .reduce((tlds, env) => {
@@ -37,7 +36,7 @@ const matchesHostname = (hostname: string) => (domain: string) => {
 };
 
 function findPcEnvironment(location: URL, targetEnv: string, envs: Environment[]): PcEnv|null {
-    const parsedEnv = envs.find(({ publicDomainName, publicDomainAliases }) => {
+    const parsedEnv = [...envs, ...__GC_DEV_EXTRA_ENVS__].find(({ publicDomainName, publicDomainAliases }) => {
         const domains = [publicDomainName, ...publicDomainAliases].filter(d => !!d);
         return domains.some(matchesHostname(location.hostname));
     });
@@ -46,17 +45,6 @@ function findPcEnvironment(location: URL, targetEnv: string, envs: Environment[]
             pcEnvTld: parsedEnv.publicDomainName,
             pcAppOrigin: location.origin
         };
-    } else {
-        for (const environment of __GC_DEV_EXTRA_ENVS__) {
-            const publicDomains = [environment.publicDomainName, ...(environment.publicDomainAliases || [])];
-            const matchingDomain = publicDomains.find(matchesHostname(location.hostname));
-            if (matchingDomain && environment.name === targetEnv) {
-                return {
-                    pcEnvTld: environment.publicDomainName,
-                    pcAppOrigin: location.origin
-                };
-            }
-        }
     }
     return null;
 }
