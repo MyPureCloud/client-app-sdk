@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { getEnvironments } from 'genesys-cloud-service-discovery-web';
+import { getEnvironments, Environment } from 'genesys-cloud-service-discovery-web';
 
 export interface PcEnv {
     pcEnvTld: string;

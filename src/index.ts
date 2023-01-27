@@ -9,6 +9,7 @@
  * @since 1.0.0
  */
 
+import type { Environment } from 'genesys-cloud-service-discovery-web';
 import * as queryString from 'query-string';
 import { lookupPcEnv, lookupGcEnv, PcEnv, DEFAULT_PC_ENV } from './utils/env';
 import AlertingApi from './modules/alerting';
