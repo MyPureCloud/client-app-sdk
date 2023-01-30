@@ -107,7 +107,7 @@ We recommend configuring your app so the PC environment can be seeded into the u
 
 1. When registering your app, configure the URL in the format: https://myapp.mydomain.com?gcHostOrigin=\{\{gcHostOrigin\}\}&gcTargetEnv=\{\{gcTargetEnv\}\}
 1. Include `gcHostOriginQueryParam: 'gcHostOrigin'` and `gcTargetEnvQueryParam: 'gcTargetEnv'` in your ClientApp config to dynamically determine the environment
-1. Use `myClientApp.pcEnvironment` to access the environment later when needed (e.g. to pass to the [Genesys Cloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html)).
+1. Use `myClientApp.gcEnvironment` to access the environment later when needed (e.g. to pass to the [Genesys Cloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html)).
 
 ### Manual Configuration
 
