@@ -30,6 +30,9 @@ export default describe('ClientApp', () => {
             myClientApp = new ClientApp({nonEmptyConfig: true} as any);
             expect(myClientApp.pcEnvironment).toBe(VALID_DEFAULT_PC_ENVIRONMENT);
         });
+        it('should export gcEnvironment', () => {
+            expect(new ClientApp().gcEnvironment).toBe(VALID_DEFAULT_PC_ENVIRONMENT);
+        });
 
         describe('pcEnvironmentQueryParam config', () => {
             it('should allow a user to pass a valid query string param name into the constructor', () => {

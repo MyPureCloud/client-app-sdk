@@ -268,6 +268,18 @@ class ClientApp {
      * @since 1.0.0
      */
     get pcEnvironment() {
+        return this.gcEnvironment;
+    }
+    /**
+     * Returns the gcEnvironment (e.g. mypurecloud.com, mypurecloud.jp) if known; null otherwise.
+     * This value will be available if a valid Genesys Cloud Environment is provided, inferred, or
+     * defaulted from the config passed to this instance.
+     *
+     * @returns the valid Genesys Cloud environment; null if unknown.
+     *
+     * @since 2.6.3
+     */
+    get gcEnvironment() {
         return (this._pcEnv ? this._pcEnv.pcEnvTld : null);
     }
 
