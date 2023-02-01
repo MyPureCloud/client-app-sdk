@@ -13,8 +13,8 @@
     <head>
         <title>Genesys Cloud Profile Example</title>
 
-        <script src="https://sdk-cdn.mypurecloud.com/javascript/142.0.0/purecloud-platform-client-v2.min.js"></script>
-        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.4.0/purecloud-client-app-sdk-bb974a18.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/javascript/157.0.0/purecloud-platform-client-v2.min.js"></script>
+        <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.6.3/purecloud-client-app-sdk-de77761d.min.js"></script>
         <script src="utils/oauth.js"></script>
 
         <style>
@@ -111,33 +111,40 @@
         <script>document.addEventListener('DOMContentLoaded', function () {
             /*
             * The Client Apps SDK can interpolate the current PC Environment into your app's URL
-            * EX: https://mypurecloud.github.io/client-app-sdk/directoryNavigationDemo.html?pcEnvironment={{pcEnvironment}}
+            * EX: https://mypurecloud.github.io/client-app-sdk/directoryNavigationDemo.html?gcHostOrigin={{gcHostOrigin}}&gcTargetEnv={{gcTargetEnv}}
             *
             * Reading the PC Environment from the query string or state param returned from OAuth2 response
             */
-            let pcEnvironment = getEmbeddingPCEnv();
-            if (!pcEnvironment) {
-                setErrorState('Cannot identify App Embedding context.  Did you forget to add pcEnvironment={{pcEnvironment}} to your app\'s query string?');
-                return;
-            }
+            const queryParameters = getQueryParameters();
+            const state = computeState(queryParameters);
+            let pcEnvironment = queryParameters.pcEnvironment;
 
             let platformClient = window.require('platformClient');
             let client = platformClient.ApiClient.instance;
             let clientApp = null;
             try {
-                clientApp = new window.purecloud.apps.ClientApp({
-                    pcEnvironment: pcEnvironment
-                });
+                if (queryParameters.gcHostOrigin && queryParameters.gcTargetEnv) {
+                    clientApp = new window.purecloud.apps.ClientApp({
+                        gcHostOrigin: queryParameters.gcHostOrigin,
+                        gcTargetEnv: queryParameters.gcTargetEnv
+                    });
+                    pcEnvironment = clientApp.pcEnvironment;
+                } else if (pcEnvironment) {
+                    clientApp = new window.purecloud.apps.ClientApp({ pcEnvironment });
+                } else {
+                    setErrorState('Cannot identify App Embedding context.  Did you forget to add gcHostOrigin={{gcHostOrigin}}&gcTargetEnv={{gcTargetEnv}} to your app\'s query string?');
+                    return;
+                }
             } catch (e) {
-                setErrorState(pcEnvironment + ': Unknown/Unsupported Genesys Cloud Embed Context');
+                let errorStr = pcEnvironment || queryParameters.gcHostOrigin;
+                setErrorState(errorStr + ': Unknown/Unsupported Genesys Cloud Embed Context');
                 return;
             }
-
             // Authenticate with Genesys Cloud
             let authenticated = false;
             let authenticatingEl = document.querySelector('.authenticating');
             setHidden(authenticatingEl, false);
-            authenticate(client, pcEnvironment)
+            authenticate(client, pcEnvironment, state)
                 .then(() => {
                     authenticated = true;
                     return new platformClient.UsersApi().getUsersMe({expand: ['groups']});
@@ -272,32 +279,6 @@
                 }
             }
 
-            /**
-             * Determine the embedding Genesys Cloud environment seeded on the query string or
-             * being returned through the OAuth2 Implicit grant state hash param.
-             *
-             * @returns A string indicating the embedding PC env (e.g. mypurecloud.com, mypurecloud.jp); otherwise, null.
-             */
-            function getEmbeddingPCEnv() {
-              let result = null;
-
-              if (window.location.hash && window.location.hash.indexOf('access_token') >= 0) {
-                let oauthParams = extractParams(window.location.hash.substring(1));
-                if (oauthParams && oauthParams.access_token && oauthParams.state) {
-                  // OAuth2 spec dictates this encoding
-                  // See: https://tools.ietf.org/html/rfc6749#appendix-B
-                  let stateSearch = unescape(oauthParams.state);
-                  result = extractParams(stateSearch).pcEnvironment;
-                }
-              }
-
-              if (!result && window.location.search) {
-                result = extractParams(window.location.search.substring(1)).pcEnvironment || null;
-              }
-
-              return result;
-            }
-
             // ----- Utility Functions
 
             function setHidden(el, hidden) {
@@ -306,35 +287,6 @@
                 } else {
                     el.classList.remove('hidden');
                 }
-            }
-
-            function extractParams(paramStr) {
-              let result = {};
-
-              if (paramStr) {
-                  let params = paramStr.split('&');
-                  params.forEach(function(currParam) {
-                    if (currParam) {
-                        let paramTokens = currParam.split('=');
-                        let paramName = paramTokens[0];
-                        let paramValue = paramTokens[1];
-                        if (paramName) {
-                            paramName = decodeURIComponent(paramName);
-                            paramValue = paramValue ? decodeURIComponent(paramValue) : null;
-
-                            if (!result.hasOwnProperty(paramName)) {
-                                result[paramName] = paramValue;
-                            } else if (Array.isArray(result[paramName])) {
-                                result[paramName].push(paramValue);
-                            } else {
-                                result[paramName] = [result[paramName], paramValue];
-                            }
-                        }
-                    }
-                  });
-              }
-
-              return result;
             }
           });
         </script>
