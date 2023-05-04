@@ -1,6 +1,6 @@
 # Client Apps SDK
 
-A JavaScript library to deeply integrate a 3rd-party applications within Genesys Cloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, plese use the [Genesys Cloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
+A JavaScript library to deeply integrate 3rd-party applications within Genesys Cloud.  This library handles App and UI-level integration concerns such as navigation, alerting, attention, and lifecycle management. For data access, please use the [Genesys Cloud Platform API Javascript Client](https://developer.mypurecloud.com/api/rest/client-libraries/javascript/index.html).
 
 * [API](https://developer.mypurecloud.com/api/client-apps/sdk.html)
 * [Developer Guides](https://developer.mypurecloud.com/api/client-apps/index.html)
