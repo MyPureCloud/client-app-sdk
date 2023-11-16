@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.10.3",
-    "genesys-cloud-service-discovery-web": "^3.0.203",
+    "genesys-cloud-service-discovery-web": "^3.0.233",
     "query-string": "^5.0.0"
   },
   "devDependencies": {
