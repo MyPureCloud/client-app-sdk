@@ -202,7 +202,11 @@ class ClientApp {
             if ('gcHostOriginQueryParam' in cfg || 'gcTargetEnvQueryParam' in cfg) {
                 this.assertNonEmptyString(cfg.gcHostOriginQueryParam, 'host origin query param name');
                 this.assertNonEmptyString(cfg.gcTargetEnvQueryParam, 'target env query param name');
-                this._pcEnv = this.lookupGcEnv(parsedQueryString[cfg.gcHostOriginQueryParam], parsedQueryString[cfg.gcTargetEnvQueryParam]);
+                const parsedGcHostOrigin = parsedQueryString[cfg.gcHostOriginQueryParam];
+                const parsedGcTargetEnv = parsedQueryString[cfg.gcTargetEnvQueryParam];
+                this.assertNonEmptyString(parsedGcHostOrigin, 'host origin parsed query param');
+                this.assertNonEmptyString(parsedGcTargetEnv, 'target env parsed query param');
+                this._pcEnv = this.lookupGcEnv(parsedGcHostOrigin, parsedGcTargetEnv);
             } else if ('gcHostOrigin' in cfg || 'gcTargetEnv' in cfg) {
                 this.assertNonEmptyString(cfg.gcHostOrigin, 'gcHostOrigin');
                 this.assertNonEmptyString(cfg.gcTargetEnv, 'gcTargetEnv');
