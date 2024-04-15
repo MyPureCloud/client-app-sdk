@@ -70,7 +70,7 @@ const defaultToastOptions: ToastOptions<ValidMessageType, number> = {
     timeout: 7,
     showCloseButton: true,
     markdownMessage: true
-} as unknown as ToastOptions<ValidMessageType, number>;
+};
 
 /**
  * Handles aspects of alerting and attention of this app with Genesys Cloud
@@ -146,23 +146,23 @@ class AlertingApi extends BaseApi {
         message: string,
         options?: ToastOptions<MessageType, Timeout>
     ) {
-        const ToastOptions = options || defaultToastOptions as ToastOptions<MessageType, Timeout>;
+        const toastOptions = options || defaultToastOptions;
         const messageParams = {
             title,
             message,
             type: 'info'
         };
 
-        if (ToastOptions && typeof ToastOptions === 'object') {
-            if (ToastOptions.type && typeof ToastOptions.type === 'string') {
-                const requestedType = ToastOptions.type.trim().toLowerCase();
+        if (toastOptions && typeof toastOptions === 'object') {
+            if (toastOptions.type && typeof toastOptions.type === 'string') {
+                const requestedType = toastOptions.type.trim().toLowerCase();
 
                 if (isValidMessageType(requestedType)) {
                     messageParams.type = requestedType;
                 }
             }
 
-            const validOptions = pick(ToastOptions, VALID_SUPPLEMENTAL_OPTIONS);
+            const validOptions = pick(toastOptions, VALID_SUPPLEMENTAL_OPTIONS);
             Object.assign(messageParams, validOptions);
         }
 
