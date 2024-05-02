@@ -105,7 +105,6 @@
                         currLiDt = '<dt>{{gcInteractionId}}</dt>';
                         currLiDd.textContent = interactionId;
                     } else if(currParam[0] === 'gcInteractionType') {
-                        console.log('cp:: gcInteractionType')
                         const interactionType = getParamValue(currParam);
                         currLiDt = '<dt>{{gcInteractionType}}</dt>';
                         currLiDd.textContent = interactionType;
@@ -118,10 +117,6 @@
                     } else if (currParam[0] === 'gcTargetEnv') {
                         gcTargetEnv = getParamValue(currParam)
                     }
-
-                    //interactionId
-                    //workitemId
-                    //interactionType
 
                     if (currLiDt) {
                         $('dl.url-vars').append(currLiDt);
