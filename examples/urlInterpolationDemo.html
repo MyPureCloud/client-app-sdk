@@ -41,7 +41,6 @@
             (function () {
                 var DEFAULT_LANG_TAG = 'en-us';
                 var langTag = null;
-                var conversationId = null;
                 var usePopupAuth = null;
                 var welcomeTokens = {
                     de: "Willkommen bei Genesys Cloud",
@@ -90,9 +89,25 @@
                     } else if(currParam[0] === 'environment' && pcEnv === null) {
                         pcEnv = getParamValue(currParam);
                     } else if(['conversationId', 'pcConversationId'].indexOf(currParam[0]) !== -1) {
-                        conversationId = getParamValue(currParam);
+                        const conversationId = getParamValue(currParam);
                         currLiDt = '<dt>{{pcConversationId}}</dt>';
                         currLiDd.textContent = conversationId;
+                    } else if(currParam[0] === 'gcConversationId') {
+                        const conversationId = getParamValue(currParam);
+                        currLiDt = '<dt>{{gcConversationId}}</dt>';
+                        currLiDd.textContent = conversationId;
+                    } else if(currParam[0] === 'gcWorkitemId') {
+                        const workitemId = getParamValue(currParam);
+                        currLiDt = '<dt>{{gcWorkitemId}}</dt>';
+                        currLiDd.textContent = workitemId;
+                    } else if(currParam[0] === 'gcInteractionId') {
+                        const interactionId = getParamValue(currParam);
+                        currLiDt = '<dt>{{gcInteractionId}}</dt>';
+                        currLiDd.textContent = interactionId;
+                    } else if(currParam[0] === 'gcInteractionType') {
+                        const interactionType = getParamValue(currParam);
+                        currLiDt = '<dt>{{gcInteractionType}}</dt>';
+                        currLiDd.textContent = interactionType;
                     } else if(['usePopupAuth', 'pcUsePopupAuth'].indexOf(currParam[0]) !== -1){
                         usePopupAuth = getParamValue(currParam)
                         currLiDt = '<dt>{{pcUsePopupAuth}}</dt>';
@@ -102,7 +117,6 @@
                     } else if (currParam[0] === 'gcTargetEnv') {
                         gcTargetEnv = getParamValue(currParam)
                     }
-
 
                     if (currLiDt) {
                         $('dl.url-vars').append(currLiDt);
