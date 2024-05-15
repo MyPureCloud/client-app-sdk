@@ -65,6 +65,13 @@ type ToastCloseButtonConfig<Timeout extends number> = Timeout extends 0
         showCloseButton?: boolean
     }
 
+const defaultToastOptions: ToastOptions<ValidMessageType, number> = {
+    type: 'info',
+    timeout: 7,
+    showCloseButton: true,
+    markdownMessage: true
+};
+
 /**
  * Handles aspects of alerting and attention of this app with Genesys Cloud
  *
@@ -82,6 +89,17 @@ class AlertingApi extends BaseApi {
      * Error toasts (`type: 'error'`) require manual dismissal and must be explictly specified with `showCloseButton: true`.
      * TypeScript users will also specify `timeout: 0` while JavaScript users can specify 0 or omit the prop entirely.
      * The `timeout` prop will be ignored regardless.
+     * 
+     * **Toast Options:**
+     * 
+     * Name | Type | Default | Description |
+     * `id` | string | your app's namespace | The id of the message.  Duplicate IDs will replace each other in the toast display.  All IDs will be namespaced with your app ID to avoid collisions. Default will just be your app's namespace and will not support multiple messages. |
+     * `type` | 'error' &#124; 'info' &#124; 'success' | 'info' | The type of the toast message. |
+     * `markdownMessage` |  boolean | true | Indicates if the message is in MD. |
+     * `timeout` | number | 7 | Time in seconds to show the toast.  Set to `0` to disable automatic dismissal. `timeout` must be `0` for toasts with `type: 'error'`. |
+     * `showCloseButton` | boolean | true | Indicates if the close button should be shown. Must be explicitly set to true when `timeout` is `0`. |
+     * 
+     * The type parameters impact the options config. The `MessageType` type extends `'error' | 'info' | 'success'`, and when it is set to `'error'`, it enforces that `timeout` is `0`. The `Timeout` type extends `number`, and when set to `0` it enforces that `showCloseButton` is `true` to prevent a permanent toast message.
      *
      * ```ts
      * myClientApp.alerting.showToastPopup("Hello world", "Hello world, how are you doing today?");
@@ -113,10 +131,10 @@ class AlertingApi extends BaseApi {
      * };
      * myClientApp.alerting.showToastPopup("Hello world", "Hello :earth_americas: How are *you* doing today?", options);
      * ```
-     *
+     * 
      * @param title - Toast title.
-     * @param message - Toast Message.  Supports emoticons, emoji (unicode, shortcodes) and markdown (with markdwownMessage boolean).
-     * @param options - Additonal toast options.
+     * @param message - Toast Message.  Supports emoticons, emoji (unicode, shortcodes) and markdown (with markdownMessage boolean).
+     * @param options - Additonal toast options. 
      *
      * @since 1.0.0
      */
@@ -126,35 +144,31 @@ class AlertingApi extends BaseApi {
     >(
         title: string,
         message: string,
-        options: ToastOptions<MessageType, Timeout> = {
-            type: 'info',
-            timeout: 7,
-            showCloseButton: true,
-            markdownMessage: true
-        } as unknown as ToastOptions<MessageType, Timeout>
+        options?: ToastOptions<MessageType, Timeout>
     ) {
+        const toastOptions = options || defaultToastOptions;
         const messageParams = {
             title,
             message,
             type: 'info'
         };
 
-        if (options && typeof options === 'object') {
-            if (options.type && typeof options.type === 'string') {
-                const requestedType = options.type.trim().toLowerCase();
+        if (toastOptions && typeof toastOptions === 'object') {
+            if (toastOptions.type && typeof toastOptions.type === 'string') {
+                const requestedType = toastOptions.type.trim().toLowerCase();
 
                 if (isValidMessageType(requestedType)) {
                     messageParams.type = requestedType;
                 }
             }
 
-            const validOptions = pick(options, VALID_SUPPLEMENTAL_OPTIONS);
+            const validOptions = pick(toastOptions, VALID_SUPPLEMENTAL_OPTIONS);
             Object.assign(messageParams, validOptions);
         }
 
         super.sendMsgToPc('showToast', messageParams);
     }
-
+    
     /**
      * Displays badging for unread messages and notifications
      *
