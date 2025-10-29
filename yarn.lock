@@ -2065,10 +2065,10 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
 
-genesys-cloud-service-discovery-web@3.0.242:
-  version "3.0.242"
-  resolved "https://registry.yarnpkg.com/genesys-cloud-service-discovery-web/-/genesys-cloud-service-discovery-web-3.0.242.tgz#08416bd247ff33dad8d972a9e920169aa6c57d75"
-  integrity sha512-1ursLOyv6wbhkNv+zftR0Ngg02IuvatD+jrgplKA5P8OKww7UdkJEv/a4ur4/olYCJ9HwpRZ81pvgKYfZZKENQ==
+genesys-cloud-service-discovery-web@3.0.460:
+  version "3.0.460"
+  resolved "https://registry.yarnpkg.com/genesys-cloud-service-discovery-web/-/genesys-cloud-service-discovery-web-3.0.460.tgz#b3e9d5b56070f02326dbf961f3e2906fe85865be"
+  integrity sha512-JtJftsNW7OVQfglr8XTH5YMI9ooPN4Wojrq/XSLwft2Y86N1lZHeQBhpMA6MTqfJjiEWKWpMBOUnRd3OB8qaeA==
   dependencies:
     tslib "~2.4.0"
     url-parse "^1.5.10"
