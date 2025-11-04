@@ -1,6 +1,6 @@
 {
   "name": "purecloud-client-app-sdk",
-  "version": "2.6.7",
+  "version": "2.6.8-alpha",
   "description": "Javascript API for integrating 3rd-party apps with Genesys Cloud",
   "main": "dist/main.js",
   "jsnext:main": "dist/main.mjs",
@@ -111,5 +111,9 @@
     "typedoc-plugin-markdown": "^2.3.1",
     "typedoc-plugin-no-inherit": "^1.1.10",
     "typescript": "^3.9.5"
+  },
+  "peerDependencies": {
+    "snyk": "1.1296.1",
+    "snyk-to-html": "2.6.0"
   }
 }
