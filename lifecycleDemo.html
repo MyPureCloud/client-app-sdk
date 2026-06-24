@@ -272,7 +272,6 @@
 
                     // Simulating delay of 500ms
                     window.setTimeout(() => {
-                        myClientApp.lifecycle.stopped();
                         if (requireManualToastDismissal) {
                             myClientApp.alerting.showToastPopup(
                                 lifecycleStatusMessageTitle,
@@ -295,6 +294,7 @@
                             );
                         }
 
+                        myClientApp.lifecycle.stopped();
                         logLifecycleEvent('Notified PC of Successful App Stop', false);
                     }, 500);
                 });
