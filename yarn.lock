@@ -2370,10 +2370,10 @@ generator-function@^2.0.0:
   resolved "https://registry.yarnpkg.com/generator-function/-/generator-function-2.0.1.tgz#0e75dd410d1243687a0ba2e951b94eedb8f737a2"
   integrity sha512-SFdFmIJi+ybC0vjlHN0ZGVGHc3lgE0DxPAT0djjVg+kjOnSqclqmj0KQ7ykTOLP6YxoqOvuAODGdcHJn+43q3g==
 
-genesys-cloud-service-discovery-web@3.0.500:
-  version "3.0.500"
-  resolved "https://registry.yarnpkg.com/genesys-cloud-service-discovery-web/-/genesys-cloud-service-discovery-web-3.0.500.tgz#03f998fb0f0485a051fb64e7a8f9d9e70bce531c"
-  integrity sha512-Qb0pVUPH1PG0dQ2+vOBACmclrkpAUcA9PVoFarMkhe7K8Eh0u12NvVGkSlyPrmEYNB+UY+oYPkU664LUJ+vjAg==
+genesys-cloud-service-discovery-web@3.0.528:
+  version "3.0.528"
+  resolved "https://registry.yarnpkg.com/genesys-cloud-service-discovery-web/-/genesys-cloud-service-discovery-web-3.0.528.tgz#a95759ccc7f0225577e262e172d27e4194a3dd9e"
+  integrity sha512-5+44RheD17QZtM/frhrKUdhanF0s7a3sLvxqVgpLLCOs763+aufx018tzBW0+eOLRTOHwLjhH6WH3JwmfRp2/g==
   dependencies:
     tslib "~2.4.0"
     url-parse "^1.5.10"
